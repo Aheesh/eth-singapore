@@ -191,7 +191,7 @@ addHyperFrame('txSuccess', {
       },
     ],
     image: {
-      src: `${NEXT_PUBLIC_URL}/desert-lost.webp`,
+      src: `${NEXT_PUBLIC_URL}/park-2.png`,
       aspectRatio: '1:1',
     },
     state: { frame: 'txSuccess' },
