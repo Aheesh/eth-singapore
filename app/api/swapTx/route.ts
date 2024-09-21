@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { FrameRequest, getFrameMessage } from '@coinbase/onchainkit/frame';
 import { BalancerSDK, Network, SwapType, Swaps } from '@balancer-labs/sdk';
 import { BAL_VAULT_ADDR, DEGEN_ADDR, PLAYER_A_ADDR, POOL_ID } from '../../config';
-import { ethers, formatEther, BigNumberish, parseUnits, N } from 'ethers'; // Ethers v6 imports
+import { formatEther, parseUnits } from 'ethers'; // Ethers v6 imports
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/swapTx/route.ts : Swap Tx endpoint');
@@ -122,6 +122,10 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const gasLimit = parseUnits('300000', 'wei'); // Adjust as needed
   const maxFeePerGas = parseUnits('1', 'gwei'); // 1 gwei
   const maxPriorityFeePerGas = parseUnits('0.1', 'gwei'); // 0.1 gwei
+
+  console.log('gasLimit', gasLimit);
+  console.log('maxFeePerGas', maxFeePerGas);
+  console.log('maxPriorityFeePerGas', maxPriorityFeePerGas);
 
   //Frame Transaction
   const txData = {
