@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { FrameRequest, getFrameMessage } from '@coinbase/onchainkit/frame';
 import { BalancerSDK, Network, SwapType, Swaps } from '@balancer-labs/sdk';
 import { BAL_VAULT_ADDR, DEGEN_ADDR, PLAYER_A_ADDR, POOL_ID } from '../../config';
-import { ethers, formatEther, BigNumberish, parseUnits } from 'ethers'; // Ethers v6 imports
+import { ethers, formatEther, BigNumberish, parseUnits, N } from 'ethers'; // Ethers v6 imports
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/swapTx/route.ts : Swap Tx endpoint');
@@ -19,12 +19,13 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const { isValid, message } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
 
   if (isValid) {
-    accountAddress = message.interactor.verified_accounts[1];
+    accountAddress = message.interactor.verified_accounts[0];
     walletAddress = message.address || '';
   } else {
     return new NextResponse('Message not valid', { status: 500 });
   }
   console.log('api/swapTx/route.ts :accountAddress =>', accountAddress);
+  console.log('api/swapTx/route.ts :walletAddress =>', walletAddress);
   console.log('api/swapTx/route.ts : message =>', message);
   console.log('api/swapTx/route.ts : button =>', message.interactor);
 
@@ -57,12 +58,16 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     rpcUrl: `https://base-mainnet.g.alchemy.com/v2/${providerApiKey}`,
   });
 
+  console.log('sdk', sdk);
+  console.log('network', Network.BASE);
   const { contracts } = sdk;
   console.log('contracts', contracts.vault.address);
 
   const tokenIn = DEGEN_ADDR;
   const tokenOut = PLAYER_A_ADDR; //TODO should be based on the option selected
 
+  console.log('tokenIn', tokenIn);
+  console.log('tokenOut', tokenOut);
   const value = String(1e18); //TODO get the amount from the user on first frame.
 
   const swaps = [
