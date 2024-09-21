@@ -21,7 +21,7 @@ const frameMetadata = getFrameMetadata({
   // input: {
   //   text: 'Tell me a story',
   // },
-  postUrl: `${NEXT_PUBLIC_URL}/api/approve`,
+  postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
 });
 
 export const metadata: Metadata = {
