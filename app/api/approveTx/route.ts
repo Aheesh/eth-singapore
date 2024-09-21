@@ -51,8 +51,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/approveTx/route.ts : message =>', message);
   console.log('api/approveTx/route.ts : button =>', message.button);
 
+  let amount = 0;
   //TODO : amount based on previous frame button and player / draw outcome from 1st frame.
-  const amount = message.button === 1 ? 1 : 0;
+  if (message.button) {
+    amount = message.button * 100;
+  } else amount = 100; //TODO : default amount set to 100.
+
   console.log('api/approveTx/route.ts :amount =>', amount);
 
   const value = parseUnits(amount.toString(), 18);
