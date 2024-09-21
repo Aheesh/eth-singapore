@@ -103,20 +103,26 @@ addHyperFrame('Player-B', {
   frame: getFrameHtmlResponse({
     buttons: [
       {
+        action: 'tx',
         label: '100 DEGEN',
+        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
+        action: 'tx',
         label: '200 DEGEN',
+        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
+        action: 'tx',
         label: '500 DEGEN',
+        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
         label: 'CANCEL',
       },
     ],
     image: {
-      src: `${NEXT_PUBLIC_URL}/cave-1.png`,
+      src: `${NEXT_PUBLIC_URL}/park-1.png`,
       aspectRatio: '1:1',
     },
     state: { frame: 'Player-B' },
@@ -132,20 +138,26 @@ addHyperFrame('Draw', {
   frame: getFrameHtmlResponse({
     buttons: [
       {
+        action: 'tx',
         label: '100 DEGEN',
+        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
+        action: 'tx',
         label: '200 DEGEN',
+        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
+        action: 'tx',
         label: '500 DEGEN',
+        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
         label: 'CANCEL',
       },
     ],
     image: {
-      src: `${NEXT_PUBLIC_URL}/cave-2.png`,
+      src: `${NEXT_PUBLIC_URL}/park-1.png`,
       aspectRatio: '1:1',
     },
     state: { frame: 'Draw' },
