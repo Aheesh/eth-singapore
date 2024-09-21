@@ -79,7 +79,7 @@ addHyperFrame('Player-A', {
       },
       {
         action: 'tx',
-        label: '500 DEGEN',
+        label: '300 DEGEN',
         target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
@@ -114,7 +114,7 @@ addHyperFrame('Player-B', {
       },
       {
         action: 'tx',
-        label: '500 DEGEN',
+        label: '300 DEGEN',
         target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
@@ -149,7 +149,7 @@ addHyperFrame('Draw', {
       },
       {
         action: 'tx',
-        label: '500 DEGEN',
+        label: '300 DEGEN',
         target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
