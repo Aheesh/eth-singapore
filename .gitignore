@@ -3,4 +3,5 @@ node_modules
 .next/
 yarn.lock
 .env
+.env.local
 
