@@ -2,10 +2,10 @@
 
 import dotenv from 'dotenv';
 dotenv.config();
-import { NextRequest, NextResponse } from 'next/server.js';
+import { NextRequest, NextResponse } from 'next/server';
 import { FrameRequest, getFrameMessage } from '@coinbase/onchainkit/frame';
 import { BalancerSDK, Network, SwapType, Swaps } from '@balancer-labs/sdk';
-import { BAL_VAULT_ADDR, DEGEN_ADDR, PLAYER_A_ADDR, POOL_ID } from '../../config.js';
+import { BAL_VAULT_ADDR, DEGEN_ADDR, PLAYER_A_ADDR, POOL_ID } from '../../config';
 import { ethers, formatEther, BigNumberish, parseUnits } from 'ethers'; // Ethers v6 imports
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
