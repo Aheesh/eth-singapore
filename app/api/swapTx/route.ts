@@ -135,9 +135,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       to: BAL_VAULT_ADDR,
       data: `0x${hexSwapData}`,
       value: '0',
-      gasLimit: gasLimit,
-      maxFeePerGas: maxFeePerGas,
-      maxPriorityFeePerGas: maxPriorityFeePerGas,
+      gasLimit: gasLimit.toString(),
+      maxFeePerGas: maxFeePerGas.toString(),
+      maxPriorityFeePerGas: maxPriorityFeePerGas.toString(),
     },
   };
   console.log('txData', txData);
