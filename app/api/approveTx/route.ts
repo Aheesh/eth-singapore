@@ -4,8 +4,7 @@
 // Player A / B / Draw from message.state
 // tx to approve DEGEN token transfer and spend
 
-import { NextRequest, NextResponse } from 'next/server.js';
-//import { FrameRequest, getFrameMessage } from '@coinbase/onchainkit/frame';
+import { NextRequest, NextResponse } from 'next/server';
 import('@coinbase/onchainkit/frame');
 import { NEXT_PUBLIC_URL } from '../../config';
 import { addHyperFrame, getHyperFrame } from '../../hyperframes';
@@ -47,6 +46,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   }
   console.log('api/approveTx/route.ts :State =>', state);
   console.log('api/approveTx/route.ts :accountAddress =>', accountAddress);
+  console.log('api/approveTx/route.ts :walletAddress =>', walletAddress);
 
   console.log('api/approveTx/route.ts : message =>', message);
   console.log('api/approveTx/route.ts : button =>', message.button);
