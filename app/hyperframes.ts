@@ -87,7 +87,7 @@ addHyperFrame('Player-A', {
       },
     ],
     image: {
-      src: `${NEXT_PUBLIC_URL}/woods-bear.png`,
+      src: `${NEXT_PUBLIC_URL}/park-1.png`,
       aspectRatio: '1:1',
     },
     state: { frame: 'Player-A' },
