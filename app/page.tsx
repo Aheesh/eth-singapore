@@ -5,13 +5,13 @@ import { NEXT_PUBLIC_URL } from './config';
 const frameMetadata = getFrameMetadata({
   buttons: [
     {
-      label: 'Player A',
+      label: 'Player-A',
     },
     {
-      label: 'Player B',
+      label: 'Player-B',
     },
     {
-      label: 'Draw',
+      label: 'Draw ?',
     },
   ],
   image: {
