@@ -11,7 +11,7 @@ const frameMetadata = getFrameMetadata({
       label: 'Player-B',
     },
     {
-      label: 'Draw ?',
+      label: 'Draw',
     },
   ],
   image: {
