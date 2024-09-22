@@ -86,6 +86,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   const frame = state.frame;
   console.log('api/approveTx/route.ts :state =>', message.state);
+  console.log('api/approveTx/route.ts :state.amount =>', state.amount);
   console.log('api/approveTx/route.ts :frame =>', frame);
 
   if (!frame) {
