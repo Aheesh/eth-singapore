@@ -40,6 +40,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const frame = state.frame;
   console.log('api/swapTx/route.ts :state =>', message.state);
   console.log('api/swapTx/route.ts :frame =>', frame);
+  console.log('api/swapTx/route.ts :state.amount =>', state.amount);
 
   if (!frame) {
     return new NextResponse('Frame not found', { status: 404 });
