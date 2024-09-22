@@ -24,11 +24,11 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   let state; // = { frame: 'start' };
   //Set state to default start frame if it doesn't exist
-  console.log('api/frame/route.ts : message.state =>', message.state);
+  console.log('api/frame/route.ts : message.state before check for value =>', message.state);
   if (!message?.state?.serialized) {
     state = { frame: 'start' };
   }
-
+  console.log('api/frame/route.ts : message.state after check for value =>', message.state);
   try {
     state = JSON.parse(decodeURIComponent(message.state?.serialized));
   } catch (e) {
