@@ -30,7 +30,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     console.error(e);
   }
 
-  console.log('api/frame/route.ts : after try catch ==> state =>', state.frame);
+  console.log('api/frame/route.ts : after try catch ==> state =>', state);
+  console.log('api/frame/route.ts : after try catch ==> state.frame =>', state.frame);
   const frame = state.frame;
   console.log('api/frame/route.ts : state =>', message.state);
   console.log('api/frame/route.ts : frame =>', frame);
