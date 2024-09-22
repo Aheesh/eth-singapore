@@ -37,10 +37,23 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   }
   console.log('api/approveTx/route.ts : walletAddress =>', walletAddress);
 
+  let amount = 0;
+  //TODO : amount based on previous frame button and player / draw outcome from 1st frame.
+  if (message.button) {
+    amount = message.button * 1; //TODO : make this * 100
+  } else amount = 100; //TODO : default amount set to 100.
+
+  console.log('api/approveTx/route.ts :amount =>', amount);
+
+  //state = { swapAmount: amount }; //Set amount to state for future use
+
   let state; // = { frame: 'start' };
 
   try {
     state = JSON.parse(decodeURIComponent(message.state?.serialized));
+    state.amount = amount;
+    const updatedSeralizedState = encodeURIComponent(JSON.stringify(state));
+    message.state.serialized = updatedSeralizedState;
   } catch (e) {
     console.error(e);
   }
@@ -50,14 +63,6 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   console.log('api/approveTx/route.ts : message =>', message);
   console.log('api/approveTx/route.ts : button =>', message.button);
-
-  let amount = 0;
-  //TODO : amount based on previous frame button and player / draw outcome from 1st frame.
-  if (message.button) {
-    amount = message.button * 1;
-  } else amount = 100; //TODO : default amount set to 100.
-
-  console.log('api/approveTx/route.ts :amount =>', amount);
 
   const value = parseUnits(amount.toString(), 18);
   console.log('api/approveTx/route.ts :value =>', value);
