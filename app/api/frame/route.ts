@@ -22,7 +22,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     text = message.input;
   }
 
-  let state = { frame: 'start' };
+  let state; // = { frame: 'start' };
+  //Set state to default start frame if it doesn't exist
+  console.log('api/frame/route.ts : message.state =>', message.state);
+  if (!message?.state?.serialized) {
+    state = { frame: 'start' };
+  }
 
   try {
     state = JSON.parse(decodeURIComponent(message.state?.serialized));
