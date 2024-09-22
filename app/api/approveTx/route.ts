@@ -101,6 +101,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   //return new NextResponse('Approve', { status: 200 }); // TODO
   console.log('api/approveTx/route.ts : txData =>', txData);
   //console.log('api/approveTx/route.ts : text =>', text);
+  console.log('api/approveTx/route.ts : message.state before return txdata =>', message.state);
   return NextResponse.json(txData);
   //return new NextResponse(getHyperFrame(frame as string, text || '', message?.button));
 }
