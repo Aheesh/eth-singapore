@@ -51,7 +51,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   try {
     state = JSON.parse(decodeURIComponent(message.state?.serialized));
-    state.amount = amount;
+    state.amount = amount.toString;
     const updatedSeralizedState = encodeURIComponent(JSON.stringify(state));
     message.state.serialized = updatedSeralizedState;
   } catch (e) {
