@@ -51,9 +51,11 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   try {
     state = JSON.parse(decodeURIComponent(message.state?.serialized));
-    state.amount = amount.toString;
+    //set key value pair for amount in state
+    state.amount = amount;
     const updatedSeralizedState = encodeURIComponent(JSON.stringify(state));
     message.state.serialized = updatedSeralizedState;
+    console.log('api/approveTx/route.ts :updatedSeralizedState =>', updatedSeralizedState);
   } catch (e) {
     console.error(e);
   }
@@ -85,6 +87,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   };
 
   const frame = state.frame;
+  message.state = state; //set state to message for future use
   console.log('api/approveTx/route.ts :state =>', message.state);
   console.log('api/approveTx/route.ts :state.amount =>', state.amount);
   console.log('api/approveTx/route.ts :frame =>', frame);
