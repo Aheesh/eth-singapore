@@ -90,7 +90,7 @@ addHyperFrame('Player-A', {
       src: `${NEXT_PUBLIC_URL}/park-1.png`,
       aspectRatio: '1:1',
     },
-    state: { frame: 'P-A' },
+    state: { frame: 'Player-A' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
   1: 'approve',

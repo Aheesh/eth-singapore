@@ -45,7 +45,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   console.log('api/approveTx/route.ts :amount =>', amount);
 
-  let state; // = { frame: 'start' };
+  // Initialize state object
+  let state: { frame?: string; amount?: string } = {};
 
   try {
     console.log('try block --> message.state =>', message.state);
@@ -54,7 +55,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     state = JSON.parse(decodeURIComponent(message.state?.serialized));
     console.log('try block --> after decode URI --> state =>', state);
     //set key value pair for amount in state
-    state.amount = amount;
+    state.amount = amount.toString();
     console.log('try block --> after setting amount in state =>', state);
     const updatedSeralizedState = encodeURIComponent(JSON.stringify(state));
     message.state.serialized = updatedSeralizedState;
@@ -93,7 +94,6 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   };
 
   const frame = state.frame;
-  message.state = state; //set state to message for future use
   console.log('api/approveTx/route.ts :state =>', message.state);
   console.log('api/approveTx/route.ts :state.amount =>', state.amount);
   console.log('api/approveTx/route.ts :frame =>', frame);
