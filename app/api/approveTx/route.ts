@@ -45,24 +45,30 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   console.log('api/approveTx/route.ts :amount =>', amount);
 
-  //state = { swapAmount: amount }; //Set amount to state for future use
-
   let state; // = { frame: 'start' };
 
   try {
+    console.log('try block --> message.state =>', message.state);
+    console.log('try block --> message.state.serialized =>', message.state.serialized);
+    console.log('try block --> local var state =>', state);
     state = JSON.parse(decodeURIComponent(message.state?.serialized));
+    console.log('try block --> after decode URI --> state =>', state);
     //set key value pair for amount in state
     state.amount = amount;
+    console.log('try block --> after setting amount in state =>', state);
     const updatedSeralizedState = encodeURIComponent(JSON.stringify(state));
     message.state.serialized = updatedSeralizedState;
     console.log('api/approveTx/route.ts :updatedSeralizedState =>', updatedSeralizedState);
+    console.log(
+      'api/approveTx/route.ts :message.state.serealized after setting amount =>',
+      message.state.serialized,
+    );
   } catch (e) {
     console.error(e);
   }
   console.log('api/approveTx/route.ts :State =>', state);
   console.log('api/approveTx/route.ts :accountAddress =>', accountAddress);
   console.log('api/approveTx/route.ts :walletAddress =>', walletAddress);
-
   console.log('api/approveTx/route.ts : message =>', message);
   console.log('api/approveTx/route.ts : button =>', message.button);
 
@@ -101,12 +107,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     return new NextResponse('Button not found', { status: 404 });
   }
 
-  //return new NextResponse('Approve', { status: 200 }); // TODO
   console.log('api/approveTx/route.ts : txData =>', txData);
-  //console.log('api/approveTx/route.ts : text =>', text);
   console.log('api/approveTx/route.ts : message.state before return txdata =>', message.state);
   return NextResponse.json(txData);
-  //return new NextResponse(getHyperFrame(frame as string, text || '', message?.button));
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
