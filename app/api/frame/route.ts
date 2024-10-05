@@ -22,24 +22,23 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     text = message.input;
   }
 
-  let state; // = { frame: 'start' };
-  //Set state to default start frame if it doesn't exist
-  console.log('api/frame/route.ts : message.state before check for value =>', message.state);
-  if (!message?.state?.serialized) {
-    state = { frame: 'start' };
-  }
-  console.log('api/frame/route.ts : message.state after check for value =>', message.state);
+  let state = { frame: 'start', amount: '0' };
+  console.log('api/frame/route.ts : message.state before parsing =>', message.state);
+  
   try {
-    state = JSON.parse(decodeURIComponent(message.state?.serialized));
+    if (message?.state?.serialized) {
+      const parsedState = JSON.parse(decodeURIComponent(message.state.serialized));
+      state = { ...state, ...parsedState };
+    }
   } catch (e) {
-    console.error(e);
+    console.error('Error parsing state:', e);
   }
 
-  console.log('api/frame/route.ts : after try catch ==> state =>', state);
-  console.log('api/frame/route.ts : after try catch ==> state.frame =>', state.frame);
+  console.log('api/frame/route.ts : after parsing ==> state =>', state);
+  console.log('api/frame/route.ts : after parsing ==> state.frame =>', state.frame);
+  console.log('api/frame/route.ts : after parsing ==> state.amount =>', state.amount);
+
   const frame = state.frame;
-  console.log('api/frame/route.ts : state =>', message.state);
-  console.log('api/frame/route.ts : frame =>', frame);
 
   // TODO: Cleanup this error handling
   if (!frame) {
@@ -52,7 +51,19 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   }
 
   console.log('api/frame/route.ts : Calling getHyperFrame =>');
-  return new NextResponse(getHyperFrame(frame as string, text || '', message?.button));
+  const hyperFrame = getHyperFrame(frame as string, text || '', message?.button);
+
+  // Ensure the state is passed to the next frame
+  const updatedState = encodeURIComponent(JSON.stringify(state));
+  const htmlResponse = hyperFrame.replace(
+    'fc:frame:post_url" content="',
+    `fc:frame:post_url" content="${NEXT_PUBLIC_URL}/api/swapTx?state=${updatedState}&`
+  );
+
+  return new NextResponse(htmlResponse, {
+    status: 200,
+    headers: { 'Content-Type': 'text/html' },
+  });
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
