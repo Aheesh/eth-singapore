@@ -31,7 +31,18 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   let state: { frame?: string; amount?: string } = {};
   try {
+    // First, try to parse from message.state
     state = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
+    
+    // If amount is not in message.state, check URL parameters
+    if (!state.amount) {
+      const url = new URL(req.url);
+      const urlState = url.searchParams.get('state');
+      if (urlState) {
+        const urlStateObj = JSON.parse(decodeURIComponent(urlState));
+        state = { ...state, ...urlStateObj };
+      }
+    }
   } catch (e) {
     console.error('Error parsing state:', e);
   }
