@@ -50,20 +50,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     return new NextResponse('Button not found', { status: 404 });
   }
 
-  console.log('api/frame/route.ts : Calling getHyperFrame =>');
-  const hyperFrame = getHyperFrame(frame as string, text || '', message?.button);
-
-  // Ensure the state is passed to the next frame
-  const updatedState = encodeURIComponent(JSON.stringify(state));
-  const htmlResponse = hyperFrame.replace(
-    'fc:frame:post_url" content="',
-    `fc:frame:post_url" content="${NEXT_PUBLIC_URL}/api/swapTx?state=${updatedState}&`
-  );
-
-  return new NextResponse(htmlResponse, {
-    status: 200,
-    headers: { 'Content-Type': 'text/html' },
-  });
+  return new NextResponse(getHyperFrame(frame as string,text || '',message?.button));
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
