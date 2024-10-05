@@ -29,13 +29,17 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/swapTx/route.ts : message =>', message);
   console.log('api/swapTx/route.ts : button =>', message.interactor);
 
-  let state; // = { frame: 'start' };
-
+  let state: { frame?: string; amount?: string } = {};
   try {
-    state = JSON.parse(decodeURIComponent(message.state?.serialized));
+    state = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
   } catch (e) {
-    console.error(e);
+    console.error('Error parsing state:', e);
   }
+
+  const amount = state.amount ? parseInt(state.amount) : 0;
+  console.log('api/swapTx/route.ts :amount =>', amount);
+
+  const value = String(parseUnits(amount.toString(), 18));
 
   const frame = state.frame;
   console.log('api/swapTx/route.ts :state =>', message.state);
@@ -69,14 +73,13 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   console.log('tokenIn', tokenIn);
   console.log('tokenOut', tokenOut);
-  const value = String(1e18); //TODO get the amount from the user on first frame.
 
   const swaps = [
     {
       poolId: POOL_ID,
       assetInIndex: 0,
       assetOutIndex: 1,
-      amount: value, //TODO get the amount from the user
+      amount: value,
       userData: '0x',
     },
   ];

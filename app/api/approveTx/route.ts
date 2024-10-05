@@ -38,40 +38,29 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/approveTx/route.ts : walletAddress =>', walletAddress);
 
   let amount = 0;
-  //TODO : amount based on previous frame button and player / draw outcome from 1st frame.
   if (message.button) {
-    amount = message.button * 1; //TODO : make this * 100
-  } else amount = 100; //TODO : default amount set to 100.
+    amount = message.button * 100; // Multiply by 100 as per TODO
+  } else {
+    amount = 100; // Default amount
+  }
 
   console.log('api/approveTx/route.ts :amount =>', amount);
 
-  // Initialize state object
+  // Parse the existing state
   let state: { frame?: string; amount?: string } = {};
-
   try {
-    console.log('try block --> message.state =>', message.state);
-    console.log('try block --> message.state.serialized =>', message.state.serialized);
-    console.log('try block --> local var state =>', state);
-    state = JSON.parse(decodeURIComponent(message.state?.serialized));
-    console.log('try block --> after decode URI --> state =>', state);
-    //set key value pair for amount in state
-    state.amount = amount.toString();
-    console.log('try block --> after setting amount in state =>', state);
-    const updatedSeralizedState = encodeURIComponent(JSON.stringify(state));
-    message.state.serialized = updatedSeralizedState;
-    console.log('api/approveTx/route.ts :updatedSeralizedState =>', updatedSeralizedState);
-    console.log(
-      'api/approveTx/route.ts :message.state.serealized after setting amount =>',
-      message.state.serialized,
-    );
+    state = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
   } catch (e) {
-    console.error(e);
+    console.error('Error parsing state:', e);
   }
-  console.log('api/approveTx/route.ts :State =>', state);
-  console.log('api/approveTx/route.ts :accountAddress =>', accountAddress);
-  console.log('api/approveTx/route.ts :walletAddress =>', walletAddress);
-  console.log('api/approveTx/route.ts : message =>', message);
-  console.log('api/approveTx/route.ts : button =>', message.button);
+
+  // Update the state with the new amount
+  state.amount = amount.toString();
+
+  // Serialize the updated state
+  const updatedSerializedState = encodeURIComponent(JSON.stringify(state));
+
+  console.log('api/approveTx/route.ts :updatedSerializedState =>', updatedSerializedState);
 
   const value = parseUnits(amount.toString(), 18);
   console.log('api/approveTx/route.ts :value =>', value);
@@ -109,7 +98,10 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   console.log('api/approveTx/route.ts : txData =>', txData);
   console.log('api/approveTx/route.ts : message.state before return txdata =>', message.state);
-  return NextResponse.json(txData);
+  return NextResponse.json({
+    ...txData,
+    state: updatedSerializedState,
+  });
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
