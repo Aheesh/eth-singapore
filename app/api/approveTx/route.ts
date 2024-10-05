@@ -39,9 +39,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   let amount = 0;
   if (message.button) {
-    amount = message.button * 100; // Multiply by 100 as per TODO
+    amount = message.button * 1; // Multiply by 1 as per TODO
   } else {
-    amount = 100; // Default amount
+    amount = 1; // Default amount
   }
 
   console.log('api/approveTx/route.ts :amount =>', amount);
@@ -100,7 +100,10 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/approveTx/route.ts : message.state before return txdata =>', message.state);
   return NextResponse.json({
     ...txData,
-    state: updatedSerializedState,
+    state: {
+      serialized: updatedSerializedState
+    },
+    postUrl: `${NEXT_PUBLIC_URL}/api/frame`
   });
 }
 
