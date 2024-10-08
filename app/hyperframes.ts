@@ -3,10 +3,10 @@ import { NEXT_PUBLIC_URL } from './config';
 
 export type HyperFrame = {
   frame: string;
-  1: string | ((text: string) => string) | (() => string);
-  2?: string | ((text: string) => string) | (() => string);
-  3?: string | ((text: string) => string) | (() => string);
-  4?: string | ((text: string) => string) | (() => string);
+  1: string | ((text: string) => string | { frame: string; amount: string; [key: string]: any });
+  2?: string | ((text: string) => string | { frame: string; amount: string; [key: string]: any });
+  3?: string | ((text: string) => string | { frame: string; amount: string; [key: string]: any });
+  4?: string | ((text: string) => string | { frame: string; amount: string; [key: string]: any });
 };
 
 const frames: Record<string, HyperFrame> = {};
@@ -15,7 +15,7 @@ export function addHyperFrame(label: string, frame: HyperFrame) {
   frames[label] = frame;
 }
 
-export function getHyperFrame(frame: string, text: string, button: number, existingState: any={}) {
+export function getHyperFrame(frame: string, text: string, button: number, existingState: any = {}) {
   console.log('hyperframes.ts : frame =>', frame);
   console.log('hyperframes.ts : frames =>', frames);
   const currentFrame = frames[frame];
@@ -24,10 +24,21 @@ export function getHyperFrame(frame: string, text: string, button: number, exist
   console.log('hyperframes.ts : nextFrameIdOrFunction =>', nextFrameIdOrFunction);
 
   let nextFrameId: string;
+  let newState: any = {};
   if (typeof nextFrameIdOrFunction === 'function') {
-    nextFrameId = nextFrameIdOrFunction(text);
+    const result = nextFrameIdOrFunction(text);
+    if (typeof result === 'string') {
+      nextFrameId = result;
+    } else if (typeof result === 'object' && result !== null && 'frame' in result) {
+      nextFrameId = result.frame;
+      newState = result;
+    } else {
+      throw new Error('Invalid result from nextFrameIdOrFunction');
+    }
+  } else if (typeof nextFrameIdOrFunction === 'string') {
+    nextFrameId = nextFrameIdOrFunction;
   } else {
-    nextFrameId = nextFrameIdOrFunction as string;
+    throw new Error('Invalid nextFrameIdOrFunction type');
   }
 
   if (!frames[nextFrameId]) {
@@ -37,8 +48,8 @@ export function getHyperFrame(frame: string, text: string, button: number, exist
   console.log('hyperframes.ts : nextFrameId =>', nextFrameId);
   console.log('hyperframes.ts : frames[nextFrameId] =>', frames[nextFrameId]);
 
-  //Merge existing state with new frame state
-  const mergedState = { ...existingState, frame: nextFrameId };
+  //Merge existing state with new frame state and new state
+  const mergedState = { ...existingState, ...newState, frame: nextFrameId };
   console.log('hyperframes.ts : mergedState =>', mergedState);
 
   //Create a new frame response with the merged state
@@ -80,17 +91,17 @@ addHyperFrame('Player-A', {
       {
         action: 'tx',
         label: '100 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
+        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=100`,
       },
       {
         action: 'tx',
         label: '200 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
+        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=200`,
       },
       {
         action: 'tx',
         label: '300 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
+        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=300`,
       },
       {
         label: 'CANCEL',
@@ -103,9 +114,9 @@ addHyperFrame('Player-A', {
     state: { frame: 'Player-A' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: 'approve',
-  2: 'approve',
-  3: 'approve',
+  1: (text) => ({ frame: 'approve', amount: '100' }),
+  2: (text) => ({ frame: 'approve', amount: '200' }),
+  3: (text) => ({ frame: 'approve', amount: '300' }),
   4: 'start',
 });
 
@@ -115,17 +126,17 @@ addHyperFrame('Player-B', {
       {
         action: 'tx',
         label: '100 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
+        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=100`,
       },
       {
         action: 'tx',
         label: '200 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
+        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=200`,
       },
       {
         action: 'tx',
         label: '300 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
+        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=300`,
       },
       {
         label: 'CANCEL',
@@ -138,9 +149,9 @@ addHyperFrame('Player-B', {
     state: { frame: 'Player-B' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: 'approve',
-  2: 'approve',
-  3: 'approve',
+  1: (text) => ({ frame: 'approve', amount: '100' }),
+  2: (text) => ({ frame: 'approve', amount: '200' }),
+  3: (text) => ({ frame: 'approve', amount: '300' }),
   4: 'start',
 });
 
@@ -150,17 +161,17 @@ addHyperFrame('Draw', {
       {
         action: 'tx',
         label: '100 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
+        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=100`,
       },
       {
         action: 'tx',
         label: '200 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
+        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=200`,
       },
       {
         action: 'tx',
         label: '300 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
+        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=300`,
       },
       {
         label: 'CANCEL',
@@ -173,9 +184,9 @@ addHyperFrame('Draw', {
     state: { frame: 'Draw' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: 'approve',
-  2: 'approve',
-  3: 'approve',
+  1: (text) => ({ frame: 'approve', amount: '100' }),
+  2: (text) => ({ frame: 'approve', amount: '200' }),
+  3: (text) => ({ frame: 'approve', amount: '300' }),
   4: 'start',
 });
 
