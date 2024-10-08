@@ -50,7 +50,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     return new NextResponse('Button not found', { status: 404 });
   }
 
-  return new NextResponse(getHyperFrame(frame as string,text || '',message?.button));
+  return new NextResponse(getHyperFrame(frame as string,text || '',message?.button, state));
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
