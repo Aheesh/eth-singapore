@@ -42,10 +42,10 @@ export function getHyperFrame(frame: string, text: string, button: number, exist
   console.log('hyperframes.ts : mergedState =>', mergedState);
 
   //Create a new frame response with the merged state
-  const newFrameResponse = getFrameHtmlResponse({
-    ...JSON.parse(frames[nextFrameId].frame),
-    state: mergedState,
-  });
+  const newFrameResponse = frames[nextFrameId].frame.replace(
+    /"state":\s*{[^}]*}/,
+    `"state": ${JSON.stringify(mergedState)}`
+  );
   return newFrameResponse;
 }
 
