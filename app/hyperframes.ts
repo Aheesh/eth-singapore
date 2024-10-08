@@ -91,17 +91,17 @@ addHyperFrame('Player-A', {
       {
         action: 'tx',
         label: '100 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=100`,
+        target: `${NEXT_PUBLIC_URL}/api/approveTx?amount=100`,
       },
       {
         action: 'tx',
         label: '200 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=200`,
+        target: `${NEXT_PUBLIC_URL}/api/approveTx?amount=200`,
       },
       {
         action: 'tx',
         label: '300 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=300`,
+        target: `${NEXT_PUBLIC_URL}/api/approveTx?amount=300`,
       },
       {
         label: 'CANCEL',
