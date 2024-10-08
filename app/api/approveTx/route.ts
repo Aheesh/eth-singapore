@@ -97,7 +97,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   }
 
   console.log('api/approveTx/route.ts : txData =>', txData);
-  console.log('api/approveTx/route.ts : message.state before return txdata =>', message.state);
+  console.log('api/approveTx/route.ts : serialized: updatedSerializedState with return txdata =>', updatedSerializedState);
   return NextResponse.json({
     ...txData,
     state: {
