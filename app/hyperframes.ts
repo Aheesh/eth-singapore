@@ -3,10 +3,10 @@ import { NEXT_PUBLIC_URL } from './config';
 
 export type HyperFrame = {
   frame: string;
-  1: string | ((text: string) => string | { frame: string; amount: string; [key: string]: any });
-  2?: string | ((text: string) => string | { frame: string; amount: string; [key: string]: any });
-  3?: string | ((text: string) => string | { frame: string; amount: string; [key: string]: any });
-  4?: string | ((text: string) => string | { frame: string; amount: string; [key: string]: any });
+  1: string | ((text: string) => string | { frame: string; amount?: string; [key: string]: any });
+  2?: string | ((text: string) => string | { frame: string; amount?: string; [key: string]: any });
+  3?: string | ((text: string) => string | { frame: string; amount?: string; [key: string]: any });
+  4?: string | ((text: string) => string | { frame: string; amount?: string; [key: string]: any });
 };
 
 const frames: Record<string, HyperFrame> = {};
@@ -32,6 +32,10 @@ export function getHyperFrame(frame: string, text: string, button: number, exist
     } else if (typeof result === 'object' && result !== null && 'frame' in result) {
       nextFrameId = result.frame;
       newState = result;
+      // Preserve the amount if it's not in the new state but exists in the existing state
+      if (!('amount' in newState) && 'amount' in existingState) {
+        newState.amount = existingState.amount;
+      }
     } else {
       throw new Error('Invalid result from nextFrameIdOrFunction');
     }
@@ -209,7 +213,7 @@ addHyperFrame('approve', {
     state: { frame: 'approve' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: 'txSuccess',
+  1: (text) => ({ frame: 'txSuccess' }), // This should now be valid
   2: 'start',
 });
 
