@@ -15,7 +15,7 @@ export function addHyperFrame(label: string, frame: HyperFrame) {
   frames[label] = frame;
 }
 
-export function getHyperFrame(frame: string, text: string, button: number) {
+export function getHyperFrame(frame: string, text: string, button: number, existingState: any={}) {
   console.log('hyperframes.ts : frame =>', frame);
   console.log('hyperframes.ts : frames =>', frames);
   const currentFrame = frames[frame];
@@ -36,7 +36,17 @@ export function getHyperFrame(frame: string, text: string, button: number) {
 
   console.log('hyperframes.ts : nextFrameId =>', nextFrameId);
   console.log('hyperframes.ts : frames[nextFrameId] =>', frames[nextFrameId]);
-  return frames[nextFrameId].frame;
+
+  //Merge existing state with new frame state
+  const mergedState = { ...existingState, frame: nextFrameId };
+  console.log('hyperframes.ts : mergedState =>', mergedState);
+
+  //Create a new frame response with the merged state
+  const newFrameResponse = getFrameHtmlResponse({
+    ...JSON.parse(frames[nextFrameId].frame),
+    state: mergedState,
+  });
+  return newFrameResponse;
 }
 
 addHyperFrame('start', {
