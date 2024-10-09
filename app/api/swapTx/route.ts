@@ -34,13 +34,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     // First, try to parse from message.state
     state = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
     
-    // If amount is not in message.state, check URL parameters
+    // If amount is not in message.state, check X-Frame-State header
     if (!state.amount) {
-      const url = new URL(req.url);
-      const urlState = url.searchParams.get('state');
-      if (urlState) {
-        const urlStateObj = JSON.parse(decodeURIComponent(urlState));
-        state = { ...state, ...urlStateObj };
+      const frameState = req.headers.get('X-Frame-State');
+      if (frameState) {
+        const parsedFrameState = JSON.parse(decodeURIComponent(frameState));
+        state = { ...state, ...parsedFrameState };
       }
     }
   } catch (e) {

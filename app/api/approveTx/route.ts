@@ -56,6 +56,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   // Update the state with the new amount
   state.amount = amount.toString();
+  state.frame = 'approve'; // Set the next frame
 
   // Serialize the updated state
   const updatedSerializedState = encodeURIComponent(JSON.stringify(state));
@@ -103,7 +104,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     state: {
       serialized: updatedSerializedState
     },
-    //postUrl: `${NEXT_PUBLIC_URL}/api/frame`
+    postUrl: `${NEXT_PUBLIC_URL}/api/frame`
   });
 }
 
