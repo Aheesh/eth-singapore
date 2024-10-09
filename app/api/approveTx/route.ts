@@ -44,7 +44,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   let amount = '0';
   if (message.button) {
-    amount = (parseInt(message.button.toString()) * 100).toString(); // Example: button 1 -> 100
+    amount = (parseInt(message.button.toString()) * 1).toString(); // Example: button 1 -> 100
   }
 
   console.log('api/approveTx/route.ts :amount =>', amount);
