@@ -99,7 +99,7 @@ addHyperFrame('Player-A', {
       src: `${NEXT_PUBLIC_URL}/park-1.png`,
       aspectRatio: '1:1',
     },
-    state: { frame: 'Player-B' },
+    state: { frame: 'Player-A' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
   1: 'approve',
@@ -157,7 +157,7 @@ addHyperFrame('approve', {
       {
         action: 'tx',
         label: 'Swap Approve',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
+        target: `${NEXT_PUBLIC_URL}/api/swapTx`,
       },
       {
         label: 'Cancel',
