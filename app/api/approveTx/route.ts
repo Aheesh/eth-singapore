@@ -59,7 +59,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   // Update the state with the new amount
   state.amount = amount;
-  state.frame = 'approve'; // Set the next frame
+  state.frame = 'confirmSwap'; // Set the next frame to confirmSwap
 
   // Serialize the updated state
   const updatedSerializedState = encodeURIComponent(JSON.stringify(state));
@@ -94,7 +94,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     state: {
       serialized: updatedSerializedState,
     },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`, // Return to frame handler after transaction
+    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   });
 }
 
