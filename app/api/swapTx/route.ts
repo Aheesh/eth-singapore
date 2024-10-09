@@ -3,7 +3,7 @@ dotenv.config();
 import { NextRequest, NextResponse } from 'next/server';
 import { FrameRequest, getFrameMessage } from '@coinbase/onchainkit/frame';
 import { BalancerSDK, Network, SwapType, Swaps } from '@balancer-labs/sdk';
-import { BAL_VAULT_ADDR, DEGEN_ADDR, PLAYER_A_ADDR, POOL_ID } from '../../config';
+import { BAL_VAULT_ADDR, DEGEN_ADDR, PLAYER_A_ADDR, PLAYER_B_ADDR, DRAW_ADDR, POOL_ID } from '../../config';
 import { formatEther, parseUnits } from 'ethers';
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
@@ -26,7 +26,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/swapTx/route.ts : message =>', message);
   console.log('api/swapTx/route.ts : button =>', message.button);
 
-  let state: { frame?: string; amount?: string } = {};
+  let state: { frame?: string; amount?: string; outcome?: string } = {};
   try {
     // Parse from message.state
     state = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
@@ -67,7 +67,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('contracts', contracts.vault.address);
 
   const tokenIn = DEGEN_ADDR;
-  const tokenOut = PLAYER_A_ADDR; // TODO: Make this dynamic based on user selection
+  const tokenOut = state.outcome === 'Player-A' ? PLAYER_A_ADDR : 
+                   state.outcome === 'Player-B' ? PLAYER_B_ADDR : 
+                   DRAW_ADDR; // Assuming you have these addresses defined
 
   console.log('tokenIn', tokenIn);
   console.log('tokenOut', tokenOut);
@@ -144,7 +146,13 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   };
   console.log('txData', txData);
 
-  return NextResponse.json(txData);
+  return NextResponse.json({
+    ...txData,
+    state: {
+      serialized: encodeURIComponent(JSON.stringify({ ...state, frame: 'txSuccess' })),
+    },
+    postUrl: `${process.env.NEXT_PUBLIC_URL}/api/frame`,
+  });
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
