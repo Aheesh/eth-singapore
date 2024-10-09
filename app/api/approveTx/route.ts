@@ -61,10 +61,11 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   state.amount = amount;
   state.frame = 'confirmSwap'; // Set the next frame to confirmSwap
 
-  // Serialize the updated state
-  const updatedSerializedState = encodeURIComponent(JSON.stringify(state));
 
-  console.log('api/approveTx/route.ts :updatedSerializedState =>', updatedSerializedState);
+  //TODO : amount based on previous frame button and player / draw outcome from 1st frame.
+  const amount = message.button * 1;
+  console.log('api/approveTx/route.ts :amount =>', amount);
+
 
   const value = parseUnits(amount, 18);
   console.log('api/approveTx/route.ts :value =>', value);
