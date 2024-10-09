@@ -79,11 +79,32 @@ addHyperFrame('start', {
     state: { frame: 'start' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: (text) => ({ frame: 'Player-A', amount: '100' }),
-  2: (text) => ({ frame: 'Player-B', amount: '200' }),
-  3: (text) => ({ frame: 'Draw', amount: '300' }),
+  1: (text) => ({ frame: 'Player-A' }),
+  2: (text) => ({ frame: 'Player-B' }),
+  3: (text) => ({ frame: 'Draw' }),
 });
-
+addHyperFrame('Player-A', {
+  frame: getFrameHtmlResponse({
+    buttons: [
+      {
+        action: 'tx',
+        label: 'Approve DEGEN',
+        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
+      },
+      {
+        label: 'Cancel',
+      },
+    ],
+    image: {
+      src: `${NEXT_PUBLIC_URL}/park-1.png`,
+      aspectRatio: '1:1',
+    },
+    state: { frame: 'Player-B' },
+    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+  }),
+  1: 'approve',
+  2: 'start',
+});
 addHyperFrame('Player-B', {
   frame: getFrameHtmlResponse({
     buttons: [
