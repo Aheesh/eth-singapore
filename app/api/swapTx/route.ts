@@ -18,19 +18,23 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   let state: { frame?: string; amount?: string; outcome?: string } = {};
   try {
-    state = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
+    if (message.state?.serialized) {
+      state = JSON.parse(decodeURIComponent(message.state.serialized));
+    }
   } catch (e) {
     console.error('Error parsing state:', e);
   }
 
   const amount = state.amount || '0';
+  const outcome = state.outcome || 'Draw';
   console.log('api/swapTx/route.ts :amount =>', amount);
+  console.log('api/swapTx/route.ts :outcome =>', outcome);
 
   const value = parseUnits(amount, 18);
 
   const tokenIn = DEGEN_ADDR;
-  const tokenOut = state.outcome === 'Player-A' ? PLAYER_A_ADDR :
-                   state.outcome === 'Player-B' ? PLAYER_B_ADDR :
+  const tokenOut = outcome === 'Player-A' ? PLAYER_A_ADDR :
+                   outcome === 'Player-B' ? PLAYER_B_ADDR :
                    DRAW_ADDR;
 
   console.log('tokenIn', tokenIn);

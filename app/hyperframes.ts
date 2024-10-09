@@ -1,12 +1,13 @@
 import { getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
 import { NEXT_PUBLIC_URL, DEGEN_ADDR, BAL_VAULT_ADDR, POOL_ID } from './config';
 
+// Update the HyperFrame type definition
 export type HyperFrame = {
   frame: string;
-  1: string | ((text: string) => string | { frame: string; amount?: string; outcome?: string });
-  2?: string | ((text: string) => string | { frame: string; amount?: string; outcome?: string });
-  3?: string | ((text: string) => string | { frame: string; amount?: string; outcome?: string });
-  4?: string | ((text: string) => string | { frame: string; amount?: string; outcome?: string });
+  1: string | ((text: string, state: any) => string | { frame: string; amount?: string; outcome?: string });
+  2?: string | ((text: string, state: any) => string | { frame: string; amount?: string; outcome?: string });
+  3?: string | ((text: string, state: any) => string | { frame: string; amount?: string; outcome?: string });
+  4?: string | ((text: string, state: any) => string | { frame: string; amount?: string; outcome?: string });
 };
 
 const frames: Record<string, HyperFrame> = {};
@@ -22,7 +23,7 @@ export function getHyperFrame(frame: string, text: string, button: number, exist
   let nextFrameId: string;
   let newState: any = {};
   if (typeof nextFrameIdOrFunction === 'function') {
-    const result = nextFrameIdOrFunction(text);
+    const result = nextFrameIdOrFunction(text, existingState);
     if (typeof result === 'string') {
       nextFrameId = result;
     } else if (typeof result === 'object' && result !== null && 'frame' in result) {
@@ -124,7 +125,7 @@ addHyperFrame('confirmSwap', {
     state: { frame: 'confirmSwap' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: 'txSuccess',
+  1: (text: string, state: any) => ({ ...state, frame: 'txSuccess' }),
   2: 'start',
 });
 
