@@ -52,11 +52,11 @@ export function getHyperFrame(frame: string, text: string, button: number, exist
   console.log('hyperframes.ts : nextFrameId =>', nextFrameId);
   console.log('hyperframes.ts : frames[nextFrameId] =>', frames[nextFrameId]);
 
-  //Merge existing state with new frame state and new state
+  // Merge existing state with new frame state and new state
   const mergedState = { ...existingState, ...newState, frame: nextFrameId };
   console.log('hyperframes.ts : mergedState =>', mergedState);
 
-  //Create a new frame response with the merged state
+  // Create a new frame response with the merged state
   const newFrameResponse = frames[nextFrameId].frame.replace(
     /"state":\s*{[^}]*}/,
     `"state": ${JSON.stringify(mergedState)}`
@@ -64,18 +64,13 @@ export function getHyperFrame(frame: string, text: string, button: number, exist
   return newFrameResponse;
 }
 
+// Define frames
 addHyperFrame('start', {
   frame: getFrameHtmlResponse({
     buttons: [
-      {
-        label: 'Player A',
-      },
-      {
-        label: 'Player B',
-      },
-      {
-        label: 'Draw ',
-      },
+      { label: 'Player A' },
+      { label: 'Player B' },
+      { label: 'Draw' },
     ],
     image: {
       src: `${NEXT_PUBLIC_URL}/game1.webp`,
@@ -84,44 +79,9 @@ addHyperFrame('start', {
     state: { frame: 'start' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: 'Player-A',
-  2: 'Player-B',
-  3: 'Draw',
-});
-
-addHyperFrame('Player-A', {
-  frame: getFrameHtmlResponse({
-    buttons: [
-      {
-        action: 'tx',
-        label: '100 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx?amount=100`,
-      },
-      {
-        action: 'tx',
-        label: '200 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx?amount=200`,
-      },
-      {
-        action: 'tx',
-        label: '300 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx?amount=300`,
-      },
-      {
-        label: 'CANCEL',
-      },
-    ],
-    image: {
-      src: `${NEXT_PUBLIC_URL}/park-1.png`,
-      aspectRatio: '1:1',
-    },
-    state: { frame: 'Player-A' },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-  }),
-  1: (text) => ({ frame: 'approve', amount: '100' }),
-  2: (text) => ({ frame: 'approve', amount: '200' }),
-  3: (text) => ({ frame: 'approve', amount: '300' }),
-  4: 'start',
+  1: (text) => ({ frame: 'Player-A', amount: '100' }),
+  2: (text) => ({ frame: 'Player-B', amount: '200' }),
+  3: (text) => ({ frame: 'Draw', amount: '300' }),
 });
 
 addHyperFrame('Player-B', {
@@ -129,21 +89,11 @@ addHyperFrame('Player-B', {
     buttons: [
       {
         action: 'tx',
-        label: '100 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=100`,
+        label: 'Approve DEGEN',
+        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
-        action: 'tx',
-        label: '200 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=200`,
-      },
-      {
-        action: 'tx',
-        label: '300 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=300`,
-      },
-      {
-        label: 'CANCEL',
+        label: 'Cancel',
       },
     ],
     image: {
@@ -153,10 +103,8 @@ addHyperFrame('Player-B', {
     state: { frame: 'Player-B' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: (text) => ({ frame: 'approve', amount: '100' }),
-  2: (text) => ({ frame: 'approve', amount: '200' }),
-  3: (text) => ({ frame: 'approve', amount: '300' }),
-  4: 'start',
+  1: 'approve',
+  2: 'start',
 });
 
 addHyperFrame('Draw', {
@@ -164,21 +112,11 @@ addHyperFrame('Draw', {
     buttons: [
       {
         action: 'tx',
-        label: '100 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=100`,
+        label: 'Approve DEGEN',
+        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
-        action: 'tx',
-        label: '200 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=200`,
-      },
-      {
-        action: 'tx',
-        label: '300 DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=300`,
-      },
-      {
-        label: 'CANCEL',
+        label: 'Cancel',
       },
     ],
     image: {
@@ -188,10 +126,8 @@ addHyperFrame('Draw', {
     state: { frame: 'Draw' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: (text) => ({ frame: 'approve', amount: '100' }),
-  2: (text) => ({ frame: 'approve', amount: '200' }),
-  3: (text) => ({ frame: 'approve', amount: '300' }),
-  4: 'start',
+  1: 'approve',
+  2: 'start',
 });
 
 addHyperFrame('approve', {
@@ -200,7 +136,7 @@ addHyperFrame('approve', {
       {
         action: 'tx',
         label: 'Swap Approve',
-        target: `${NEXT_PUBLIC_URL}/api/swapTx`,
+        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
         label: 'Cancel',
@@ -213,19 +149,15 @@ addHyperFrame('approve', {
     state: { frame: 'approve' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: (text) => ({ frame: 'txSuccess' }), // This should now be valid
+  1: (text) => ({ frame: 'txSuccess' }),
   2: 'start',
 });
 
 addHyperFrame('txSuccess', {
   frame: getFrameHtmlResponse({
     buttons: [
-      {
-        label: 'SUCCESS',
-      },
-      {
-        label: 'Start Again',
-      },
+      { label: 'SUCCESS' },
+      { label: 'Start Again' },
     ],
     image: {
       src: `${NEXT_PUBLIC_URL}/park-2.png`,

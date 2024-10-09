@@ -18,11 +18,16 @@ import {
   FrameTransactionResponse,
 } from '@coinbase/onchainkit/frame';
 
+export type State = {
+  frame?: string;
+  amount?: string;
+  [key: string]: any;
+};
+
 async function getResponse(req: NextRequest): Promise<NextResponse> {
-  console.log('api/approvetx/route.ts : Approve endpoint');
+  console.log('api/approveTx/route.ts : Approve endpoint');
 
   let accountAddress: string | undefined = '';
-  let text: string | undefined = '';
   let walletAddress: string = '';
 
   const body: FrameRequest = await req.json();
@@ -37,17 +42,15 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   }
   console.log('api/approveTx/route.ts : walletAddress =>', walletAddress);
 
-  let amount = 0;
+  let amount = '0';
   if (message.button) {
-    amount = message.button * 1; // Multiply by 1 as per TODO
-  } else {
-    amount = 1; // Default amount
+    amount = (parseInt(message.button.toString()) * 100).toString(); // Example: button 1 -> 100
   }
 
   console.log('api/approveTx/route.ts :amount =>', amount);
 
   // Parse the existing state
-  let state: { frame?: string; amount?: string } = {};
+  let state: State = {};
   try {
     state = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
   } catch (e) {
@@ -55,7 +58,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   }
 
   // Update the state with the new amount
-  state.amount = amount.toString();
+  state.amount = amount;
   state.frame = 'approve'; // Set the next frame
 
   // Serialize the updated state
@@ -63,7 +66,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   console.log('api/approveTx/route.ts :updatedSerializedState =>', updatedSerializedState);
 
-  const value = parseUnits(amount.toString(), 18);
+  const value = parseUnits(amount, 18);
   console.log('api/approveTx/route.ts :value =>', value);
 
   const data = encodeFunctionData({
@@ -83,28 +86,15 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     },
   };
 
-  const frame = state.frame;
-  console.log('api/approveTx/route.ts :state =>', message.state);
-  console.log('api/approveTx/route.ts :state.amount =>', state.amount);
-  console.log('api/approveTx/route.ts :frame =>', frame);
-
-  if (!frame) {
-    return new NextResponse('Frame not found', { status: 404 });
-  }
-
-  // There should always be a button number
-  if (!message?.button) {
-    return new NextResponse('Button not found', { status: 404 });
-  }
-
   console.log('api/approveTx/route.ts : txData =>', txData);
   console.log('api/approveTx/route.ts : serialized: updatedSerializedState with return txdata =>', updatedSerializedState);
+
   return NextResponse.json({
     ...txData,
     state: {
-      serialized: updatedSerializedState
+      serialized: updatedSerializedState,
     },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`
+    postUrl: `${NEXT_PUBLIC_URL}/api/frame`, // Return to frame handler after transaction
   });
 }
 

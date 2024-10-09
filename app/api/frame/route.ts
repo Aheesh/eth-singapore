@@ -53,15 +53,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     const hyperFrameResponse = getHyperFrame(frame as string, text, message.button, state);
     console.log('HyperFrame response:', hyperFrameResponse);
 
-    // If the frame is 'approve' and the button pressed is 1 (Swap Approve),
-    // redirect to the swapTx endpoint with the amount
-    if (frame === 'approve' && message.button === 1) {
-      const amount = state.amount || '0';
-      const swapTxUrl = `${NEXT_PUBLIC_URL}/api/swapTx`;
-      const redirectResponse = NextResponse.redirect(swapTxUrl);
-      redirectResponse.headers.set('X-Frame-State', encodeURIComponent(JSON.stringify(state)));
-      return redirectResponse;
-    }
+    // No redirect logic here; let the frame flow handle transitions based on transaction responses
 
     return new NextResponse(hyperFrameResponse);
   } catch (error) {
