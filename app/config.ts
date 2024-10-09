@@ -1,5 +1,6 @@
 // use NODE_ENV to not have to change config based on where it's deployed
-export const NEXT_PUBLIC_URL ='https://eth-singapore-pnff0cm2i-aheeshs-projects.vercel.app';
+export const NEXT_PUBLIC_URL =// 'https://eth-singapore-woad.vercel.app';
+'https://eth-singapore-pnff0cm2i-aheeshs-projects.vercel.app';
 // process.env.NODE_ENV == 'development'
 //   ? 'http://localhost:3000'
 //   : 'https://eth-singapore-woad.vercel.app';
