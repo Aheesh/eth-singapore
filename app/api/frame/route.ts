@@ -24,9 +24,11 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     accountAddress = message.interactor.verified_accounts[0];
     text = message.input || '';
 
-    let state = { frame: 'start', amount: '0' };
-    console.log('api/frame/route.ts : message.state before parsing =>', message.state);
-    
+    let state: { frame?: string; amount?: string; outcome?: string } = {
+      frame: 'start',
+      amount: '0',
+      outcome: 'Draw'
+    };
     if (message?.state?.serialized) {
       try {
         const parsedState = JSON.parse(decodeURIComponent(message.state.serialized));
