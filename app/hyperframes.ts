@@ -2,7 +2,7 @@ import { getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
 import { NEXT_PUBLIC_URL } from './config';
 
 export type HyperFrame = {
-  frame: string;
+  frame: string | ((text: string) => string);
   1: string | ((text: string) => string) | (() => string);
   2?: string | ((text: string) => string) | (() => string);
   3?: string | ((text: string) => string) | (() => string);
@@ -15,12 +15,16 @@ export function addHyperFrame(label: string, frame: HyperFrame) {
   frames[label] = frame;
 }
 
-export function getHyperFrame(frame: string, text: string, button: number) {
+export function getHyperFrame(
+  frame: string,
+  text: string,
+  buttonNumber?: number
+): string {
   console.log('hyperframes.ts : frame =>', frame);
   console.log('hyperframes.ts : frames =>', frames);
   const currentFrame = frames[frame];
   console.log('hyperframes.ts : currentFrame =>', currentFrame);
-  const nextFrameIdOrFunction = currentFrame[button as keyof HyperFrame];
+  const nextFrameIdOrFunction = currentFrame[buttonNumber as keyof HyperFrame];
   console.log('hyperframes.ts : nextFrameIdOrFunction =>', nextFrameIdOrFunction);
 
   let nextFrameId: string;
@@ -36,7 +40,13 @@ export function getHyperFrame(frame: string, text: string, button: number) {
 
   console.log('hyperframes.ts : nextFrameId =>', nextFrameId);
   console.log('hyperframes.ts : frames[nextFrameId] =>', frames[nextFrameId]);
-  return frames[nextFrameId].frame;
+  
+  const nextFrame = frames[nextFrameId].frame;
+  if (typeof nextFrame === 'function') {
+    return nextFrame(text);
+  } else {
+    return nextFrame;
+  }
 }
 
 addHyperFrame('start', {
@@ -79,7 +89,7 @@ addHyperFrame('Player-A', {
       },
       {
         action: 'tx',
-        label: '500 DEGEN',
+        label: '300 DEGEN',
         target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
@@ -93,9 +103,9 @@ addHyperFrame('Player-A', {
     state: { frame: 'Player-A' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: 'approve',
-  2: 'approve',
-  3: 'approve',
+  1: (text) => `approve?amount=100`,
+  2: (text) => `approve?amount=200`,
+  3: (text) => `approve?amount=300`,
   4: 'start',
 });
 
@@ -116,7 +126,7 @@ addHyperFrame('Player-B', {
       },
     ],
     image: {
-      src: `${NEXT_PUBLIC_URL}/cave-1.png`,
+      src: `${NEXT_PUBLIC_URL}/park-2.png`,
       aspectRatio: '1:1',
     },
     state: { frame: 'Player-B' },
@@ -145,7 +155,7 @@ addHyperFrame('Draw', {
       },
     ],
     image: {
-      src: `${NEXT_PUBLIC_URL}/cave-2.png`,
+      src: `${NEXT_PUBLIC_URL}/park-3.png`,
       aspectRatio: '1:1',
     },
     state: { frame: 'Draw' },
@@ -157,26 +167,33 @@ addHyperFrame('Draw', {
   4: 'start',
 });
 
+// Add a new frame for 'approve' that accepts a query parameter
 addHyperFrame('approve', {
-  frame: getFrameHtmlResponse({
-    buttons: [
-      {
-        action: 'tx',
-        label: 'Swap Approve',
-        target: `${NEXT_PUBLIC_URL}/api/swapTx`,
+  frame: (text) => {
+    const amount = new URL(text, 'http://dummy.com').searchParams.get('amount');
+    return getFrameHtmlResponse({
+      buttons: [
+        {
+          action: 'tx',
+          label: 'Swap Approve',
+          target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=${amount}`,
+        },
+        {
+          label: 'Cancel',
+        },
+      ],
+      image: {
+        src: `${NEXT_PUBLIC_URL}/park-4.png`,
+        aspectRatio: '1:1',
       },
-      {
-        label: 'Cancel',
-      },
-    ],
-    image: {
-      src: `${NEXT_PUBLIC_URL}/game1.webp`,
-      aspectRatio: '1:1',
-    },
-    state: { frame: 'approve' },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-  }),
-  1: 'txSuccess',
+      state: { frame: 'approve', amount },
+      postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+    });
+  },
+  1: (text) => {
+    const amount = new URL(text, 'http://dummy.com').searchParams.get('amount');
+    return `txSuccess?amount=${amount}`;
+  },
   2: 'start',
 });
 
