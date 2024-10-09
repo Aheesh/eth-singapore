@@ -1,18 +1,15 @@
-//Query Batchswap , display the token that will be swapped for the DEGEN amount selected in previous frame.
-
 import dotenv from 'dotenv';
 dotenv.config();
 import { NextRequest, NextResponse } from 'next/server';
 import { FrameRequest, getFrameMessage } from '@coinbase/onchainkit/frame';
 import { BalancerSDK, Network, SwapType, Swaps } from '@balancer-labs/sdk';
 import { BAL_VAULT_ADDR, DEGEN_ADDR, PLAYER_A_ADDR, POOL_ID } from '../../config';
-import { formatEther, parseUnits } from 'ethers'; // Ethers v6 imports
+import { formatEther, parseUnits } from 'ethers';
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/swapTx/route.ts : Swap Tx endpoint');
 
   let accountAddress: string | undefined = '';
-  let text: string | undefined = '';
   let walletAddress: string = '';
 
   const body: FrameRequest = await req.json();
@@ -27,21 +24,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/swapTx/route.ts :accountAddress =>', accountAddress);
   console.log('api/swapTx/route.ts :walletAddress =>', walletAddress);
   console.log('api/swapTx/route.ts : message =>', message);
-  console.log('api/swapTx/route.ts : button =>', message.interactor);
+  console.log('api/swapTx/route.ts : button =>', message.button);
 
   let state: { frame?: string; amount?: string } = {};
   try {
-    // First, try to parse from message.state
+    // Parse from message.state
     state = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
-    
-    // If amount is not in message.state, check X-Frame-State header
-    if (!state.amount) {
-      const frameState = req.headers.get('X-Frame-State');
-      if (frameState) {
-        const parsedFrameState = JSON.parse(decodeURIComponent(frameState));
-        state = { ...state, ...parsedFrameState };
-      }
-    }
   } catch (e) {
     console.error('Error parsing state:', e);
   }
@@ -65,7 +53,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     return new NextResponse('Button not found', { status: 404 });
   }
 
-  //QueryBatchSwap to get the expected amount of tokens Out for confirmation
+  // QueryBatchSwap to get the expected amount of tokens Out for confirmation
   const providerApiKey = process.env.BASE_PROVIDER_API_KEY;
 
   const sdk = new BalancerSDK({
@@ -79,7 +67,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('contracts', contracts.vault.address);
 
   const tokenIn = DEGEN_ADDR;
-  const tokenOut = PLAYER_A_ADDR; //TODO should be based on the option selected
+  const tokenOut = PLAYER_A_ADDR; // TODO: Make this dynamic based on user selection
 
   console.log('tokenIn', tokenIn);
   console.log('tokenOut', tokenOut);
@@ -128,7 +116,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   });
 
   console.log('encodeBatchSwapData', encodeBatchSwapData);
-  //convert encodeBatchSwapData to remove the leading 0x characters
+  // Convert encodeBatchSwapData to remove the leading 0x characters
   const hexSwapData = encodeBatchSwapData.slice(2);
   console.log('hexSwapData', hexSwapData);
 
@@ -141,7 +129,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('maxFeePerGas', maxFeePerGas);
   console.log('maxPriorityFeePerGas', maxPriorityFeePerGas);
 
-  //Frame Transaction
+  // Frame Transaction
   const txData = {
     chainId: `eip155:${Network.BASE}`,
     method: 'eth_sendTransaction',
