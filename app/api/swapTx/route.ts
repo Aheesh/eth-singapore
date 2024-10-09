@@ -9,49 +9,32 @@ import { formatEther, parseUnits } from 'ethers';
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/swapTx/route.ts : Swap Tx endpoint');
 
-  let accountAddress: string | undefined = '';
-  let walletAddress: string = '';
-
   const body: FrameRequest = await req.json();
   const { isValid, message } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
 
-  if (isValid) {
-    accountAddress = message.interactor.verified_accounts[0];
-    walletAddress = message.address || '';
-  } else {
+  if (!isValid) {
     return new NextResponse('Message not valid', { status: 500 });
   }
-  console.log('api/swapTx/route.ts :accountAddress =>', accountAddress);
-  console.log('api/swapTx/route.ts :walletAddress =>', walletAddress);
-  console.log('api/swapTx/route.ts : message =>', message);
-  console.log('api/swapTx/route.ts : button =>', message.button);
 
   let state: { frame?: string; amount?: string; outcome?: string } = {};
   try {
-    // Parse from message.state
     state = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
   } catch (e) {
     console.error('Error parsing state:', e);
   }
 
-  const amount = state.amount ? parseInt(state.amount) : 0;
+  const amount = state.amount || '0';
   console.log('api/swapTx/route.ts :amount =>', amount);
 
-  const value = String(parseUnits(amount.toString(), 18));
+  const value = parseUnits(amount, 18);
 
-  const frame = state.frame;
-  console.log('api/swapTx/route.ts :state =>', message.state);
-  console.log('api/swapTx/route.ts :frame =>', frame);
-  console.log('api/swapTx/route.ts :state.amount =>', state.amount);
+  const tokenIn = DEGEN_ADDR;
+  const tokenOut = state.outcome === 'Player-A' ? PLAYER_A_ADDR :
+                   state.outcome === 'Player-B' ? PLAYER_B_ADDR :
+                   DRAW_ADDR;
 
-  if (!frame) {
-    return new NextResponse('Frame not found', { status: 404 });
-  }
-
-  // There should always be a button number
-  if (!message?.button) {
-    return new NextResponse('Button not found', { status: 404 });
-  }
+  console.log('tokenIn', tokenIn);
+  console.log('tokenOut', tokenOut);
 
   // QueryBatchSwap to get the expected amount of tokens Out for confirmation
   const providerApiKey = process.env.BASE_PROVIDER_API_KEY;
@@ -66,20 +49,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const { contracts } = sdk;
   console.log('contracts', contracts.vault.address);
 
-  const tokenIn = DEGEN_ADDR;
-  const tokenOut = state.outcome === 'Player-A' ? PLAYER_A_ADDR : 
-                   state.outcome === 'Player-B' ? PLAYER_B_ADDR : 
-                   DRAW_ADDR; // Assuming you have these addresses defined
-
-  console.log('tokenIn', tokenIn);
-  console.log('tokenOut', tokenOut);
-
   const swaps = [
     {
       poolId: POOL_ID,
       assetInIndex: 0,
       assetOutIndex: 1,
-      amount: value,
+      amount: value.toString(),
       userData: '0x',
     },
   ];
@@ -101,7 +76,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         poolId: POOL_ID,
         assetInIndex: 0,
         assetOutIndex: 1,
-        amount: value,
+        amount: value.toString(),
         userData: '0x',
       },
     ],
@@ -109,8 +84,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
     funds: {
       fromInternalBalance: false,
-      recipient: walletAddress,
-      sender: walletAddress,
+      recipient: message.address || '',
+      sender: message.address || '',
       toInternalBalance: false,
     },
     limits: [value, '0'],
@@ -146,10 +121,14 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   };
   console.log('txData', txData);
 
+  // At the end of the function, update the state and return the response
+  state.frame = 'txSuccess';
+  const updatedSerializedState = encodeURIComponent(JSON.stringify(state));
+
   return NextResponse.json({
     ...txData,
     state: {
-      serialized: encodeURIComponent(JSON.stringify({ ...state, frame: 'txSuccess' })),
+      serialized: updatedSerializedState,
     },
     postUrl: `${process.env.NEXT_PUBLIC_URL}/api/frame`,
   });
