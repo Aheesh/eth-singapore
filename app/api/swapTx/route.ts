@@ -16,13 +16,18 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     return new NextResponse('Message not valid', { status: 500 });
   }
 
-  let state: { frame?: string; amount?: string; outcome?: string } = {};
-  try {
-    if (message.state?.serialized) {
-      state = JSON.parse(decodeURIComponent(message.state.serialized));
+  let state: { frame?: string; amount?: string; outcome?: string } = {
+    frame: 'start',
+    amount: '0',
+    outcome: 'Draw'
+  };
+  if (message?.state?.serialized) {
+    try {
+      const parsedState = JSON.parse(decodeURIComponent(message.state.serialized));
+      state = { ...state, ...parsedState };
+    } catch (e) {
+      console.error('Error parsing state:', e);
     }
-  } catch (e) {
-    console.error('Error parsing state:', e);
   }
 
   const amount = state.amount || '0';

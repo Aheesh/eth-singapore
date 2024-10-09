@@ -21,14 +21,14 @@ export function getHyperFrame(frame: string, text: string, button: number, exist
   const nextFrameIdOrFunction = currentFrame[button as keyof HyperFrame];
 
   let nextFrameId: string;
-  let newState: any = {};
+  let newState: any = { ...existingState };
   if (typeof nextFrameIdOrFunction === 'function') {
     const result = nextFrameIdOrFunction(text, existingState);
     if (typeof result === 'string') {
       nextFrameId = result;
     } else if (typeof result === 'object' && result !== null && 'frame' in result) {
       nextFrameId = result.frame;
-      newState = result;
+      newState = { ...newState, ...result };
     } else {
       throw new Error('Invalid result from nextFrameIdOrFunction');
     }
@@ -38,10 +38,11 @@ export function getHyperFrame(frame: string, text: string, button: number, exist
     throw new Error('Invalid nextFrameIdOrFunction type');
   }
 
-  const mergedState = { ...existingState, ...newState, frame: nextFrameId };
+  newState.frame = nextFrameId;
+  const serializedState = encodeURIComponent(JSON.stringify(newState));
   const newFrameResponse = frames[nextFrameId].frame.replace(
     /"state":\s*{[^}]*}/,
-    `"state": ${JSON.stringify(mergedState)}`
+    `"state": {"serialized": "${serializedState}"}`
   );
   return newFrameResponse;
 }
@@ -81,10 +82,10 @@ addHyperFrame('selectAmount', {
     state: { frame: 'selectAmount' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: (text) => ({ frame: 'approve', amount: '100' }),
-  2: (text) => ({ frame: 'approve', amount: '200' }),
-  3: (text) => ({ frame: 'approve', amount: '300' }),
-  4: 'start',
+  1: (text, state) => ({ ...state, frame: 'approve', amount: '100' }),
+  2: (text, state) => ({ ...state, frame: 'approve', amount: '200' }),
+  3: (text, state) => ({ ...state, frame: 'approve', amount: '300' }),
+  4: (text, state) => ({ ...state, frame: 'start' }),
 });
 
 addHyperFrame('approve', {
