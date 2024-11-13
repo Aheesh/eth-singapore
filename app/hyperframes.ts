@@ -26,9 +26,18 @@ export function getHyperFrame(
   buttonNumber?: number,
   existingState: any = {}
 ): string {
-  console.log('hyperframes.ts : frame =>', frame);
+  // Extract base frame name and query params
+  const [baseFrame, queryString] = frame.split('?');
+  const params = new URLSearchParams(queryString || '');
+  
+  console.log('hyperframes.ts : baseFrame =>', baseFrame);
   console.log('hyperframes.ts : frames =>', frames);
-  const currentFrame = frames[frame];
+  
+  const currentFrame = frames[baseFrame];
+  if (!currentFrame) {
+    throw new Error(`Frame not found: ${baseFrame}`);
+  }
+
   console.log('hyperframes.ts : currentFrame =>', currentFrame);
   const nextFrameIdOrFunction = currentFrame[buttonNumber as keyof HyperFrame];
   console.log('hyperframes.ts : nextFrameIdOrFunction =>', nextFrameIdOrFunction);
@@ -181,7 +190,14 @@ addHyperFrame('Draw', {
 // Add a new frame for 'approve' that accepts a query parameter
 addHyperFrame('approve', {
   frame: (text) => {
-    const amount = new URL(text, 'http://dummy.com').searchParams.get('amount');
+    // If text contains query params, use those, otherwise try to get from URL
+    let amount;
+    try {
+      amount = new URL(text, 'http://dummy.com').searchParams.get('amount') || '100';
+    } catch {
+      amount = '100'; // fallback
+    }
+    
     return getFrameHtmlResponse({
       buttons: [
         {
@@ -201,11 +217,7 @@ addHyperFrame('approve', {
       postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
     });
   },
-  1: (text) => {
-    const amount = new URL(text, 'http://dummy.com').searchParams.get('amount');
-    return `txSuccess?amount=${amount}`;
-  },
-
+  1: 'txSuccess',
   2: 'start',
 });
 
