@@ -208,7 +208,7 @@ addHyperFrame('approve', {
         },
       ],
       image: {
-        src: `${NEXT_PUBLIC_URL}/park-4.png`,
+        src: `${NEXT_PUBLIC_URL}/confirm-swap.webp`,
         aspectRatio: '1:1',
       },
       state: { frame: 'approve', amount },
