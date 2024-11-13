@@ -1,15 +1,16 @@
 import { getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
 import { NEXT_PUBLIC_URL, DEGEN_ADDR, BAL_VAULT_ADDR, POOL_ID } from './config';
 
+// Add this type definition
+type FrameResult = string | { frame: string; [key: string]: any };
+
 // Update the HyperFrame type definition
 export type HyperFrame = {
-
   frame: string | ((text: string) => string);
-  1: string | ((text: string) => string) | (() => string);
-  2?: string | ((text: string) => string) | (() => string);
-  3?: string | ((text: string) => string) | (() => string);
-  4?: string | ((text: string) => string) | (() => string);
-
+  1: string | ((text: string, state?: any) => FrameResult) | (() => string);
+  2?: string | ((text: string, state?: any) => FrameResult) | (() => string);
+  3?: string | ((text: string, state?: any) => FrameResult) | (() => string);
+  4?: string | ((text: string, state?: any) => FrameResult) | (() => string);
 };
 
 const frames: Record<string, HyperFrame> = {};
@@ -22,7 +23,8 @@ export function addHyperFrame(label: string, frame: HyperFrame) {
 export function getHyperFrame(
   frame: string,
   text: string,
-  buttonNumber?: number
+  buttonNumber?: number,
+  existingState: any = {}
 ): string {
   console.log('hyperframes.ts : frame =>', frame);
   console.log('hyperframes.ts : frames =>', frames);
