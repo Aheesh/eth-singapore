@@ -101,7 +101,6 @@ addHyperFrame('start', {
 addHyperFrame('selectAmount', {
   frame: getFrameHtmlResponse({
     buttons: [
-
       {
         action: 'tx',
         label: '100 DEGEN',
@@ -120,7 +119,6 @@ addHyperFrame('selectAmount', {
       {
         label: 'CANCEL',
       },
-
     ],
     image: {
       src: `${NEXT_PUBLIC_URL}/select-amount.webp`,
@@ -129,9 +127,9 @@ addHyperFrame('selectAmount', {
     state: { frame: 'selectAmount' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: (text) => `approve?amount=100`,
-  2: (text) => `approve?amount=200`,
-  3: (text) => `approve?amount=300`,
+  1: (text) => ({ frame: 'approve', amount: '100' }),
+  2: (text) => ({ frame: 'approve', amount: '200' }),
+  3: (text) => ({ frame: 'approve', amount: '300' }),
   4: 'start',
 });
 
