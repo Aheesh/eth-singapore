@@ -6,14 +6,16 @@ import { getHyperFrame } from '../../hyperframes';
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/frame/route.ts : Base Frame endpoint');
 
-  try {
-    let accountAddress: string | undefined = '';
-    let text: string | undefined = '';
+  let accountAddress: string | undefined = '';
+  let text: string | undefined = '';
+  let message: any;
 
+  try {
     const body: FrameRequest = await req.json();
     console.log('Received body:', body);
 
-    const { isValid, message } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
+    const { isValid, message: frameMessage } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
+    message = frameMessage;
     console.log('Frame message validation result:', { isValid, message });
 
     if (!isValid) {
@@ -22,25 +24,26 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     }
 
     accountAddress = message.interactor.verified_accounts[0];
-    text = message.input || '';
+  } catch (error) {
+    return new NextResponse('Message not valid', { status: 500 });
+  }
 
-    let state: { frame?: string; amount?: string; outcome?: string } = {
-      frame: 'start',
-      amount: '0',
-      outcome: 'Draw'
-    };
-    if (message?.state?.serialized) {
-      try {
-        const parsedState = JSON.parse(decodeURIComponent(message.state.serialized));
-        state = { ...state, ...parsedState };
-      } catch (e) {
-        console.error('Error parsing state:', e);
-      }
-    }
+  if (message?.input) {
+    text = message.input;
+  }
 
-    console.log('api/frame/route.ts : after parsing ==> state =>', state);
+  let state = { frame: 'start' };
 
-    const frame = state.frame;
+  try {
+    state = JSON.parse(decodeURIComponent(message.state?.serialized));
+  } catch (e) {
+    console.error(e);
+  }
+
+  console.log('api/frame/route.ts : after try catch ==> state =>', state.frame);
+  const frame = state.frame;
+  console.log('api/frame/route.ts : state =>', message.state);
+  console.log('api/frame/route.ts : frame =>', frame);
 
     if (!frame) {
       console.error('Frame not found');
@@ -52,16 +55,10 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Button not found' }, { status: 400 });
     }
 
-    const hyperFrameResponse = getHyperFrame(frame as string, text, message.button, state);
+    const hyperFrameResponse = getHyperFrame(frame as string, text ?? '', message.button);
     console.log('HyperFrame response:', hyperFrameResponse);
 
-    // No redirect logic here; let the frame flow handle transitions based on transaction responses
-
     return new NextResponse(hyperFrameResponse);
-  } catch (error) {
-    console.error('Error in getResponse:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
