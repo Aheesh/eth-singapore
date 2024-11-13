@@ -45,20 +45,22 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/frame/route.ts : state =>', message.state);
   console.log('api/frame/route.ts : frame =>', frame);
 
-    if (!frame) {
-      console.error('Frame not found');
-      return NextResponse.json({ error: 'Frame not found' }, { status: 404 });
-    }
+  const baseFrame = frame.split('?')[0];
 
-    if (!message?.button) {
-      console.error('Button not found');
-      return NextResponse.json({ error: 'Button not found' }, { status: 400 });
-    }
+  if (!baseFrame) {
+    console.error('Frame not found');
+    return NextResponse.json({ error: 'Frame not found' }, { status: 404 });
+  }
 
-    const hyperFrameResponse = getHyperFrame(frame as string, text ?? '', message.button);
-    console.log('HyperFrame response:', hyperFrameResponse);
+  if (!message?.button) {
+    console.error('Button not found');
+    return NextResponse.json({ error: 'Button not found' }, { status: 400 });
+  }
 
-    return new NextResponse(hyperFrameResponse);
+  const hyperFrameResponse = getHyperFrame(baseFrame as string, text ?? '', message.button);
+  console.log('HyperFrame response:', hyperFrameResponse);
+
+  return new NextResponse(hyperFrameResponse);
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
