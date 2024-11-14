@@ -29,19 +29,15 @@ export function getHyperFrame(
   // Extract base frame name and query params
   const [baseFrame, queryString] = frame.split('?');
   const params = new URLSearchParams(queryString || '');
-  
-  console.log('hyperframes.ts : baseFrame =>', baseFrame);
-  console.log('hyperframes.ts : frames =>', frames);
-  
   const currentFrame = frames[baseFrame];
   if (!currentFrame) {
     throw new Error(`Frame not found: ${baseFrame}`);
   }
-
   console.log('hyperframes.ts : currentFrame =>', currentFrame);
+  console.log('hyperframes.ts : baseFrame =>', baseFrame);
+  console.log('hyperframes.ts : frames =>', frames);
+  
   const nextFrameIdOrFunction = currentFrame[buttonNumber as keyof HyperFrame];
-  console.log('hyperframes.ts : nextFrameIdOrFunction =>', nextFrameIdOrFunction);
-
 
   let nextFrameId: string;
   let newState: any = { ...existingState };

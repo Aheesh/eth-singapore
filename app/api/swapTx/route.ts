@@ -19,9 +19,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('Raw state:', message?.state?.serialized);
 
   let state: { frame?: string; amount?: string; outcome?: string } = {
-    frame: 'start',
-    amount: '0',
-    outcome: 'Draw'
+    frame: 'start'
   };
   if (message?.state?.serialized) {
     try {
