@@ -30,10 +30,14 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     }
   }
 
-  const amount = state.amount || '0';
-  const outcome = state.outcome || 'Draw';
+  const amount = state.amount;
+  const outcome = state.outcome ;
   console.log('api/swapTx/route.ts :amount =>', amount);
   console.log('api/swapTx/route.ts :outcome =>', outcome);
+
+  if (!amount) {
+    return new NextResponse('Amount is required', { status: 400 });
+  }
 
   const value = parseUnits(amount, 18);
 
