@@ -59,9 +59,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   // Update the state with the new amount
   state.amount = amount.toString();
-  state.frame = 'confirmSwap'; // Set the next frame to confirmSwap
+  state.frame = 'approve'; // Change from 'confirmSwap' to 'approve'
 
-  amount = message.button * 1;
+
   console.log('api/approveTx/route.ts :amount =>', amount);
 
   const value = parseUnits(amount.toString(), 18);
