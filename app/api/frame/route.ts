@@ -4,7 +4,7 @@ import { NEXT_PUBLIC_URL } from '../../config';
 import { getHyperFrame } from '../../hyperframes';
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
-  console.log('api/frame/route.ts : Base Frame endpoint');
+  console.log('api/frame/route.ts :  START ');
 
   let accountAddress: string | undefined = '';
   let text: string | undefined = '';
