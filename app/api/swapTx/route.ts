@@ -16,6 +16,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     return new NextResponse('Message not valid', { status: 500 });
   }
 
+  console.log('Raw state:', message?.state?.serialized);
+
   let state: { frame?: string; amount?: string; outcome?: string } = {
     frame: 'start',
     amount: '0',

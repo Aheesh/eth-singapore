@@ -99,7 +99,7 @@ addHyperFrame('start', {
 });
 
 addHyperFrame('selectAmount', {
-  frame: getFrameHtmlResponse({
+  frame: (text, state?: any) => getFrameHtmlResponse({
     buttons: [
       {
         action: 'tx',
@@ -124,7 +124,7 @@ addHyperFrame('selectAmount', {
       src: `${NEXT_PUBLIC_URL}/select-amount.webp`,
       aspectRatio: '1:1',
     },
-    state: { frame: 'selectAmount' },
+    state: { frame: 'selectAmount', outcome: state?.outcome },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
   1: (text) => ({ frame: 'approve', amount: '100' }),
@@ -133,7 +133,7 @@ addHyperFrame('selectAmount', {
   4: 'start',
 });
 
-addHyperFrame('Player-B', {
+/*addHyperFrame('Player-B', {
   frame: getFrameHtmlResponse({
     buttons: [
       {
@@ -183,12 +183,11 @@ addHyperFrame('Draw', {
   }),
   1: 'confirmSwap',
   2: 'start',
-});
+});*/
 
 // Add a new frame for 'approve' that accepts a query parameter
 addHyperFrame('approve', {
-  frame: (text) => {
-    // If text contains query params, use those, otherwise try to get from URL
+  frame: (text, state?: any) => {
     let amount;
     try {
       amount = new URL(text, 'http://dummy.com').searchParams.get('amount') || '100';
@@ -211,7 +210,7 @@ addHyperFrame('approve', {
         src: `${NEXT_PUBLIC_URL}/confirm-swap.webp`,
         aspectRatio: '1:1',
       },
-      state: { frame: 'approve', amount },
+      state: { frame: 'approve', amount, outcome: state?.outcome },
       postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
     });
   },
