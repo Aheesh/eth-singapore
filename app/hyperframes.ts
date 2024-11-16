@@ -141,12 +141,7 @@ addHyperFrame('selectAmount', {
 // Add a new frame for 'approve' that accepts a query parameter
 addHyperFrame('approve', {
   frame: (text, state?: any) => {
-    let amount;
-    try {
-      amount = new URL(text, 'http://dummy.com').searchParams.get('amount') || '100';
-    } catch {
-      amount = '100'; // fallback
-    }
+    const amount = state?.amount || '1'; // Default to '1' if no amount in state
     
     return getFrameHtmlResponse({
       buttons: [
