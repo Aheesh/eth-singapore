@@ -126,9 +126,9 @@ addHyperFrame('selectAmount', {
     },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: (text, state) => ({ frame: 'approve', amount: '1', outcome: state?.outcome }),
+  1: (text, state) => ({ frame: 'approve', amount: '3', outcome: state?.outcome }),
   2: (text, state) => ({ frame: 'approve', amount: '2', outcome: state?.outcome }),
-  3: (text, state) => ({ frame: 'approve', amount: '3', outcome: state?.outcome }),
+  3: (text, state) => ({ frame: 'approve', amount: '1', outcome: state?.outcome }),
   4: 'start',
 });
 
