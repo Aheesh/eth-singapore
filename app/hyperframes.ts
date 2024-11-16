@@ -120,7 +120,10 @@ addHyperFrame('selectAmount', {
       src: `${NEXT_PUBLIC_URL}/select-amount.webp`,
       aspectRatio: '1:1',
     },
-    state: { frame: 'selectAmount', outcome: state?.outcome },
+    state: { 
+      frame: 'selectAmount', 
+      outcome: state?.outcome 
+    },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
   1: (text, state) => ({ frame: 'approve', amount: '1', outcome: state?.outcome }),

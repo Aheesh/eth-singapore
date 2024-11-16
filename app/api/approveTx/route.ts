@@ -61,7 +61,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   state = {
     ...state,
     amount: amount.toString(),
-    frame: 'approve'
+    frame: 'approve',
+    outcome: state.outcome
   };
 
   console.log('api/approveTx/route.ts :amount =>', amount);
