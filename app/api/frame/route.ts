@@ -40,9 +40,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     console.error(e);
   }
 
-  console.log('api/frame/route.ts : after try catch ==> state =>', state.frame);
   const frame = state.frame;
-  console.log('api/frame/route.ts : state =>', message.state);
+  console.log('api/frame/route.ts : state =>', state);
   console.log('api/frame/route.ts : frame =>', frame);
 
   const hyperFrameResponse = getHyperFrame(frame as string, text ?? '', message.button, state);

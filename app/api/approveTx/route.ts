@@ -53,7 +53,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   // Parse the existing state
   let state: State = {};
   try {
-    state = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
+    const parsedState = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
+    console.log('api/approveTx/route.ts : parsed state =>', parsedState);
+    state = parsedState;
   } catch (e) {
     console.error('Error parsing state:', e);
   }
@@ -61,12 +63,11 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   // Update the state with the new amount while preserving existing state
   state = {
     ...state,
-    amount: amount.toString(),
     frame: 'approve',
-    outcome: state.outcome
+    amount: amount.toString(),
   };
 
-  console.log('api/approveTx/route.ts :amount =>', amount);
+  console.log('api/approveTx/route.ts : updated state =>', state);
 
   const value = parseUnits(amount.toString(), 18);
   console.log('api/approveTx/route.ts :value =>', value);
