@@ -6,7 +6,7 @@ type FrameResult = string | { frame: string; [key: string]: any };
 
 // Update the HyperFrame type definition
 export type HyperFrame = {
-  frame: string | ((text: string) => string);
+  frame: string | ((text: string, state?: any) => string);
   1: string | ((text: string, state?: any) => FrameResult) | (() => string);
   2?: string | ((text: string, state?: any) => FrameResult) | (() => string);
   3?: string | ((text: string, state?: any) => FrameResult) | (() => string);
@@ -26,6 +26,9 @@ export function getHyperFrame(
   buttonNumber?: number,
   existingState: any = {}
 ): string {
+  // Add debug logging
+  console.log('getHyperFrame existingState:', existingState);
+  
   // Extract base frame name and query params
   const [baseFrame, queryString] = frame.split('?');
   const params = new URLSearchParams(queryString || '');
@@ -67,7 +70,9 @@ export function getHyperFrame(
   
   const nextFrame = frames[nextFrameId].frame;
   if (typeof nextFrame === 'function') {
-    return nextFrame(text);
+    // Add debug logging
+    console.log('Calling nextFrame function with text and state:', { text, newState });
+    return nextFrame(text, newState);
   } else {
     return nextFrame;
   }

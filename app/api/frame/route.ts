@@ -40,6 +40,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     console.error(e);
   }
 
+  console.log('Raw state:', message?.state?.serialized);
   const frame = state.frame;
   console.log('api/frame/route.ts : state =>', state);
   console.log('api/frame/route.ts : frame =>', frame);
