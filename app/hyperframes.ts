@@ -104,17 +104,17 @@ addHyperFrame('selectAmount', {
     buttons: [
       {
         action: 'tx',
-        label: '100 DEGEN',
+        label: '1 DEGEN',
         target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
         action: 'tx',
-        label: '200 DEGEN',
+        label: '2 DEGEN',
         target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
         action: 'tx',
-        label: '300 DEGEN',
+        label: '3 DEGEN',
         target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
@@ -131,9 +131,9 @@ addHyperFrame('selectAmount', {
     },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: (text, state) => ({ frame: 'approve', amount: '3', outcome: state?.outcome }),
+  1: (text, state) => ({ frame: 'approve', amount: '1', outcome: state?.outcome }),
   2: (text, state) => ({ frame: 'approve', amount: '2', outcome: state?.outcome }),
-  3: (text, state) => ({ frame: 'approve', amount: '1', outcome: state?.outcome }),
+  3: (text, state) => ({ frame: 'approve', amount: '3', outcome: state?.outcome }),
   4: 'start',
 });
 
