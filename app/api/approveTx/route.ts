@@ -57,10 +57,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     console.error('Error parsing state:', e);
   }
 
-  // Update the state with the new amount
-  state.amount = amount.toString();
-  state.frame = 'approve'; // Change from 'confirmSwap' to 'approve'
-
+  // Update the state with the new amount while preserving existing state
+  state = {
+    ...state,
+    amount: amount.toString(),
+    frame: 'approve'
+  };
 
   console.log('api/approveTx/route.ts :amount =>', amount);
 
