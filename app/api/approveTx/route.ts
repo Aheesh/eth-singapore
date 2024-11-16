@@ -21,6 +21,7 @@ import {
 export type State = {
   frame?: string;
   amount?: string;
+  outcome?: string;
   [key: string]: any;
 };
 

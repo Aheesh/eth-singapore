@@ -121,7 +121,7 @@ addHyperFrame('selectAmount', {
       aspectRatio: '1:1',
     },
     state: { 
-      frame: 'selectAmount', 
+      frame: 'selectAmount',
       outcome: state?.outcome 
     },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
