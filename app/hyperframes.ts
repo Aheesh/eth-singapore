@@ -169,8 +169,7 @@ addHyperFrame('approve', {
 addHyperFrame('txSuccess', {
   frame: getFrameHtmlResponse({
     buttons: [
-      { label: 'SUCCESS' },
-      { label: 'Start Again' },
+      { label: 'Start Again' }
     ],
     image: {
       src: `${NEXT_PUBLIC_URL}/tx-success.webp`,
@@ -179,6 +178,5 @@ addHyperFrame('txSuccess', {
     state: { frame: 'txSuccess' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: 'start',
-  2: 'start',
+  1: 'start'
 });
