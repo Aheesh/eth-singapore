@@ -29,6 +29,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       console.error('Error parsing state:', e);
     }
   }
+  console.log('api/swapTx/route.ts :state =>', state);
 
   const amount = state.amount;
   const outcome = state.outcome ;

@@ -123,63 +123,12 @@ addHyperFrame('selectAmount', {
     state: { frame: 'selectAmount', outcome: state?.outcome },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: (text) => ({ frame: 'approve', amount: '100' }),
-  2: (text) => ({ frame: 'approve', amount: '200' }),
-  3: (text) => ({ frame: 'approve', amount: '300' }),
+  1: (text, state) => ({ frame: 'approve', amount: '100', outcome: state?.outcome }),
+  2: (text, state) => ({ frame: 'approve', amount: '200', outcome: state?.outcome }),
+  3: (text, state) => ({ frame: 'approve', amount: '300', outcome: state?.outcome }),
   4: 'start',
 });
 
-/*addHyperFrame('Player-B', {
-  frame: getFrameHtmlResponse({
-    buttons: [
-      {
-        label: '100 DEGEN',
-      },
-      {
-        label: '200 DEGEN',
-      },
-      {
-        label: '500 DEGEN',
-      },
-      {
-        label: 'CANCEL',
-      },
-    ],
-    image: {
-      src: `${NEXT_PUBLIC_URL}/park-2.png`,
-      aspectRatio: '1:1',
-    },
-    state: { frame: 'Player-B' },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-  }),
-  1: 'approve',
-  2: 'approve',
-  3: 'approve',
-  4: 'start',
-});
-
-addHyperFrame('Draw', {
-
-  frame: getFrameHtmlResponse({
-    buttons: [
-      {
-        action: 'tx',
-        label: 'Approve DEGEN',
-        target: `${NEXT_PUBLIC_URL}/api/approveTx`,
-      },
-      { label: 'Cancel' },
-    ],
-    image: {
-      src: `${NEXT_PUBLIC_URL}/park-3.png`,
-
-      aspectRatio: '1:1',
-    },
-    state: { frame: 'approve' },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-  }),
-  1: 'confirmSwap',
-  2: 'start',
-});*/
 
 // Add a new frame for 'approve' that accepts a query parameter
 addHyperFrame('approve', {
