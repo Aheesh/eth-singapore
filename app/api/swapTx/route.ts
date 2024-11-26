@@ -40,6 +40,10 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     return new NextResponse('Amount is required', { status: 400 });
   }
 
+  if (!outcome) {
+    return new NextResponse('Outcome is required', { status: 400 });
+  }
+
   const value = parseUnits(amount, 18);
 
   const tokenIn = DEGEN_ADDR;
