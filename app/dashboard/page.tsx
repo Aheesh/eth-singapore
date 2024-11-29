@@ -48,61 +48,91 @@ export default function Dashboard() {
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4">Token Holdings</h2>
           
-          <div className="grid gap-4">
-            {/* Player A */}
-            <div>
-              <h3 className="font-medium text-blue-600">Player A Holdings</h3>
-              <div className="mt-2 space-y-2">
+          {/* Player A Table */}
+          <div>
+            <h3 className="font-medium text-blue-600 mb-2">Player A Holdings</h3>
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr>
+                  <th className="border-b py-2">Address</th>
+                  <th className="border-b py-2">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
                 {blockchainData.address.playerA.map((holder, index) => (
-                  <div key={index} className="flex justify-between border-b pb-2">
-                    <span className="text-sm font-mono">{holder.address}</span>
-                    <span className="font-medium">{Number(holder.balance).toFixed(4)}</span>
-                  </div>
+                  <tr key={index}>
+                    <td className="border-b py-2 font-mono">{holder.address}</td>
+                    <td className="border-b py-2">{Number(holder.balance).toFixed(4)}</td>
+                  </tr>
                 ))}
-              </div>
-            </div>
+              </tbody>
+            </table>
+          </div>
 
-            {/* Player B */}
-            <div>
-              <h3 className="font-medium text-green-600">Player B Holdings</h3>
-              <div className="mt-2 space-y-2">
+          {/* Player B Table */}
+          <div className="mt-4">
+            <h3 className="font-medium text-green-600 mb-2">Player B Holdings</h3>
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr>
+                  <th className="border-b py-2">Address</th>
+                  <th className="border-b py-2">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
                 {blockchainData.address.playerB.map((holder, index) => (
-                  <div key={index} className="flex justify-between border-b pb-2">
-                    <span className="text-sm font-mono">{holder.address}</span>
-                    <span className="font-medium">{Number(holder.balance).toFixed(4)}</span>
-                  </div>
+                  <tr key={index}>
+                    <td className="border-b py-2 font-mono">{holder.address}</td>
+                    <td className="border-b py-2">{Number(holder.balance).toFixed(4)}</td>
+                  </tr>
                 ))}
-              </div>
-            </div>
+              </tbody>
+            </table>
+          </div>
 
-            {/* Draw */}
-            <div>
-              <h3 className="font-medium text-purple-600">Draw Holdings</h3>
-              <div className="mt-2 space-y-2">
+          {/* Draw Table */}
+          <div className="mt-4">
+            <h3 className="font-medium text-purple-600 mb-2">Draw Holdings</h3>
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr>
+                  <th className="border-b py-2">Address</th>
+                  <th className="border-b py-2">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
                 {blockchainData.address.draw.map((holder, index) => (
-                  <div key={index} className="flex justify-between border-b pb-2">
-                    <span className="text-sm font-mono">{holder.address}</span>
-                    <span className="font-medium">{Number(holder.balance).toFixed(4)}</span>
-                  </div>
+                  <tr key={index}>
+                    <td className="border-b py-2 font-mono">{holder.address}</td>
+                    <td className="border-b py-2">{Number(holder.balance).toFixed(4)}</td>
+                  </tr>
                 ))}
-              </div>
-            </div>
+              </tbody>
+            </table>
           </div>
         </div>
 
         {/* Pool Balance Section */}
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-xl font-semibold mb-4">Pool Balance</h2>
-          <div className="space-y-2">
-            {blockchainData.poolBalance.tokens.map((token, index) => (
-              <div key={index} className="flex justify-between border-b pb-2">
-                <span className="text-sm font-mono">{token}</span>
-                <span className="font-medium">
-                  {Number(blockchainData.poolBalance.balances[index]).toFixed(4)}
-                </span>
-              </div>
-            ))}
-          </div>
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr>
+                <th className="border-b py-2">Token Address</th>
+                <th className="border-b py-2">Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {blockchainData.poolBalance.tokens.map((token, index) => (
+                <tr key={index}>
+                  <td className="border-b py-2 font-mono">{token}</td>
+                  <td className="border-b py-2">
+                    {Number(blockchainData.poolBalance.balances[index]).toFixed(4)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           <div className="mt-4 text-sm text-gray-600">
             Last Change Block: {blockchainData.poolBalance.lastChangeBlock}
           </div>
