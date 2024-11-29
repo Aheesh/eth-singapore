@@ -7,18 +7,12 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch from your new API routes
-        const [addressResponse, balanceResponse] = await Promise.all([
-          fetch('/api/getAddressBlockscout'),
-          fetch('/api/balancerPool')
-        ]);
-
-        const addressData = await addressResponse.json();
-        const balanceData = await balanceResponse.json();
-
+        const response = await fetch('/api/blockchain');
+        const data = await response.json();
+        
         setBlockchainData({
-          address: addressData.data,
-          balance: balanceData.balance
+          address: data.address,
+          poolBalance: data.poolBalance
         });
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -38,7 +32,7 @@ export default function Dashboard() {
           </div>
           <div className="mb-4">
             <label className="font-medium">Pool Balance:</label>
-            <p>{JSON.stringify(blockchainData.balance)}</p>
+            <p>{JSON.stringify(blockchainData.poolBalance)}</p>
           </div>
         </>
       )}
