@@ -29,10 +29,18 @@ export async function GET() {
             getPoolBalance()
         ]);
 
-        return NextResponse.json({
-            address,
-            poolBalance,
-        });
+        return NextResponse.json(
+            {
+                address,
+                poolBalance,
+            },
+            {
+                headers: {
+                    'Cache-Control': 'no-store, no-cache, must-revalidate',
+                    'Pragma': 'no-cache',
+                }
+            }
+        );
     } catch (error) {
         console.error("API Error:", error);
         return NextResponse.json(
