@@ -2,26 +2,26 @@ import { getFrameMetadata } from '@coinbase/onchainkit/frame';
 import type { Metadata } from 'next';
 import { NEXT_PUBLIC_URL } from './config';
 import Link from 'next/link';
+import { getOdds } from '../app/lib/odds';
+
+const odds = getOdds();
 
 const frameMetadata = getFrameMetadata({
   buttons: [
     {
-      label: 'Player-A',
+      label: `Ding (${odds.playerA}x)`,
     },
     {
-      label: 'Player-B',
+      label: `Gukesh (${odds.playerB}x)`,
     },
     {
-      label: 'Draw',
+      label: `Draw (${odds.draw}x)`,
     },
   ],
   image: {
-    src: `${NEXT_PUBLIC_URL}/game1.webp`,
+    src: `${NEXT_PUBLIC_URL}/api/generateImage`,
     aspectRatio: '1:1',
   },
-  // input: {
-  //   text: 'Tell me a story',
-  // },
   postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
 });
 

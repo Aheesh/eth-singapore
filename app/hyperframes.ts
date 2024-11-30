@@ -86,8 +86,8 @@ addHyperFrame('start', {
     
     return getFrameHtmlResponse({
       buttons: [
-        { label: 'Player A' },
-        { label: 'Player B' },
+        { label: 'Ding' },
+        { label: 'Gukesh' },
         { label: 'Draw' },
       ],
       image: {
@@ -98,8 +98,8 @@ addHyperFrame('start', {
       postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
     });
   },
-  1: (text) => ({ frame: 'selectAmount', outcome: 'Player-A' }),
-  2: (text) => ({ frame: 'selectAmount', outcome: 'Player-B' }),
+  1: (text) => ({ frame: 'selectAmount', outcome: 'Ding' }),
+  2: (text) => ({ frame: 'selectAmount', outcome: 'Gukesh' }),
   3: (text) => ({ frame: 'selectAmount', outcome: 'Draw' }),
 });
 
