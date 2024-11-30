@@ -37,5 +37,5 @@ export async function generateStartFrame(data: OddsData) {
       <text x="200" y="450" font-family="Arial" font-size="36" font-weight="bold" fill="white">DEGEN Pool size = ${data.poolSize} DEGEN</text>
     </svg>`.trim();
 
-  return svgResponse(svg);
+  return svg;
 } 

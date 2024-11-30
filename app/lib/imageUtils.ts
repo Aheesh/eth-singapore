@@ -1,10 +1,11 @@
 export function svgResponse(svg: string) {
-  return new Response(svg, {
+  const encodedSvg = encodeURIComponent(svg);
+  const dataUrl = `data:image/svg+xml,${encodedSvg}`;
+
+  return new Response(dataUrl, {
     headers: {
-      'Content-Type': 'image/svg+xml',
+      'Content-Type': 'text/plain',
       'Cache-Control': 'public, max-age=10',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, OPTIONS',
     },
   });
 } 

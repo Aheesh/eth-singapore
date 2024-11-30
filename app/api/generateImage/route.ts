@@ -7,8 +7,14 @@ export const runtime = 'edge';
 export async function GET() {
   try {
     const oddsData = getOdds();
-    const response = await generateStartFrame(oddsData);
-    return response;
+    const svgContent = await generateStartFrame(oddsData);
+    
+    return new Response(svgContent, {
+      headers: {
+        'Content-Type': 'image/svg+xml',
+        'Cache-Control': 'public, max-age=10',
+      },
+    });
   } catch (error) {
     console.error('Error generating image:', error);
     return NextResponse.json({ error: 'Failed to generate image' }, { status: 500 });
