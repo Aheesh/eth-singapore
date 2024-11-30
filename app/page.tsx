@@ -19,7 +19,7 @@ const frameMetadata = getFrameMetadata({
     },
   ],
   image: {
-    src: `${NEXT_PUBLIC_URL}/api/generateImage`,
+    src: `${NEXT_PUBLIC_URL}/game-1.webp`,
     aspectRatio: '1:1',
   },
   postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
