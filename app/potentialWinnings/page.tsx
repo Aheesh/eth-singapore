@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { BAL_VAULT_ADDR, DEGEN_ADDR } from '../config';
 
 interface WinningsData {
   totalPrizePool: number;
@@ -10,8 +11,6 @@ interface WinningsData {
   };
 }
 
-const BAL_VAULT_ADDR = '0xba12222222228d8ba445958a75a0704d566bf2c8';
-const DEGEN_TOKEN_ADDR = '0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed';
 const REFRESH_INTERVAL = 10000; // Refresh every 10 seconds
 
 export default function PotentialWinnings() {
@@ -33,10 +32,10 @@ export default function PotentialWinnings() {
 
       // Get total prize pool (DEGEN token balance)
       const degenTokenIndex = data.poolBalance.tokens.findIndex(
-        (token: string) => token.toLowerCase() === DEGEN_TOKEN_ADDR.toLowerCase()
+        (token: string) => token.toLowerCase() === DEGEN_ADDR.toLowerCase()
       );
       const totalDegenInPool = Number(data.poolBalance.balances[degenTokenIndex]);
-      const LP_DEGEN_AMOUNT = 1000;
+      const LP_DEGEN_AMOUNT = 1000; //TODO: get this from the pool
       const totalPrizePool = totalDegenInPool - LP_DEGEN_AMOUNT;
 
       // Calculate sum of tokens excluding BAL_VAULT_ADDR
