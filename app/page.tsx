@@ -9,13 +9,13 @@ const odds = getOdds();
 const frameMetadata = getFrameMetadata({
   buttons: [
     {
-      label: `Ding (${odds.playerA}x)`,
+      label: `Ding`,
     },
     {
-      label: `Gukesh (${odds.playerB}x)`,
+      label: `Gukesh`,
     },
     {
-      label: `Draw (${odds.draw}x)`,
+      label: `Draw`,
     },
   ],
   image: {
