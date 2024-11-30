@@ -1,4 +1,4 @@
-import { createCanvas, loadImage } from '@napi-rs/canvas';
+import sharp from 'sharp';
 
 interface OddsData {
   playerA: { odds: number; payout: number };
@@ -8,45 +8,37 @@ interface OddsData {
 }
 
 export async function generateStartFrame(data: OddsData) {
-  const canvas = createCanvas(800, 800);
-  const ctx = canvas.getContext('2d');
+  const svg = `
+    <svg width="800" height="800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="#1a1a1a"/>
+      
+      <!-- Title -->
+      <text x="200" y="100" font-family="Arial" font-size="48" font-weight="bold" fill="white">Ding vs Gukesh</text>
+      
+      <!-- Header -->
+      <text x="100" y="200" font-family="Arial" font-size="32" font-weight="bold" fill="white">Player</text>
+      <text x="300" y="200" font-family="Arial" font-size="32" font-weight="bold" fill="white">ODDs</text>
+      <text x="500" y="200" font-family="Arial" font-size="32" font-weight="bold" fill="white">Potential Payout</text>
+      
+      <!-- Player data -->
+      <text x="100" y="250" font-family="Arial" font-size="28" fill="white">Ding</text>
+      <text x="300" y="250" font-family="Arial" font-size="28" fill="white">${data.playerA.odds.toFixed(2)}</text>
+      <text x="500" y="250" font-family="Arial" font-size="28" fill="white">${data.playerA.payout.toFixed(1)}x</text>
+      
+      <text x="100" y="300" font-family="Arial" font-size="28" fill="white">Gukesh</text>
+      <text x="300" y="300" font-family="Arial" font-size="28" fill="white">${data.playerB.odds.toFixed(2)}</text>
+      <text x="500" y="300" font-family="Arial" font-size="28" fill="white">${data.playerB.payout.toFixed(1)}x</text>
+      
+      <text x="100" y="350" font-family="Arial" font-size="28" fill="white">Draw</text>
+      <text x="300" y="350" font-family="Arial" font-size="28" fill="white">${data.draw.odds.toFixed(2)}</text>
+      <text x="500" y="350" font-family="Arial" font-size="28" fill="white">${data.draw.payout.toFixed(1)}x</text>
+      
+      <!-- Pool size -->
+      <text x="200" y="450" font-family="Arial" font-size="36" font-weight="bold" fill="white">DEGEN Pool size = ${data.poolSize} DEGEN</text>
+    </svg>
+  `;
 
-  // Set background
-  ctx.fillStyle = '#1a1a1a';
-  ctx.fillRect(0, 0, 800, 800);
-
-  // Set text styles
-  ctx.fillStyle = '#ffffff';
-  ctx.textAlign = 'left';
-
-  // Title
-  ctx.font = 'bold 48px Arial';
-  ctx.fillText('Ding vs Gukesh', 200, 100);
-
-  // Header
-  ctx.font = 'bold 32px Arial';
-  ctx.fillText('Player', 100, 200);
-  ctx.fillText('ODDs', 300, 200);
-  ctx.fillText('Potential Payout', 500, 200);
-
-  // Player data
-  ctx.font = '28px Arial';
-  // Ding
-  ctx.fillText('Ding', 100, 250);
-  ctx.fillText(data.playerA.odds.toFixed(2), 300, 250);
-  ctx.fillText(`${data.playerA.payout.toFixed(1)}x`, 500, 250);
-  // Gukesh
-  ctx.fillText('Gukesh', 100, 300);
-  ctx.fillText(data.playerB.odds.toFixed(2), 300, 300);
-  ctx.fillText(`${data.playerB.payout.toFixed(1)}x`, 500, 300);
-  // Draw
-  ctx.fillText('Draw', 100, 350);
-  ctx.fillText(data.draw.odds.toFixed(2), 300, 350);
-  ctx.fillText(`${data.draw.payout.toFixed(1)}x`, 500, 350);
-
-  // Pool size
-  ctx.font = 'bold 36px Arial';
-  ctx.fillText(`DEGEN Pool size = ${data.poolSize} DEGEN`, 200, 450);
-
-  return canvas.toBuffer('image/png');
+  return await sharp(Buffer.from(svg))
+    .png()
+    .toBuffer();
 } 
