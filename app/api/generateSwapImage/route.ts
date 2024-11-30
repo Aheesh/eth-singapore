@@ -1,6 +1,6 @@
-import { createCanvas, GlobalFonts } from '@napi-rs/canvas';
+import sharp from 'sharp';
 import { NextRequest } from 'next/server';
-import { calculateSwapAmount } from '../../lib/calculation'; // Import your existing swap calculation logic
+import { calculateSwapAmount } from '../../lib/calculation';
 
 export const runtime = 'edge';
 
@@ -9,33 +9,27 @@ export async function GET(req: NextRequest) {
   const amount = searchParams.get('amount') || '1';
   const outcome = searchParams.get('outcome') || '';
 
-  // Get swap calculations (implement based on your existing logic)
   const { absValue, tokenOut } = await calculateSwapAmount(amount, outcome);
 
-  // Create canvas
-  const width = 1200;
-  const height = 630;
-  const canvas = createCanvas(width, height);
-  const ctx = canvas.getContext('2d');
+  // Create an SVG with the text
+  const svg = `
+    <svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100%" height="100%" fill="black"/>
+      <text x="600" y="265" font-family="Arial" font-size="48" fill="white" text-anchor="middle">
+        Swapping ${amount} DEGEN with ${outcome}
+      </text>
+      <text x="600" y="365" font-family="Arial" font-size="48" fill="white" text-anchor="middle">
+        You will receive approximately ${absValue} ${tokenOut}
+      </text>
+    </svg>
+  `;
 
-  // Set background
-  ctx.fillStyle = '#000000';
-  ctx.fillRect(0, 0, width, height);
+  // Convert SVG to PNG buffer
+  const buffer = await sharp(Buffer.from(svg))
+    .png()
+    .toBuffer();
 
-  // Configure text
-  ctx.fillStyle = '#FFFFFF';
-  ctx.textAlign = 'center';
-  ctx.font = '48px Arial';
-
-  // Draw text
-  ctx.fillText(`Swapping ${amount} DEGEN with ${outcome}`, width / 2, height / 2 - 50);
-  ctx.fillText(`You will receive approximately ${absValue} ${tokenOut}`, width / 2, height / 2 + 50);
-
-  // Convert canvas to buffer
-  const image = canvas.toBuffer('image/png');
-
-  // Return the image
-  return new Response(image, {
+  return new Response(buffer, {
     headers: {
       'Content-Type': 'image/png',
       'Cache-Control': 'max-age=10',
