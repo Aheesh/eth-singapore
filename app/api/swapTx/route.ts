@@ -47,8 +47,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const value = parseUnits(amount, 18);
 
   const tokenIn = DEGEN_ADDR;
-  const tokenOut = outcome === 'Player-A' ? PLAYER_A_ADDR :
-                   outcome === 'Player-B' ? PLAYER_B_ADDR :
+  const tokenOut = outcome === 'Ding' ? PLAYER_A_ADDR :
+                   outcome === 'Gukesh' ? PLAYER_B_ADDR :
                    DRAW_ADDR;
 
   console.log('tokenIn', tokenIn);
