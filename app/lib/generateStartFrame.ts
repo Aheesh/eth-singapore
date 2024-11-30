@@ -8,8 +8,8 @@ interface OddsData {
 }
 
 export async function generateStartFrame(data: OddsData) {
-  const svg = `
-    <svg width="800" height="800" xmlns="http://www.w3.org/2000/svg">
+  const svg = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <svg width="800" height="800" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
       <rect width="100%" height="100%" fill="#1a1a1a"/>
       
       <!-- Title -->
@@ -35,8 +35,7 @@ export async function generateStartFrame(data: OddsData) {
       
       <!-- Pool size -->
       <text x="200" y="450" font-family="Arial" font-size="36" font-weight="bold" fill="white">DEGEN Pool size = ${data.poolSize} DEGEN</text>
-    </svg>
-  `;
+    </svg>`.trim();
 
   return svgResponse(svg);
 } 

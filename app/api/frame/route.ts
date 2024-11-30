@@ -61,6 +61,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   }
 }
 
+export const runtime = 'edge';
+
 export async function POST(req: NextRequest): Promise<Response> {
   return getResponse(req);
 }
