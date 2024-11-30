@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+import { svgResponse } from './imageUtils';
 
 interface OddsData {
   playerA: { odds: number; payout: number };
@@ -38,7 +38,5 @@ export async function generateStartFrame(data: OddsData) {
     </svg>
   `;
 
-  return await sharp(Buffer.from(svg))
-    .png()
-    .toBuffer();
+  return svgResponse(svg);
 } 
