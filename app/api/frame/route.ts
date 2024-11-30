@@ -48,12 +48,17 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const hyperFrameResponse = await getHyperFrame(frame as string, text ?? '', message.button, state);
   console.log('HyperFrame response:', hyperFrameResponse);
 
-  return new NextResponse(hyperFrameResponse, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/html',
-    },
-  });
+  try {
+    return new NextResponse(hyperFrameResponse, {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html',
+      },
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    return new NextResponse('Internal Server Error', { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
