@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Baller Chess',
     description: 'What are the odds?',
-    images: [`${NEXT_PUBLIC_URL}/park-1.png`],
+    images: [`${NEXT_PUBLIC_URL}/tx-success.webp`],
   },
   other: {
     ...frameMetadata,
