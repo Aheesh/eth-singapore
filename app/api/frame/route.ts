@@ -48,7 +48,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   const hyperFrameResponse = await getHyperFrame(frame as string, text ?? '', message.button, state);
   console.log('HyperFrame response:', hyperFrameResponse);
 
-  return new NextResponse(hyperFrameResponse);
+  return new NextResponse(hyperFrameResponse, {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/html',
+    },
+  });
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
