@@ -1,6 +1,6 @@
-import sharp from 'sharp';
 import { NextRequest } from 'next/server';
 import { calculateSwapAmount } from '../../lib/calculation';
+import { svgResponse } from '../../lib/imageUtils';
 
 export const runtime = 'edge';
 
@@ -11,7 +11,6 @@ export async function GET(req: NextRequest) {
 
   const { absValue, tokenOut } = await calculateSwapAmount(amount, outcome);
 
-  // Create an SVG with the text
   const svg = `
     <svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
       <rect width="100%" height="100%" fill="black"/>
@@ -24,15 +23,5 @@ export async function GET(req: NextRequest) {
     </svg>
   `;
 
-  // Convert SVG to PNG buffer
-  const buffer = await sharp(Buffer.from(svg))
-    .png()
-    .toBuffer();
-
-  return new Response(buffer, {
-    headers: {
-      'Content-Type': 'image/png',
-      'Cache-Control': 'max-age=10',
-    },
-  });
+  return svgResponse(svg);
 }
