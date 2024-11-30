@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { generateStartFrame } from '../../lib/generateStartFrame';
+import { NEXT_PUBLIC_URL } from '../../config';
 
 export async function GET() {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/blockchain`);
+    const response = await fetch(`${NEXT_PUBLIC_URL}/api/blockchain`);
     const data = await response.json();
     
     // Calculate odds and payouts using your existing logic
@@ -24,6 +25,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error generating image:', error);
-    return NextResponse.error();
+    return NextResponse.json({ error: 'Failed to generate image' }, { status: 500 });
   }
 } 
