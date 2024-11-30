@@ -6,7 +6,7 @@ type FrameResult = string | { frame: string; [key: string]: any };
 
 // Update the HyperFrame type definition
 export type HyperFrame = {
-  frame: string | ((text: string, state?: any) => string);
+  frame: string | ((text: string, state?: any) => string | Promise<string>);
   1: string | ((text: string, state?: any) => FrameResult) | (() => string);
   2?: string | ((text: string, state?: any) => FrameResult) | (() => string);
   3?: string | ((text: string, state?: any) => FrameResult) | (() => string);
@@ -20,12 +20,12 @@ export function addHyperFrame(label: string, frame: HyperFrame) {
 }
 
 
-export function getHyperFrame(
+export async function getHyperFrame(
   frame: string,
   text: string,
   buttonNumber?: number,
   existingState: any = {}
-): string {
+): Promise<string> {
   // Add debug logging
   console.log('getHyperFrame existingState:', existingState);
   
@@ -70,9 +70,8 @@ export function getHyperFrame(
   
   const nextFrame = frames[nextFrameId].frame;
   if (typeof nextFrame === 'function') {
-    // Add debug logging
     console.log('Calling nextFrame function with text and state:', { text, newState });
-    return nextFrame(text, newState);
+    return await nextFrame(text, newState);
   } else {
     return nextFrame;
   }
@@ -81,19 +80,24 @@ export function getHyperFrame(
 
 // Define frames
 addHyperFrame('start', {
-  frame: getFrameHtmlResponse({
-    buttons: [
-      { label: 'Player A' },
-      { label: 'Player B' },
-      { label: 'Draw' },
-    ],
-    image: {
-      src: `${NEXT_PUBLIC_URL}/game1.webp`,
-      aspectRatio: '1:1',
-    },
-    state: { frame: 'start' },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-  }),
+  frame: async () => {
+    const response = await fetch(`${NEXT_PUBLIC_URL}/api/getOdds`);
+    const oddsData = await response.json();
+    
+    return getFrameHtmlResponse({
+      buttons: [
+        { label: 'Player A' },
+        { label: 'Player B' },
+        { label: 'Draw' },
+      ],
+      image: {
+        src: `${NEXT_PUBLIC_URL}/api/generateImage`,
+        aspectRatio: '1:1',
+      },
+      state: { frame: 'start' },
+      postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+    });
+  },
   1: (text) => ({ frame: 'selectAmount', outcome: 'Player-A' }),
   2: (text) => ({ frame: 'selectAmount', outcome: 'Player-B' }),
   3: (text) => ({ frame: 'selectAmount', outcome: 'Draw' }),
