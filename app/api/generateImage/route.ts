@@ -5,6 +5,17 @@ import { getOdds } from '../../lib/odds';
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
+// Mock or fetch your odds data
+const getOddsData = () => {
+    return {
+        ding: "2.5",
+        gukesh: "1.8",
+        draw: "3.0",
+        poolSize: "1000"
+        // Add any other data your generateStartFrame needs
+    };
+};
+
 // Handle OPTIONS preflight request
 export async function OPTIONS(request: Request) {
     return new NextResponse(null, {
@@ -20,6 +31,7 @@ export async function OPTIONS(request: Request) {
 
 export async function GET(request: Request) {
     try {
+        const oddsData = getOddsData();
         const svgContent = await generateStartFrame(oddsData);
         
         return new NextResponse(svgContent, {
