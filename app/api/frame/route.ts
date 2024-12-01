@@ -4,17 +4,27 @@ import { NEXT_PUBLIC_URL } from '../../config';
 import { getHyperFrame } from '../../hyperframes';
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
-  console.log('api/frame/route.ts : Base Frame endpoint');
+  console.log('api/frame/route.ts :  START ');
 
   let accountAddress: string | undefined = '';
   let text: string | undefined = '';
+  let message: any;
 
-  const body: FrameRequest = await req.json();
-  const { isValid, message } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
+  try {
+    const body: FrameRequest = await req.json();
+    console.log('Received body:', body);
 
-  if (isValid) {
+    const { isValid, message: frameMessage } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
+    message = frameMessage;
+    console.log('Frame message validation result:', { isValid, message });
+
+    if (!isValid) {
+      console.error('Invalid message');
+      return NextResponse.json({ error: 'Message not valid' }, { status: 400 });
+    }
+
     accountAddress = message.interactor.verified_accounts[0];
-  } else {
+  } catch (error) {
     return new NextResponse('Message not valid', { status: 500 });
   }
 
@@ -30,23 +40,15 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     console.error(e);
   }
 
-  console.log('api/frame/route.ts : after try catch ==> state =>', state.frame);
+  console.log('Raw state:', message?.state?.serialized);
   const frame = state.frame;
-  console.log('api/frame/route.ts : state =>', message.state);
+  console.log('api/frame/route.ts : state =>', state);
   console.log('api/frame/route.ts : frame =>', frame);
 
-  // TODO: Cleanup this error handling
-  if (!frame) {
-    return new NextResponse('Frame not found', { status: 404 });
-  }
+  const hyperFrameResponse = getHyperFrame(frame as string, text ?? '', message.button, state);
+  console.log('HyperFrame response:', hyperFrameResponse);
 
-  // There should always be a button number
-  if (!message?.button) {
-    return new NextResponse('Button not found', { status: 404 });
-  }
-
-  console.log('api/frame/route.ts : Calling getHyperFrame =>');
-  return new NextResponse(getHyperFrame(frame as string, text || '', message?.button));
+  return new NextResponse(hyperFrameResponse);
 }
 
 export async function POST(req: NextRequest): Promise<Response> {

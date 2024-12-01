@@ -1,6 +1,7 @@
 import { getFrameMetadata } from '@coinbase/onchainkit/frame';
 import type { Metadata } from 'next';
 import { NEXT_PUBLIC_URL } from './config';
+import Link from 'next/link';
 
 const frameMetadata = getFrameMetadata({
   buttons: [
@@ -40,7 +41,23 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <h1>Let's get up and running - Baller Chess</h1>
+      <h1 className="text-3xl font-bold mb-8">Let's get up and running - Baller Chess</h1>
+      
+      <div className="flex flex-col space-y-4">
+        <Link 
+          href="/dashboard" 
+          className="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 text-xl text-center w-64"
+        >
+          View Dashboard
+        </Link>
+        
+        <Link 
+          href="/potentialWinnings" 
+          className="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 text-xl text-center w-64"
+        >
+          Potential Winnings
+        </Link>
+      </div>
     </>
   );
 }

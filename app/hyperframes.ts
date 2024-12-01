@@ -1,12 +1,16 @@
 import { getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
-import { NEXT_PUBLIC_URL } from './config';
+import { NEXT_PUBLIC_URL, DEGEN_ADDR, BAL_VAULT_ADDR, POOL_ID } from './config';
 
+// Add this type definition
+type FrameResult = string | { frame: string; [key: string]: any };
+
+// Update the HyperFrame type definition
 export type HyperFrame = {
-  frame: string;
-  1: string | ((text: string) => string) | (() => string);
-  2?: string | ((text: string) => string) | (() => string);
-  3?: string | ((text: string) => string) | (() => string);
-  4?: string | ((text: string) => string) | (() => string);
+  frame: string | ((text: string, state?: any) => string);
+  1: string | ((text: string, state?: any) => FrameResult) | (() => string);
+  2?: string | ((text: string, state?: any) => FrameResult) | (() => string);
+  3?: string | ((text: string, state?: any) => FrameResult) | (() => string);
+  4?: string | ((text: string, state?: any) => FrameResult) | (() => string);
 };
 
 const frames: Record<string, HyperFrame> = {};
@@ -15,20 +19,47 @@ export function addHyperFrame(label: string, frame: HyperFrame) {
   frames[label] = frame;
 }
 
-export function getHyperFrame(frame: string, text: string, button: number) {
-  console.log('hyperframes.ts : frame =>', frame);
-  console.log('hyperframes.ts : frames =>', frames);
-  const currentFrame = frames[frame];
+
+export function getHyperFrame(
+  frame: string,
+  text: string,
+  buttonNumber?: number,
+  existingState: any = {}
+): string {
+  // Add debug logging
+  console.log('getHyperFrame existingState:', existingState);
+  
+  // Extract base frame name and query params
+  const [baseFrame, queryString] = frame.split('?');
+  const params = new URLSearchParams(queryString || '');
+  const currentFrame = frames[baseFrame];
+  if (!currentFrame) {
+    throw new Error(`Frame not found: ${baseFrame}`);
+  }
   console.log('hyperframes.ts : currentFrame =>', currentFrame);
-  const nextFrameIdOrFunction = currentFrame[button as keyof HyperFrame];
-  console.log('hyperframes.ts : nextFrameIdOrFunction =>', nextFrameIdOrFunction);
+  console.log('hyperframes.ts : baseFrame =>', baseFrame);
+  console.log('hyperframes.ts : frames =>', frames);
+  
+  const nextFrameIdOrFunction = currentFrame[buttonNumber as keyof HyperFrame];
 
   let nextFrameId: string;
+  let newState: any = { ...existingState };
   if (typeof nextFrameIdOrFunction === 'function') {
-    nextFrameId = nextFrameIdOrFunction(text);
+    const result = nextFrameIdOrFunction(text, existingState);
+    if (typeof result === 'string') {
+      nextFrameId = result;
+    } else if (typeof result === 'object' && result !== null && 'frame' in result) {
+      nextFrameId = result.frame;
+      newState = { ...newState, ...result };
+    } else {
+      throw new Error('Invalid result from nextFrameIdOrFunction');
+    }
+  } else if (typeof nextFrameIdOrFunction === 'string') {
+    nextFrameId = nextFrameIdOrFunction;
   } else {
-    nextFrameId = nextFrameIdOrFunction as string;
+    throw new Error('Invalid nextFrameIdOrFunction type');
   }
+
 
   if (!frames[nextFrameId]) {
     throw new Error(`Frame not found: ${nextFrameId}`);
@@ -36,21 +67,25 @@ export function getHyperFrame(frame: string, text: string, button: number) {
 
   console.log('hyperframes.ts : nextFrameId =>', nextFrameId);
   console.log('hyperframes.ts : frames[nextFrameId] =>', frames[nextFrameId]);
-  return frames[nextFrameId].frame;
+  
+  const nextFrame = frames[nextFrameId].frame;
+  if (typeof nextFrame === 'function') {
+    // Add debug logging
+    console.log('Calling nextFrame function with text and state:', { text, newState });
+    return nextFrame(text, newState);
+  } else {
+    return nextFrame;
+  }
+
 }
 
+// Define frames
 addHyperFrame('start', {
   frame: getFrameHtmlResponse({
     buttons: [
-      {
-        label: 'Player A',
-      },
-      {
-        label: 'Player B',
-      },
-      {
-        label: 'Draw ',
-      },
+      { label: 'Player A' },
+      { label: 'Player B' },
+      { label: 'Draw' },
     ],
     image: {
       src: `${NEXT_PUBLIC_URL}/game1.webp`,
@@ -59,27 +94,27 @@ addHyperFrame('start', {
     state: { frame: 'start' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: 'Player-A',
-  2: 'Player-B',
-  3: 'Draw',
+  1: (text) => ({ frame: 'selectAmount', outcome: 'Player-A' }),
+  2: (text) => ({ frame: 'selectAmount', outcome: 'Player-B' }),
+  3: (text) => ({ frame: 'selectAmount', outcome: 'Draw' }),
 });
 
-addHyperFrame('Player-A', {
-  frame: getFrameHtmlResponse({
+addHyperFrame('selectAmount', {
+  frame: (text, state?: any) => getFrameHtmlResponse({
     buttons: [
       {
         action: 'tx',
-        label: '100 DEGEN',
+        label: '1 DEGEN',
         target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
         action: 'tx',
-        label: '200 DEGEN',
+        label: '2 DEGEN',
         target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
         action: 'tx',
-        label: '500 DEGEN',
+        label: '3 DEGEN',
         target: `${NEXT_PUBLIC_URL}/api/approveTx`,
       },
       {
@@ -87,95 +122,46 @@ addHyperFrame('Player-A', {
       },
     ],
     image: {
-      src: `${NEXT_PUBLIC_URL}/park-1.png`,
+      src: `${NEXT_PUBLIC_URL}/select-amount.webp`,
       aspectRatio: '1:1',
     },
-    state: { frame: 'Player-A' },
+    state: { 
+      frame: 'selectAmount',
+      outcome: state?.outcome 
+    },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: 'approve',
-  2: 'approve',
-  3: 'approve',
+  1: (text, state) => ({ frame: 'approve', amount: '1', outcome: state?.outcome }),
+  2: (text, state) => ({ frame: 'approve', amount: '2', outcome: state?.outcome }),
+  3: (text, state) => ({ frame: 'approve', amount: '3', outcome: state?.outcome }),
   4: 'start',
 });
 
-addHyperFrame('Player-B', {
-  frame: getFrameHtmlResponse({
-    buttons: [
-      {
-        label: '100 DEGEN',
-      },
-      {
-        label: '200 DEGEN',
-      },
-      {
-        label: '500 DEGEN',
-      },
-      {
-        label: 'CANCEL',
-      },
-    ],
-    image: {
-      src: `${NEXT_PUBLIC_URL}/cave-1.png`,
-      aspectRatio: '1:1',
-    },
-    state: { frame: 'Player-B' },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-  }),
-  1: 'approve',
-  2: 'approve',
-  3: 'approve',
-  4: 'start',
-});
 
-addHyperFrame('Draw', {
-  frame: getFrameHtmlResponse({
-    buttons: [
-      {
-        label: '100 DEGEN',
-      },
-      {
-        label: '200 DEGEN',
-      },
-      {
-        label: '500 DEGEN',
-      },
-      {
-        label: 'CANCEL',
-      },
-    ],
-    image: {
-      src: `${NEXT_PUBLIC_URL}/cave-2.png`,
-      aspectRatio: '1:1',
-    },
-    state: { frame: 'Draw' },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-  }),
-  1: 'approve',
-  2: 'approve',
-  3: 'approve',
-  4: 'start',
-});
-
+// Add a new frame for 'approve' that accepts a query parameter
 addHyperFrame('approve', {
-  frame: getFrameHtmlResponse({
-    buttons: [
-      {
-        action: 'tx',
-        label: 'Swap Approve',
-        target: `${NEXT_PUBLIC_URL}/api/swapTx`,
+  frame: (text, state?: any) => {
+    const amount = state?.amount || '1'; // Default to '1' if no amount in state
+    
+    return getFrameHtmlResponse({
+      buttons: [
+        {
+          action: 'tx',
+          label: 'Swap Approve',
+          target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=${amount}`,
+        },
+        {
+          label: 'Cancel',
+        },
+      ],
+      image: {
+        src: `${NEXT_PUBLIC_URL}/confirm-swap.webp`,
+        aspectRatio: '1:1',
       },
-      {
-        label: 'Cancel',
-      },
-    ],
-    image: {
-      src: `${NEXT_PUBLIC_URL}/game1.webp`,
-      aspectRatio: '1:1',
-    },
-    state: { frame: 'approve' },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-  }),
+      state: { frame: 'approve', amount, outcome: state?.outcome },
+      postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+    });
+  },
   1: 'txSuccess',
   2: 'start',
 });
@@ -183,20 +169,14 @@ addHyperFrame('approve', {
 addHyperFrame('txSuccess', {
   frame: getFrameHtmlResponse({
     buttons: [
-      {
-        label: 'SUCCESS',
-      },
-      {
-        label: 'Start Again',
-      },
+      { label: 'Start Again' }
     ],
     image: {
-      src: `${NEXT_PUBLIC_URL}/desert-lost.webp`,
+      src: `${NEXT_PUBLIC_URL}/tx-success.webp`,
       aspectRatio: '1:1',
     },
     state: { frame: 'txSuccess' },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
   }),
-  1: 'start',
-  2: 'start',
+  1: 'start'
 });
