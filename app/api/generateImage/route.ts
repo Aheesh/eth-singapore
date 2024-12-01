@@ -12,7 +12,7 @@ export async function GET() {
     return new Response(svgContent, {
       headers: {
         'Content-Type': 'image/svg+xml',
-        'Cache-Control': 'public, max-age=10',
+        'Access-Control-Allow-Origin': '*'
       },
     });
   } catch (error) {
