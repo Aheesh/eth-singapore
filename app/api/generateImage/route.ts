@@ -5,14 +5,24 @@ import { getOdds } from '../../lib/odds';
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
-// Mock or fetch your odds data
+// Match the OddsData type expected by generateStartFrame
 const getOddsData = () => {
     return {
-        ding: "2.5",
-        gukesh: "1.8",
-        draw: "3.0",
-        poolSize: "1000"
-        // Add any other data your generateStartFrame needs
+        playerA: {
+            name: "Ding",
+            odds: 2.5,
+            payout: 2.5
+        },
+        playerB: {
+            name: "Gukesh",
+            odds: 1.8,
+            payout: 1.8
+        },
+        draw: {
+            odds: 3.0,
+            payout: 3.0
+        },
+        poolSize: 1000
     };
 };
 
