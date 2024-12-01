@@ -9,10 +9,11 @@ export async function GET() {
     const oddsData = getOdds();
     const svgContent = await generateStartFrame(oddsData);
     
-    return new Response(svgContent, {
+    return new NextResponse(svgContent, {
       headers: {
         'Content-Type': 'image/svg+xml',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
       },
     });
   } catch (error) {
