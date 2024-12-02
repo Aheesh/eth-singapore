@@ -109,8 +109,8 @@ addHyperFrame('start', {
       postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
     });
   },
-  1: (text) => ({ frame: 'selectAmount', outcome: 'Player-A' }),
-  2: (text) => ({ frame: 'selectAmount', outcome: 'Player-B' }),
+  1: (text) => ({ frame: 'selectAmount', outcome: 'Ding' }),
+  2: (text) => ({ frame: 'selectAmount', outcome: 'Gukesh' }),
   3: (text) => ({ frame: 'selectAmount', outcome: 'Draw' }),
 });
 
@@ -166,8 +166,8 @@ addHyperFrame('approve', {
     const absValueNumber = Number(absValue);
     
     // Format the outcome message
-    const outcomeLabel = outcome === 'Player-A' ? 'Player A' :
-                        outcome === 'Player-B' ? 'Player B' : 
+    const outcomeLabel = outcome === 'Ding' ? 'Ding' :
+                        outcome === 'Gukesh' ? 'Gukesh' : 
                         'Draw';
     
     // Format the params for approve frame
