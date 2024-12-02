@@ -1,6 +1,6 @@
 import { getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
 import { NEXT_PUBLIC_URL, DEGEN_ADDR, BAL_VAULT_ADDR, POOL_ID } from './config';
-import { calculateTokenAmount } from '../lib/swapUtils';
+import { calculateTokenAmount } from '../app/lib/swapUtils';
 
 // Add this type definition
 type FrameResult = string | { frame: string; [key: string]: any };
@@ -141,11 +141,12 @@ addHyperFrame('selectAmount', {
 
 addHyperFrame('approve', {
   frame: async (text, state?: any) => {
-    const amount = state?.amount || '1';
-    const outcome = state?.outcome || 'Player-A';
+    const amount = state?.amount 
+    const outcome = state?.outcome
     
     // Calculate expected tokens
-    const providerApiKey = process.env.BASE_PROVIDER_API_KEY;
+    const providerApiKey = process.env.BASE_PROVIDER_API_KEY ?? '';
+    if (!providerApiKey) throw new Error('BASE_PROVIDER_API_KEY is not defined');
     const { absValue } = await calculateTokenAmount(amount, outcome, providerApiKey);
     const absValueNumber = Number(absValue);
     
