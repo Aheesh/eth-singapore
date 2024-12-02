@@ -2,33 +2,45 @@ import { getFrameMetadata } from '@coinbase/onchainkit/frame';
 import type { Metadata } from 'next';
 import { NEXT_PUBLIC_URL } from './config';
 import Link from 'next/link';
+import { getPoolBalance } from './lib/balancer';
 
-const frameMetadata = getFrameMetadata({
-  buttons: [
-    { label: 'Ding (28.21%)' },
-    { label: 'Gukesh (38.72%)' },
-    { label: 'Draw (33.07%)' },
-  ],
-  image: {
-    src: `${NEXT_PUBLIC_URL}/api/og?text=Ding,Gukesh,Draw&degenBalance=0.00`,
-    aspectRatio: '1:1',
-  },
-  state: { frame: 'start' },
-  postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  let degenBalance = 0;
+  try {
+    const poolData = await getPoolBalance();
+    degenBalance = parseFloat(poolData.balances[1]) - 1000;
+  } catch (error) {
+    console.error('Failed to fetch pool balance:', error);
+    // Use 0 as fallback value
+  }
 
-export const metadata: Metadata = {
-  title: 'Baller Chess',
-  description: 'Lets get a market setup for a game of chess',
-  openGraph: {
+  const frameMetadata = getFrameMetadata({
+    buttons: [
+      { label: 'Ding (28.21%)' },
+      { label: 'Gukesh (38.72%)' },
+      { label: 'Draw (33.07%)' },
+    ],
+    image: {
+      src: `${NEXT_PUBLIC_URL}/api/og?text=Ding,Gukesh,Draw&degenBalance=${degenBalance.toFixed(2)}`,
+      aspectRatio: '1:1',
+    },
+    state: { frame: 'start' },
+    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+  });
+
+  return {
     title: 'Baller Chess',
-    description: 'What are the odds?',
-    images: [`${NEXT_PUBLIC_URL}/park-1.png`],
-  },
-  other: {
-    ...frameMetadata,
-  },
-};
+    description: 'Lets get a market setup for a game of chess',
+    openGraph: {
+      title: 'Baller Chess',
+      description: 'What are the odds?',
+      images: [`${NEXT_PUBLIC_URL}/park-1.png`],
+    },
+    other: {
+      ...frameMetadata,
+    },
+  };
+}
 
 export default function Page() {
   return (
