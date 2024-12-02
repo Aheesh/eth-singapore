@@ -3,7 +3,7 @@ dotenv.config();
 import { NextRequest, NextResponse } from 'next/server';
 import { FrameRequest, getFrameMessage } from '@coinbase/onchainkit/frame';
 import { BalancerSDK, Network, SwapType, Swaps } from '@balancer-labs/sdk';
-import { BAL_VAULT_ADDR, DEGEN_ADDR, PLAYER_A_ADDR, PLAYER_B_ADDR, DRAW_ADDR, POOL_ID } from '../../config';
+import { BAL_VAULT_ADDR, DEGEN_ADDR, POOL_ID } from '../../config';
 import { formatEther, parseUnits } from 'ethers';
 import { calculateTokenAmount } from '../../lib/swapUtils';
 
