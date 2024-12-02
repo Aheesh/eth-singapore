@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
           background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
           backgroundClip: 'text',
           color: 'transparent',
+          display: 'flex',
         }}>
           Ding vs Gukesh
         </div>
@@ -35,7 +36,8 @@ export async function GET(request: NextRequest) {
           fontSize: 48, 
           fontWeight: 'bold',
           marginBottom: '20px',
-          color: '#4ECDC4'
+          color: '#4ECDC4',
+          display: 'flex',
         }}>
           Odds
         </div>
@@ -52,6 +54,7 @@ export async function GET(request: NextRequest) {
               padding: '20px',
               background: 'rgba(255, 255, 255, 0.1)',
               borderRadius: '12px',
+              display: 'flex',
             }}>
               Ding<br/>28.21%
             </div>
@@ -63,6 +66,7 @@ export async function GET(request: NextRequest) {
               padding: '20px',
               background: 'rgba(255, 255, 255, 0.1)',
               borderRadius: '12px',
+              display: 'flex',
             }}>
               Gukesh<br/>38.72%
             </div>
@@ -74,6 +78,7 @@ export async function GET(request: NextRequest) {
               padding: '20px',
               background: 'rgba(255, 255, 255, 0.1)',
               borderRadius: '12px',
+              display: 'flex',
             }}>
               Draw<br/>33.07%
             </div>
@@ -84,6 +89,7 @@ export async function GET(request: NextRequest) {
           fontSize: 42,
           color: '#FF6B6B',
           fontWeight: 'bold',
+          display: 'flex',
         }}>
           {text?.split('DEGEN Prize Pool:')[1]}
         </div>
