@@ -5,6 +5,7 @@ import { FrameRequest, getFrameMessage } from '@coinbase/onchainkit/frame';
 import { BalancerSDK, Network, SwapType, Swaps } from '@balancer-labs/sdk';
 import { BAL_VAULT_ADDR, DEGEN_ADDR, PLAYER_A_ADDR, PLAYER_B_ADDR, DRAW_ADDR, POOL_ID } from '../../config';
 import { formatEther, parseUnits } from 'ethers';
+import { calculateTokenAmount } from '../../lib/swapUtils';
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/swapTx/route.ts : Swap Tx endpoint');
@@ -44,47 +45,9 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     return new NextResponse('Outcome is required', { status: 400 });
   }
 
-  const value = parseUnits(amount, 18);
-
-  const tokenIn = DEGEN_ADDR;
-  const tokenOut = outcome === 'Player-A' ? PLAYER_A_ADDR :
-                   outcome === 'Player-B' ? PLAYER_B_ADDR :
-                   DRAW_ADDR;
-
-  console.log('tokenIn', tokenIn);
-  console.log('tokenOut', tokenOut);
-
-  // QueryBatchSwap to get the expected amount of tokens Out for confirmation
   const providerApiKey = process.env.BASE_PROVIDER_API_KEY;
+  const { absValue, tokenOut } = await calculateTokenAmount(amount, outcome, providerApiKey);
 
-  const sdk = new BalancerSDK({
-    network: Network.BASE,
-    rpcUrl: `https://base-mainnet.g.alchemy.com/v2/${providerApiKey}`,
-  });
-
-  console.log('sdk', sdk);
-  console.log('network', Network.BASE);
-  const { contracts } = sdk;
-  console.log('contracts', contracts.vault.address);
-
-  const swaps = [
-    {
-      poolId: POOL_ID,
-      assetInIndex: 0,
-      assetOutIndex: 1,
-      amount: value.toString(),
-      userData: '0x',
-    },
-  ];
-  const assets = [tokenIn, tokenOut];
-
-  const queryInfo = await sdk.swaps.queryBatchSwap({
-    kind: SwapType.SwapExactIn,
-    swaps,
-    assets,
-  });
-  console.log('queryInfo', queryInfo);
-  const absValue = Math.abs(Number(formatEther(queryInfo[1])));
   console.log(`queryInfo - Swap : You will receive ${absValue} ${tokenOut}`);
 
   const encodeBatchSwapData = Swaps.encodeBatchSwap({
@@ -94,11 +57,11 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         poolId: POOL_ID,
         assetInIndex: 0,
         assetOutIndex: 1,
-        amount: value.toString(),
+        amount: absValue.toString(),
         userData: '0x',
       },
     ],
-    assets: [tokenIn, tokenOut],
+    assets: [DEGEN_ADDR, tokenOut],
 
     funds: {
       fromInternalBalance: false,
@@ -106,7 +69,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       sender: message.address || '',
       toInternalBalance: false,
     },
-    limits: [value, '0'],
+    limits: [absValue, '0'],
     deadline: Math.ceil(Date.now() / 1000) + 300,
   });
 
