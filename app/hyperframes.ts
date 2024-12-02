@@ -1,6 +1,7 @@
 import { getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
 import { NEXT_PUBLIC_URL, DEGEN_ADDR, BAL_VAULT_ADDR, POOL_ID } from './config';
 import { calculateTokenAmount } from '../app/lib/swapUtils';
+import { getPoolBalance } from './lib/balancer';
 
 // Add this type definition
 type FrameResult = string | { frame: string; [key: string]: any };
@@ -81,19 +82,25 @@ export async function getHyperFrame(
 
 // Define frames
 addHyperFrame('start', {
-  frame: getFrameHtmlResponse({
-    buttons: [
-      { label: 'Player A' },
-      { label: 'Player B' },
-      { label: 'Draw' },
-    ],
-    image: {
-      src: `${NEXT_PUBLIC_URL}/game1.webp`,
-      aspectRatio: '1:1',
-    },
-    state: { frame: 'start' },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-  }),
+  frame: async () => {
+    // Fetch pool balance
+    const poolData = await getPoolBalance();
+    const degenBalance = parseFloat(poolData.balances[0]) - 1000; // Subtract initial 1000 DEGEN LP
+
+    return getFrameHtmlResponse({
+      buttons: [
+        { label: 'Ding (28.21%)' },
+        { label: 'Gukesh (38.72%)' },
+        { label: 'Draw (33.07%)' },
+      ],
+      image: {
+        src: `${NEXT_PUBLIC_URL}/api/og?text=Ding vs Gukesh%0A%0AOdds:%0ADing: 28.21%25%0AGukesh: 38.72%25%0ADraw: 33.07%25%0A%0ADEGEN Prize Pool: ${degenBalance.toFixed(2)} DEGEN`,
+        aspectRatio: '1:1',
+      },
+      state: { frame: 'start' },
+      postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+    });
+  },
   1: (text) => ({ frame: 'selectAmount', outcome: 'Player-A' }),
   2: (text) => ({ frame: 'selectAmount', outcome: 'Player-B' }),
   3: (text) => ({ frame: 'selectAmount', outcome: 'Draw' }),
