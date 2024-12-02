@@ -46,9 +46,28 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   }
 
   const providerApiKey = process.env.BASE_PROVIDER_API_KEY;
+  if (!providerApiKey) {
+    return new NextResponse('Provider API key is required', { status: 400 });
+  }
   const { absValue, tokenOut } = await calculateTokenAmount(amount, outcome, providerApiKey);
 
   console.log(`queryInfo - Swap : You will receive ${absValue} ${tokenOut}`);
+
+  const value = parseUnits(amount, 18);
+
+  console.log('tokenIn', DEGEN_ADDR);
+  console.log('tokenOut', tokenOut);
+
+  // QueryBatchSwap to get the expected amount of tokens Out for confirmation
+  const sdk = new BalancerSDK({
+    network: Network.BASE,
+    rpcUrl: `https://base-mainnet.g.alchemy.com/v2/${providerApiKey}`,
+  });
+
+  console.log('sdk', sdk);
+  console.log('network', Network.BASE);
+  const { contracts } = sdk;
+  console.log('contracts', contracts.vault.address);
 
   const encodeBatchSwapData = Swaps.encodeBatchSwap({
     kind: SwapType.SwapExactIn,
@@ -57,7 +76,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
         poolId: POOL_ID,
         assetInIndex: 0,
         assetOutIndex: 1,
-        amount: absValue.toString(),
+        amount: value.toString(),
         userData: '0x',
       },
     ],
@@ -69,7 +88,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       sender: message.address || '',
       toInternalBalance: false,
     },
-    limits: [absValue, '0'],
+    limits: [value, '0'],
     deadline: Math.ceil(Date.now() / 1000) + 300,
   });
 
