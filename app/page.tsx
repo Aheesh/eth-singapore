@@ -14,6 +14,11 @@ export async function generateMetadata(): Promise<Metadata> {
     console.error('Failed to fetch pool balance:', error);
   }
 
+  const imageUrl = new URL('/api/og', NEXT_PUBLIC_URL);
+  imageUrl.searchParams.append('text', 'Ding,Gukesh,Draw');
+  imageUrl.searchParams.append('degenBalance', degenBalance.toFixed(2));
+  imageUrl.searchParams.append('type', 'start');
+
   const frameMetadata = getFrameMetadata({
     buttons: [
       {
@@ -27,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
       }
     ],
     image: {
-      src: `${NEXT_PUBLIC_URL}/api/og?text=Ding,Gukesh,Draw&degenBalance=${degenBalance.toFixed(2)}`,
+      src: imageUrl.toString(),
       aspectRatio: '1.91:1'
     },
     postUrl: `${NEXT_PUBLIC_URL}/api/frame`
