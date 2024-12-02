@@ -91,7 +91,8 @@ addHyperFrame('start', {
     // Construct the text with all parameters included
     const params = new URLSearchParams({
       text: 'Ding,Gukesh,Draw', // Include all outcomes to show all cards
-      degenBalance: degenBalance.toFixed(2)
+      degenBalance: degenBalance.toFixed(2),
+      type: 'start'
     });
 
     return getFrameHtmlResponse({
@@ -169,6 +170,12 @@ addHyperFrame('approve', {
                         outcome === 'Player-B' ? 'Player B' : 
                         'Draw';
     
+    // Format the params for approve frame
+    const params = new URLSearchParams({
+      text: `${absValueNumber.toFixed(2)} tokens for ${outcomeLabel}`,
+      type: 'approve'
+    });
+
     return getFrameHtmlResponse({
       buttons: [
         {
@@ -181,7 +188,7 @@ addHyperFrame('approve', {
         },
       ],
       image: {
-        src: `${NEXT_PUBLIC_URL}/api/og?text=You will receive approximately ${absValueNumber.toFixed(2)} tokens for ${outcomeLabel} as winning outcome`,
+        src: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
         aspectRatio: '1:1',
       },
       state: { frame: 'approve', amount, outcome: state?.outcome },

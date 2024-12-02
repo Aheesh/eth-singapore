@@ -3,11 +3,15 @@ import { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const outcomes = searchParams.get('text')?.split(',') || [];
+  const type = searchParams.get('type');
+  const text = searchParams.get('text') || '';
   const degenBalance = searchParams.get('degenBalance') || '0';
 
-  return new ImageResponse(
-    (
+  let content;
+
+  if (type === 'start') {
+    const outcomes = text.split(',');
+    content = (
       <div
         style={{
           background: 'linear-gradient(to bottom, #1a1a1a, #2d2d2d)',
@@ -95,10 +99,64 @@ export async function GET(request: NextRequest) {
           DEGEN Prize Pool: {degenBalance} DEGEN
         </div>
       </div>
-    ),
-    {
-      width: 1200,
-      height: 1200,
-    },
-  );
+    );
+  } else if (type === 'approve') {
+    content = (
+      <div
+        style={{
+          background: 'linear-gradient(to bottom, #1a1a1a, #2d2d2d)',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '40px',
+          color: 'white',
+        }}
+      >
+        <div style={{ 
+          fontSize: 48, 
+          fontWeight: 'bold',
+          marginBottom: '20px',
+          color: '#4ECDC4',
+          display: 'flex',
+        }}>
+          Swap Approval
+        </div>
+        
+        <div style={{ 
+          fontSize: 36,
+          textAlign: 'center',
+          padding: '20px',
+          background: 'rgba(255, 255, 255, 0.1)',
+          borderRadius: '12px',
+          display: 'flex',
+        }}>
+          {text}
+        </div>
+      </div>
+    );
+  } else {
+    content = (
+      <div
+        style={{
+          background: 'linear-gradient(to bottom, #1a1a1a, #2d2d2d)',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+        }}
+      >
+        Invalid type
+      </div>
+    );
+  }
+
+  return new ImageResponse(content, {
+    width: 1200,
+    height: 1200,
+  });
 } 
