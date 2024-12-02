@@ -5,23 +5,15 @@ import Link from 'next/link';
 
 const frameMetadata = getFrameMetadata({
   buttons: [
-    {
-      label: 'Player-A',
-    },
-    {
-      label: 'Player-B',
-    },
-    {
-      label: 'Draw',
-    },
+    { label: 'Ding (28.21%)' },
+    { label: 'Gukesh (38.72%)' },
+    { label: 'Draw (33.07%)' },
   ],
   image: {
-    src: `${NEXT_PUBLIC_URL}/game1.webp`,
+    src: `${NEXT_PUBLIC_URL}/api/og?text=Ding,Gukesh,Draw&degenBalance=0.00`,
     aspectRatio: '1:1',
   },
-  // input: {
-  //   text: 'Tell me a story',
-  // },
+  state: { frame: 'start' },
   postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
 });
 
