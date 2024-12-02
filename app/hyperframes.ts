@@ -172,7 +172,7 @@ addHyperFrame('approve', {
     
     // Format the params for approve frame
     const params = new URLSearchParams({
-      text: `${absValueNumber.toFixed(2)} tokens for ${outcomeLabel}`,
+      text: `Would you like to swap ${amount} DEGEN for ${absValueNumber.toFixed(2)} ${outcomeLabel} tokens ?`,
       type: 'approve'
     });
 
@@ -180,7 +180,7 @@ addHyperFrame('approve', {
       buttons: [
         {
           action: 'tx',
-          label: 'Swap Approve',
+          label: 'Approve',
           target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=${amount}`,
         },
         {
