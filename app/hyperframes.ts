@@ -1,12 +1,13 @@
 import { getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
 import { NEXT_PUBLIC_URL, DEGEN_ADDR, BAL_VAULT_ADDR, POOL_ID } from './config';
+import { calculateTokenAmount } from '../lib/swapUtils';
 
 // Add this type definition
 type FrameResult = string | { frame: string; [key: string]: any };
 
 // Update the HyperFrame type definition
 export type HyperFrame = {
-  frame: string | ((text: string, state?: any) => string);
+  frame: string | ((text: string, state?: any) => string | Promise<string>);
   1: string | ((text: string, state?: any) => FrameResult) | (() => string);
   2?: string | ((text: string, state?: any) => FrameResult) | (() => string);
   3?: string | ((text: string, state?: any) => FrameResult) | (() => string);
@@ -20,12 +21,12 @@ export function addHyperFrame(label: string, frame: HyperFrame) {
 }
 
 
-export function getHyperFrame(
+export async function getHyperFrame(
   frame: string,
   text: string,
   buttonNumber?: number,
   existingState: any = {}
-): string {
+): Promise<string> {
   // Add debug logging
   console.log('getHyperFrame existingState:', existingState);
   
@@ -70,9 +71,8 @@ export function getHyperFrame(
   
   const nextFrame = frames[nextFrameId].frame;
   if (typeof nextFrame === 'function') {
-    // Add debug logging
     console.log('Calling nextFrame function with text and state:', { text, newState });
-    return nextFrame(text, newState);
+    return await nextFrame(text, newState);
   } else {
     return nextFrame;
   }
@@ -138,10 +138,21 @@ addHyperFrame('selectAmount', {
 });
 
 
-// Add a new frame for 'approve' that accepts a query parameter
+
 addHyperFrame('approve', {
-  frame: (text, state?: any) => {
-    const amount = state?.amount || '1'; // Default to '1' if no amount in state
+  frame: async (text, state?: any) => {
+    const amount = state?.amount || '1';
+    const outcome = state?.outcome || 'Player-A';
+    
+    // Calculate expected tokens
+    const providerApiKey = process.env.BASE_PROVIDER_API_KEY;
+    const { absValue } = await calculateTokenAmount(amount, outcome, providerApiKey);
+    const absValueNumber = Number(absValue);
+    
+    // Format the outcome message
+    const outcomeLabel = outcome === 'Player-A' ? 'Player A' :
+                        outcome === 'Player-B' ? 'Player B' : 
+                        'Draw';
     
     return getFrameHtmlResponse({
       buttons: [
@@ -155,7 +166,7 @@ addHyperFrame('approve', {
         },
       ],
       image: {
-        src: `${NEXT_PUBLIC_URL}/confirm-swap.webp`,
+        src: `${NEXT_PUBLIC_URL}/api/og?text=You will receive approximately ${absValueNumber.toFixed(2)} tokens for ${outcomeLabel} as winning outcome`,
         aspectRatio: '1:1',
       },
       state: { frame: 'approve', amount, outcome: state?.outcome },
