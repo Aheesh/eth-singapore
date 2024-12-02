@@ -45,7 +45,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('api/frame/route.ts : state =>', state);
   console.log('api/frame/route.ts : frame =>', frame);
 
-  const hyperFrameResponse = getHyperFrame(frame as string, text ?? '', message.button, state);
+  const hyperFrameResponse = await getHyperFrame(frame as string, text ?? '', message.button, state);
   console.log('HyperFrame response:', hyperFrameResponse);
 
   return new NextResponse(hyperFrameResponse);
