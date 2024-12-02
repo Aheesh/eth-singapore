@@ -86,7 +86,13 @@ addHyperFrame('start', {
     // Fetch pool balance
     const poolData = await getPoolBalance();
     const degenBalance = parseFloat(poolData.balances[1]) - 1000; // Subtract initial 1000 DEGEN LP
-    console.log('hyperframes.ts DEGEN Balance 🧢🧢🧢 : degenBalance 🧢🧢🧢', degenBalance);
+    console.log('DEGEN Balance 🧢🧢🧢 : degenBalance 🧢🧢🧢', degenBalance);
+
+    // Construct the text with all parameters included
+    const params = new URLSearchParams({
+      text: 'Ding,Gukesh,Draw', // Include all outcomes to show all cards
+      degenBalance: degenBalance.toFixed(2)
+    });
 
     return getFrameHtmlResponse({
       buttons: [
@@ -95,7 +101,7 @@ addHyperFrame('start', {
         { label: 'Draw (33.07%)' },
       ],
       image: {
-        src: `${NEXT_PUBLIC_URL}/api/og?text=Ding vs Gukesh%0A%0AOdds:%0ADing: 28.21%25%0AGukesh: 38.72%25%0ADraw: 33.07%25%0A%0ADEGEN Prize Pool: ${degenBalance.toFixed(2)} DEGEN`,
+        src: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
         aspectRatio: '1:1',
       },
       state: { frame: 'start' },

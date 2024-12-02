@@ -3,7 +3,8 @@ import { NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const text = searchParams.get('text');
+  const outcomes = searchParams.get('text')?.split(',') || [];
+  const degenBalance = searchParams.get('degenBalance') || '0';
 
   return new ImageResponse(
     (
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest) {
           gap: '40px',
           marginBottom: '40px',
         }}>
-          {text?.includes('Ding') && (
+          {outcomes.includes('Ding') && (
             <div style={{ 
               fontSize: 36,
               textAlign: 'center',
@@ -59,7 +60,7 @@ export async function GET(request: NextRequest) {
               Ding<br/>28.21%
             </div>
           )}
-          {text?.includes('Gukesh') && (
+          {outcomes.includes('Gukesh') && (
             <div style={{ 
               fontSize: 36,
               textAlign: 'center',
@@ -71,7 +72,7 @@ export async function GET(request: NextRequest) {
               Gukesh<br/>38.72%
             </div>
           )}
-          {text?.includes('Draw') && (
+          {outcomes.includes('Draw') && (
             <div style={{ 
               fontSize: 36,
               textAlign: 'center',
@@ -91,7 +92,7 @@ export async function GET(request: NextRequest) {
           fontWeight: 'bold',
           display: 'flex',
         }}>
-          {text?.split('DEGEN Prize Pool:')[1]}
+          DEGEN Prize Pool: {degenBalance} DEGEN
         </div>
       </div>
     ),
