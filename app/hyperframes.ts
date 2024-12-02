@@ -86,6 +86,7 @@ addHyperFrame('start', {
     // Fetch pool balance
     const poolData = await getPoolBalance();
     const degenBalance = parseFloat(poolData.balances[1]) - 1000; // Subtract initial 1000 DEGEN LP
+    console.log('hyperframes.ts DEGEN Balance 🧢🧢🧢 : degenBalance 🧢🧢🧢', degenBalance);
 
     return getFrameHtmlResponse({
       buttons: [
