@@ -9,23 +9,28 @@ export async function generateMetadata(): Promise<Metadata> {
   try {
     const poolData = await getPoolBalance();
     degenBalance = parseFloat(poolData.balances[1]) - 1000;
+    console.log('page.tsx DEGEN Balance 🧢💸🧢💸🧢💸 : degenBalance 💸🧢💸🧢💸', degenBalance);
   } catch (error) {
     console.error('Failed to fetch pool balance:', error);
-    // Use 0 as fallback value
   }
 
   const frameMetadata = getFrameMetadata({
     buttons: [
-      { label: 'Ding (28.21%)' },
-      { label: 'Gukesh (38.72%)' },
-      { label: 'Draw (33.07%)' },
+      {
+        label: 'Ding (28.21%)'
+      },
+      {
+        label: 'Gukesh (38.72%)'
+      },
+      {
+        label: 'Draw (33.07%)'
+      }
     ],
     image: {
       src: `${NEXT_PUBLIC_URL}/api/og?text=Ding,Gukesh,Draw&degenBalance=${degenBalance.toFixed(2)}`,
-      aspectRatio: '1:1',
+      aspectRatio: '1.91:1'
     },
-    state: { frame: 'start' },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+    postUrl: `${NEXT_PUBLIC_URL}/api/frame`
   });
 
   return {
@@ -36,9 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: 'What are the odds?',
       images: [`${NEXT_PUBLIC_URL}/park-1.png`],
     },
-    other: {
-      ...frameMetadata,
-    },
+    other: frameMetadata,
   };
 }
 
