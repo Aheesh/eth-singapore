@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
               borderRadius: '12px',
               display: 'flex',
             }}>
-              Ding<br/>28.21%
+              Ding<br/>0.28
             </div>
           )}
           {outcomes.includes('Gukesh') && (
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
               borderRadius: '12px',
               display: 'flex',
             }}>
-              Gukesh<br/>38.72%
+              Gukesh<br/>0.38
             </div>
           )}
           {outcomes.includes('Draw') && (
@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
               borderRadius: '12px',
               display: 'flex',
             }}>
-              Draw<br/>33.07%
+              Draw<br/>0.33
             </div>
           )}
         </div>
