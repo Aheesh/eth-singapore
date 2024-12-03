@@ -97,9 +97,9 @@ addHyperFrame('start', {
 
     return getFrameHtmlResponse({
       buttons: [
-        { label: 'Ding (28.21%)' },
-        { label: 'Gukesh (38.72%)' },
-        { label: 'Draw (33.07%)' },
+        { label: 'Ding (0.28)' },
+        { label: 'Gukesh (0.38)' },
+        { label: 'Draw (0.33)' },
       ],
       image: {
         src: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
