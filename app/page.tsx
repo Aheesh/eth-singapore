@@ -22,13 +22,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const frameMetadata = getFrameMetadata({
     buttons: [
       {
-        label: 'Ding (28.21%)'
+        label: 'Ding (0.28)'
       },
       {
-        label: 'Gukesh (38.72%)'
+        label: 'Gukesh (0.38)'
       },
       {
-        label: 'Draw (33.07%)'
+        label: 'Draw (0.33)'
       }
     ],
     image: {
