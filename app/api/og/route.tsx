@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
           color: 'transparent',
           display: 'flex',
         }}>
-          Ding vs Gukesh
+          Player A vs Player B
         </div>
         
         <div style={{ 
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
           gap: '40px',
           marginBottom: '40px',
         }}>
-          {outcomes.includes('Ding') && (
+          {outcomes.includes('Player A') && (
             <div style={{ 
               fontSize: 36,
               textAlign: 'center',
@@ -61,10 +61,10 @@ export async function GET(request: NextRequest) {
               borderRadius: '12px',
               display: 'flex',
             }}>
-              Ding<br/>0.28
+              Player A<br/>0.28
             </div>
           )}
-          {outcomes.includes('Gukesh') && (
+          {outcomes.includes('Player B') && (
             <div style={{ 
               fontSize: 36,
               textAlign: 'center',
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
               borderRadius: '12px',
               display: 'flex',
             }}>
-              Gukesh<br/>0.38
+              Player B<br/>0.38
             </div>
           )}
           {outcomes.includes('Draw') && (
