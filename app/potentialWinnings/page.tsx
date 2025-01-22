@@ -35,7 +35,7 @@ export default function PotentialWinnings() {
         (token: string) => token.toLowerCase() === DEGEN_ADDR.toLowerCase()
       );
       const totalDegenInPool = Number(data.poolBalance.balances[degenTokenIndex]);
-      const LP_DEGEN_AMOUNT = 1000; //TODO: get this from the pool
+      const LP_DEGEN_AMOUNT = 50; //TODO: get this from the pool
       const totalPrizePool = totalDegenInPool - LP_DEGEN_AMOUNT;
 
       // Calculate sum of tokens excluding BAL_VAULT_ADDR

@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import controllerABI from '../_contracts/Controller.json';
 
-const CONTROLLER_ADDRESS = "0x835309AED8B04C52Fe0dAF35D90F7e5f9A7472Bd";
+const CONTROLLER_ADDRESS = "0x5510E5aAC4dD789FF020C54ee32b4FA431C339e7";
 
 export async function getPoolBalance() {
     const providerApiKey = process.env.BASE_PROVIDER_API_KEY;
