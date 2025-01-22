@@ -90,16 +90,16 @@ addHyperFrame('start', {
 
     // Construct the text with all parameters included
     const params = new URLSearchParams({
-      text: 'Ding,Gukesh,Draw', // Include all outcomes to show all cards
+      text: 'Player A,Player B,Draw', // Include all outcomes to show all cards
       degenBalance: degenBalance.toFixed(2),
       type: 'start'
     });
 
     return getFrameHtmlResponse({
       buttons: [
-        { label: 'Ding (0.28)' },
-        { label: 'Gukesh (0.38)' },
-        { label: 'Draw (0.33)' },
+        { label: 'Player A (0.28)' },
+        { label: 'Player B (0.36)' },
+        { label: 'Draw (0.36)' },
       ],
       image: {
         src: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
@@ -109,8 +109,8 @@ addHyperFrame('start', {
       postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
     });
   },
-  1: (text) => ({ frame: 'selectAmount', outcome: 'Ding' }),
-  2: (text) => ({ frame: 'selectAmount', outcome: 'Gukesh' }),
+  1: (text) => ({ frame: 'selectAmount', outcome: 'Player A' }),
+  2: (text) => ({ frame: 'selectAmount', outcome: 'Player B' }),
   3: (text) => ({ frame: 'selectAmount', outcome: 'Draw' }),
 });
 
@@ -166,8 +166,8 @@ addHyperFrame('approve', {
     const absValueNumber = Number(absValue);
     
     // Format the outcome message
-    const outcomeLabel = outcome === 'Ding' ? 'Ding' :
-                        outcome === 'Gukesh' ? 'Gukesh' : 
+    const outcomeLabel = outcome === 'Player A' ? 'Player A' :
+                        outcome === 'Player B' ? 'Player B' : 
                         'Draw';
     
     // Format the params for approve frame

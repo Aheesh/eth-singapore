@@ -15,20 +15,20 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   const imageUrl = new URL('/api/og', NEXT_PUBLIC_URL);
-  imageUrl.searchParams.append('text', 'Ding,Gukesh,Draw');
+  imageUrl.searchParams.append('text', 'Player A,Player B,Draw');
   imageUrl.searchParams.append('degenBalance', degenBalance.toFixed(2));
   imageUrl.searchParams.append('type', 'start');
 
   const frameMetadata = getFrameMetadata({
     buttons: [
       {
-        label: 'Ding (0.28)'
+        label: 'Player A (0.28)'
       },
       {
-        label: 'Gukesh (0.38)'
+        label: 'Gukesh (0.36)'
       },
       {
-        label: 'Draw (0.33)'
+        label: 'Draw (0.36)'
       }
     ],
     image: {
