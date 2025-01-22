@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
           gap: '40px',
           marginBottom: '40px',
         }}>
-          {outcomes.includes('Player A') && (
+          {outcomes.includes('Player-A') && (
             <div style={{ 
               fontSize: 36,
               textAlign: 'center',
@@ -61,10 +61,10 @@ export async function GET(request: NextRequest) {
               borderRadius: '12px',
               display: 'flex',
             }}>
-              Player A<br/>0.28
+              Player-A<br/>0.28
             </div>
           )}
-          {outcomes.includes('Player B') && (
+          {outcomes.includes('Player-B') && (
             <div style={{ 
               fontSize: 36,
               textAlign: 'center',
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
               borderRadius: '12px',
               display: 'flex',
             }}>
-              Player B<br/>0.38
+              Player-B<br/>0.33
             </div>
           )}
           {outcomes.includes('Draw') && (
