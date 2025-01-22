@@ -156,44 +156,84 @@ addHyperFrame('selectAmount', {
 
 addHyperFrame('approve', {
   frame: async (text, state?: any) => {
-    const amount = state?.amount 
-    const outcome = state?.outcome
-    
-    // Calculate expected tokens
-    const providerApiKey = process.env.BASE_PROVIDER_API_KEY ?? '';
-    if (!providerApiKey) throw new Error('BASE_PROVIDER_API_KEY is not defined');
-    const { absValue } = await calculateTokenAmount(amount, outcome, providerApiKey);
-    const absValueNumber = Number(absValue);
-    
-    // Format the outcome message
-    const outcomeLabel = outcome === 'Player-A' ? 'Player-A' :
-                        outcome === 'Player-B' ? 'Player-B' : 
-                        'Draw';
-    
-    // Format the params for approve frame
-    const params = new URLSearchParams({
-      text: `Would you like to swap ${amount} DEGEN for ${absValueNumber.toFixed(2)} ${outcomeLabel} tokens ?`,
-      type: 'approve'
-    });
+    try {
+      const amount = state?.amount 
+      const outcome = state?.outcome
+      
+      // Check for required environment variable
+      const providerApiKey = process.env.BASE_PROVIDER_API_KEY;
+      if (!providerApiKey) {
+        console.error('BASE_PROVIDER_API_KEY is not defined');
+        return getFrameHtmlResponse({
+          buttons: [{ label: 'Try Again' }],
+          image: {
+            src: `${NEXT_PUBLIC_URL}/error.webp`,
+            aspectRatio: '1:1',
+          },
+          state: { frame: 'start' },
+          postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+        });
+      }
 
-    return getFrameHtmlResponse({
-      buttons: [
-        {
-          action: 'tx',
-          label: 'Approve',
-          target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=${amount}`,
+      // Calculate expected tokens with error handling
+      let absValueNumber;
+      try {
+        const { absValue } = await calculateTokenAmount(amount, outcome, providerApiKey);
+        absValueNumber = Number(absValue);
+      } catch (error) {
+        console.error('Error calculating token amount:', error);
+        return getFrameHtmlResponse({
+          buttons: [{ label: 'Try Again' }],
+          image: {
+            src: `${NEXT_PUBLIC_URL}/error.webp`,
+            aspectRatio: '1:1',
+          },
+          state: { frame: 'start' },
+          postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+        });
+      }
+
+      // Format the outcome message
+      const outcomeLabel = outcome === 'Player-A' ? 'Player-A' :
+                          outcome === 'Player-B' ? 'Player-B' : 
+                          'Draw';
+      
+      // Format the params for approve frame
+      const params = new URLSearchParams({
+        text: `Would you like to swap ${amount} DEGEN for ${absValueNumber.toFixed(2)} ${outcomeLabel} tokens ?`,
+        type: 'approve'
+      });
+
+      return getFrameHtmlResponse({
+        buttons: [
+          {
+            action: 'tx',
+            label: 'Approve',
+            target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=${amount}`,
+          },
+          {
+            label: 'Cancel',
+          },
+        ],
+        image: {
+          src: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
+          aspectRatio: '1:1',
         },
-        {
-          label: 'Cancel',
+        state: { frame: 'approve', amount, outcome: state?.outcome },
+        postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+      });
+    } catch (error) {
+      console.error('Error in approve frame:', error);
+      return getFrameHtmlResponse({
+        buttons: [{ label: 'Try Again' }],
+        image: {
+          src: `${NEXT_PUBLIC_URL}/error.webp`,
+          aspectRatio: '1:1',
         },
-      ],
-      image: {
-        src: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
-        aspectRatio: '1:1',
-      },
-      state: { frame: 'approve', amount, outcome: state?.outcome },
-      postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-    });
+        state: { frame: 'start' },
+        postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+      });
+    }
   },
   1: 'txSuccess',
   2: 'start',
