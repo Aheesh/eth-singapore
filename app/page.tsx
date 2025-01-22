@@ -8,24 +8,24 @@ export async function generateMetadata(): Promise<Metadata> {
   let degenBalance = 0;
   try {
     const poolData = await getPoolBalance();
-    degenBalance = parseFloat(poolData.balances[1]) - 1000;
+    degenBalance = parseFloat(poolData.balances[1]) - 50;
     console.log('page.tsx DEGEN Balance 🧢💸🧢💸🧢💸 : degenBalance 💸🧢💸🧢💸', degenBalance);
   } catch (error) {
     console.error('Failed to fetch pool balance:', error);
   }
 
   const imageUrl = new URL('/api/og', NEXT_PUBLIC_URL);
-  imageUrl.searchParams.append('text', 'Player A,Player B,Draw');
+  imageUrl.searchParams.append('text', 'Player-A,Player-B,Draw');
   imageUrl.searchParams.append('degenBalance', degenBalance.toFixed(2));
   imageUrl.searchParams.append('type', 'start');
 
   const frameMetadata = getFrameMetadata({
     buttons: [
       {
-        label: 'Player A (0.28)'
+        label: 'Player-A (0.28)'
       },
       {
-        label: 'Gukesh (0.36)'
+        label: 'Player-B (0.36)'
       },
       {
         label: 'Draw (0.36)'
