@@ -26,81 +26,96 @@ export type State = {
 };
 
 async function getResponse(req: NextRequest): Promise<NextResponse> {
-  console.log('api/approveTx/route.ts : Approve endpoint');
+  try {
+    console.log('api/approveTx/route.ts : Approve endpoint');
 
-  let accountAddress: string | undefined = '';
-  let walletAddress: string = '';
+    let accountAddress: string | undefined = '';
+    let walletAddress: string = '';
 
-  const body: FrameRequest = await req.json();
-  const { isValid, message } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
-  console.log('api/approveTx/route.ts : body =>', body);
+    const body: FrameRequest = await req.json();
+    const { isValid, message } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
+    console.log('api/approveTx/route.ts : body =>', body);
 
-  if (isValid) {
+    if (!isValid) {
+      console.error('Invalid message');
+      return new NextResponse('Message not valid', { status: 500 });
+    }
+
     accountAddress = message.interactor.verified_accounts[0];
     walletAddress = message.address || '';
-  } else {
-    return new NextResponse('Message not valid', { status: 500 });
-  }
-  console.log('api/approveTx/route.ts : walletAddress =>', walletAddress);
+    console.log('api/approveTx/route.ts : walletAddress =>', walletAddress);
 
-  let amount = 0;
-  if (message.button) {
-    amount = parseInt(message.button.toString());
-  }
+    if (!walletAddress) {
+      throw new Error('No wallet address provided');
+    }
 
-  console.log('api/approveTx/route.ts :amount =>', amount);
+    let amount = 0;
+    if (message.button) {
+      amount = parseInt(message.button.toString());
+    }
 
-  // Parse the existing state
-  let state: State = {};
-  try {
-    const parsedState = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
-    console.log('api/approveTx/route.ts : parsed state =>', parsedState);
-    state = parsedState;
-  } catch (e) {
-    console.error('Error parsing state:', e);
-  }
+    // Parse the existing state
+    let state: State = {};
+    try {
+      const parsedState = JSON.parse(decodeURIComponent(message.state?.serialized || '{}'));
+      console.log('api/approveTx/route.ts : parsed state =>', parsedState);
+      state = parsedState;
+    } catch (e) {
+      console.error('Error parsing state:', e);
+      state = {};
+    }
 
-  // Update the state with the new amount while preserving existing state
-  state = {
-    ...state,
-    frame: 'approve',
-    amount: amount.toString(),
-  };
+    // Update the state with the new amount and explicitly set the next frame
+    state = {
+      ...state,
+      frame: 'approve',
+      amount: amount.toString(),
+      nextFrame: 'swapTx', // Add this to control the flow after approval
+      skipCalculation: true, // Add this flag to skip token calculation in the next frame
+    };
 
-  console.log('api/approveTx/route.ts : updated state =>', state);
+    console.log('api/approveTx/route.ts : updated state =>', state);
 
-  const value = parseUnits(amount.toString(), 18);
-  console.log('api/approveTx/route.ts :value =>', value);
+    const value = parseUnits(amount.toString(), 18);
+    console.log('api/approveTx/route.ts :value =>', value);
 
-  const data = encodeFunctionData({
-    abi: abi,
-    functionName: 'approve',
-    args: [BAL_VAULT_ADDR, value],
-  });
-
-  const txData: FrameTransactionResponse = {
-    chainId: `eip155:${base.id}`,
-    method: 'eth_sendTransaction',
-    params: {
+    const data = encodeFunctionData({
       abi: abi,
-      data: data,
-      to: DEGEN_ADDR,
-      value: '0x0',
-    },
-  };
+      functionName: 'approve',
+      args: [BAL_VAULT_ADDR, value],
+    });
 
-  console.log('api/approveTx/route.ts : txData =>', txData);
+    const txData: FrameTransactionResponse = {
+      chainId: `eip155:${base.id}`,
+      method: 'eth_sendTransaction',
+      params: {
+        abi: abi,
+        data: data,
+        to: DEGEN_ADDR,
+        value: '0x0',
+      },
+    };
 
-  const updatedSerializedState = encodeURIComponent(JSON.stringify(state));
-  console.log('api/approveTx/route.ts : serialized: updatedSerializedState with return txdata =>', updatedSerializedState);
+    const updatedSerializedState = encodeURIComponent(JSON.stringify(state));
 
-  return NextResponse.json({
-    ...txData,
-    state: {
-      serialized: updatedSerializedState,
-    },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-  });
+    return NextResponse.json({
+      ...txData,
+      state: {
+        serialized: updatedSerializedState,
+      },
+      postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+    });
+
+  } catch (error) {
+    console.error('Error in approveTx:', error);
+    // Return an error frame response
+    return NextResponse.json({
+      state: {
+        serialized: encodeURIComponent(JSON.stringify({ frame: 'error' })),
+      },
+      postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+    });
+  }
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
