@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
               borderRadius: '12px',
               display: 'flex',
             }}>
-              Player-A<br/>0.28
+              Player A<br/>0.28
             </div>
           )}
           {outcomes.includes('Player-B') && (
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
               borderRadius: '12px',
               display: 'flex',
             }}>
-              Player-B<br/>0.33
+              Player B<br/>0.33
             </div>
           )}
           {outcomes.includes('Draw') && (
