@@ -1,58 +1,72 @@
-import { FrameRequest, getFrameMessage, getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
 import { NextRequest, NextResponse } from 'next/server';
-import { NEXT_PUBLIC_URL } from '../../config';
+import { getFrameMessage, FrameRequest } from '@coinbase/onchainkit/frame';
 import { getHyperFrame } from '../../hyperframes';
 
-async function getResponse(req: NextRequest): Promise<NextResponse> {
-  console.log('api/frame/route.ts :  START ');
-
-  let accountAddress: string | undefined = '';
-  let text: string | undefined = '';
-  let message: any;
-
+export async function POST(req: NextRequest): Promise<Response> {
   try {
-    const body: FrameRequest = await req.json();
-    console.log('Received body:', body);
-
-    const { isValid, message: frameMessage } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
-    message = frameMessage;
-    console.log('Frame message validation result:', { isValid, message });
-
-    if (!isValid) {
-      console.error('Invalid message');
-      return NextResponse.json({ error: 'Message not valid' }, { status: 400 });
+    // Safely parse the request body
+    let body: FrameRequest;
+    try {
+      body = await req.json();
+    } catch (e) {
+      console.error('Error parsing request body:', e);
+      return new NextResponse('Invalid JSON in request body', { status: 400 });
     }
 
-    accountAddress = message.interactor.verified_accounts[0];
+    // Validate the frame message
+    const { isValid, message } = await getFrameMessage(body, { neynarApiKey: 'NEYNAR_ONCHAIN_KIT' });
+    
+    if (!isValid) {
+      console.error('Invalid frame message');
+      return new NextResponse('Invalid frame message', { status: 400 });
+    }
+
+    // Safely parse the state
+    let state = {};
+    if (message.state?.serialized) {
+      try {
+        state = JSON.parse(decodeURIComponent(message.state.serialized));
+      } catch (e) {
+        console.error('Error parsing state:', e);
+        // Instead of failing, continue with empty state
+        state = {};
+      }
+    }
+
+    console.log('frame/route.ts: Parsed state =>', state);
+    console.log('frame/route.ts: Message =>', message);
+
+    // Get the current frame from state or default to 'start'
+    const currentFrame = (state as any)?.frame || 'start';
+    const buttonNumber = message.button || undefined;
+    
+    // Generate the frame HTML
+    const frameHtml = await getHyperFrame(
+      currentFrame,
+      message.input || '',
+      buttonNumber,
+      state
+    );
+
+    return new NextResponse(frameHtml);
+
   } catch (error) {
-    return new NextResponse('Message not valid', { status: 500 });
+    console.error('Error in frame route:', error);
+    // Return a generic error frame
+    return new NextResponse(JSON.stringify({
+      buttons: [{ label: 'Try Again' }],
+      image: {
+        src: `${process.env.NEXT_PUBLIC_URL}/error.webp`,
+        aspectRatio: '1:1',
+      },
+      state: { frame: 'error' },
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   }
-
-  if (message?.input) {
-    text = message.input;
-  }
-
-  let state = { frame: 'start' };
-
-  try {
-    state = JSON.parse(decodeURIComponent(message.state?.serialized));
-  } catch (e) {
-    console.error(e);
-  }
-
-  console.log('Raw state:', message?.state?.serialized);
-  const frame = state.frame;
-  console.log('api/frame/route.ts : state =>', state);
-  console.log('api/frame/route.ts : frame =>', frame);
-
-  const hyperFrameResponse = await getHyperFrame(frame as string, text ?? '', message.button, state);
-  console.log('HyperFrame response:', hyperFrameResponse);
-
-  return new NextResponse(hyperFrameResponse);
-}
-
-export async function POST(req: NextRequest): Promise<Response> {
-  return getResponse(req);
 }
 
 export const dynamic = 'force-dynamic';
