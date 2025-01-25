@@ -70,8 +70,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       ...state,
       frame: 'approve',
       amount: amount.toString(),
-      nextFrame: 'swapTx', // Add this to control the flow after approval
-      skipCalculation: true, // Add this flag to skip token calculation in the next frame
+      isPostApproval: true,
+      skipCalculation: true,
     };
 
     console.log('api/approveTx/route.ts : updated state =>', state);
