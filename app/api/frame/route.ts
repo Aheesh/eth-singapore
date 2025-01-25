@@ -1,9 +1,8 @@
-import { FrameRequest, getFrameMessage, getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
 import { NextRequest, NextResponse } from 'next/server';
-import { NEXT_PUBLIC_URL } from '../../config';
+import { getFrameMessage, FrameRequest } from '@coinbase/onchainkit/frame';
 import { getHyperFrame } from '../../hyperframes';
 
-export async function getResponse(req: NextRequest): Promise<NextResponse> {
+export async function POST(req: NextRequest): Promise<Response> {
   try {
     // Safely parse the request body
     let body: FrameRequest;
@@ -68,10 +67,6 @@ export async function getResponse(req: NextRequest): Promise<NextResponse> {
       },
     });
   }
-}
-
-export async function POST(req: NextRequest): Promise<Response> {
-  return getResponse(req);
 }
 
 export const dynamic = 'force-dynamic';
