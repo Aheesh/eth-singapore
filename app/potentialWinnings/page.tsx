@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { balVaultAddr, degenAddr } from '../config';
+import { publicBalVaultAddr as balVaultAddr, publicDegenAddr as degenAddr } from '../config';
 
 interface WinningsData {
   totalPrizePool: number;
