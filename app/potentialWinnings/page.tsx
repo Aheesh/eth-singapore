@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { publicBalVaultAddr as balVaultAddr, publicDegenAddr as degenAddr } from '../config';
+import { publicBalVaultAddr , publicDegenAddr  } from '../config';
 
 interface WinningsData {
   totalPrizePool: number;
@@ -14,13 +14,13 @@ interface WinningsData {
 const REFRESH_INTERVAL = 1000; // Refresh every 10 seconds
 
 export default function PotentialWinnings() {
-  if (!balVaultAddr) throw new Error('balVaultAddr not set');
-  if (!degenAddr) throw new Error('degenAddr not set');
+  if (!publicBalVaultAddr) throw new Error('balVaultAddr not set');
+  if (!publicDegenAddr) throw new Error('degenAddr not set');
   const [winningsData, setWinningsData] = useState<WinningsData | null>(null);
 
   const calculateWinnings = async () => {
-    if (!balVaultAddr) throw new Error('balVaultAddr not set');
-    if (!degenAddr) throw new Error('degenAddr not set');
+    if (!publicBalVaultAddr) throw new Error('balVaultAddr not set');
+    if (!publicDegenAddr) throw new Error('degenAddr not set');
     
     try {
       // Add timestamp to URL to prevent caching
@@ -34,11 +34,11 @@ export default function PotentialWinnings() {
       });
       
       const data = await response.json();
-      const vaultAddr = balVaultAddr.toLowerCase();  // Store lowercase once
+      const vaultAddr = publicBalVaultAddr.toLowerCase();  // Store lowercase once
 
       // Get total prize pool (DEGEN token balance)
       const degenTokenIndex = data.poolBalance.tokens.findIndex(
-        (token: string) => token.toLowerCase() === (degenAddr as string).toLowerCase()
+        (token: string) => token.toLowerCase() === (publicDegenAddr as string).toLowerCase()
       );
       const totalDegenInPool = Number(data.poolBalance.balances[degenTokenIndex]);
       const LP_DEGEN_AMOUNT = 50;
