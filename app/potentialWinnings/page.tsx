@@ -1,6 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { publicBalVaultAddr , publicDegenAddr  } from '../config';
+import { publicBalVaultAddr, publicDegenAddr } from '../config';
+
+// Add export const dynamic to prevent prerendering
+export const dynamic = 'force-dynamic';
+// Add runtime setting
+export const runtime = 'edge';
 
 interface WinningsData {
   totalPrizePool: number;
