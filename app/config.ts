@@ -1,8 +1,13 @@
 // use NODE_ENV to not have to change config based on where it's deployed
 export const NEXT_PUBLIC_URL ='https://eth-singapore-woad.vercel.app';
 
-export const balVaultAddr = process.env.BAL_VAULT_ADDR;
-export const degenAddr = process.env.DEGEN_ADDR;
+// For server-side
+export const balVaultAddr = process.env.BAL_VAULT_ADDR || process.env.NEXT_PUBLIC_BAL_VAULT_ADDR;
+export const degenAddr = process.env.DEGEN_ADDR || process.env.NEXT_PUBLIC_DEGEN_ADDR;
+
+// For client-side
+export const publicBalVaultAddr = process.env.NEXT_PUBLIC_BAL_VAULT_ADDR;
+export const publicDegenAddr = process.env.NEXT_PUBLIC_DEGEN_ADDR;
 
 export const PLAYER_A_ADDR = '0xA68E10f668e735Da87f48DA78B14c5466EEF91C9';
 export const PLAYER_B_ADDR = '0xB40173EeadBA7479CBeFc320d982eEa29858CD9D';
