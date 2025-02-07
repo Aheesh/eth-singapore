@@ -1,5 +1,5 @@
 import { getFrameHtmlResponse } from '@coinbase/onchainkit/frame';
-import { NEXT_PUBLIC_URL, DEGEN_ADDR, BAL_VAULT_ADDR, POOL_ID } from './config';
+import { NEXT_PUBLIC_URL, degenAddr, balVaultAddr, poolId } from './config';
 import { calculateTokenAmount } from '../app/lib/swapUtils';
 import { getPoolBalance } from './lib/balancer';
 

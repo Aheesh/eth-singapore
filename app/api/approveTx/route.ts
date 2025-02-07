@@ -10,7 +10,7 @@ import { NEXT_PUBLIC_URL } from '../../config';
 import { addHyperFrame, getHyperFrame } from '../../hyperframes';
 import { encodeFunctionData, parseUnits } from 'viem';
 import abi from '../../_contracts/degen';
-import { BAL_VAULT_ADDR, DEGEN_ADDR } from '../../config';
+import { balVaultAddr, degenAddr } from '../../config';
 import { base } from 'viem/chains';
 import {
   FrameRequest,
@@ -78,10 +78,13 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     const value = parseUnits(amount.toString(), 18);
     console.log('api/approveTx/route.ts :value =>', value);
 
+    if (!balVaultAddr) throw new Error('balVaultAddr not set');
+    if (!degenAddr) throw new Error('degenAddr not set');
+
     const data = encodeFunctionData({
       abi: abi,
       functionName: 'approve',
-      args: [BAL_VAULT_ADDR, value],
+      args: [balVaultAddr as `0x${string}`, value],
     });
 
     const txData: FrameTransactionResponse = {
@@ -90,7 +93,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       params: {
         abi: abi,
         data: data,
-        to: DEGEN_ADDR,
+        to: degenAddr as `0x${string}`,
         value: '0x0',
       },
     };

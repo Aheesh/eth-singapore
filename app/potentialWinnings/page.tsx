@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { BAL_VAULT_ADDR, DEGEN_ADDR } from '../config';
+import { balVaultAddr, degenAddr } from '../config';
 
 interface WinningsData {
   totalPrizePool: number;
@@ -11,12 +11,17 @@ interface WinningsData {
   };
 }
 
-const REFRESH_INTERVAL = 10000; // Refresh every 10 seconds
+const REFRESH_INTERVAL = 1000; // Refresh every 10 seconds
 
 export default function PotentialWinnings() {
+  if (!balVaultAddr) throw new Error('balVaultAddr not set');
+  if (!degenAddr) throw new Error('degenAddr not set');
   const [winningsData, setWinningsData] = useState<WinningsData | null>(null);
 
   const calculateWinnings = async () => {
+    if (!balVaultAddr) throw new Error('balVaultAddr not set');
+    if (!degenAddr) throw new Error('degenAddr not set');
+    
     try {
       // Add timestamp to URL to prevent caching
       const timestamp = new Date().getTime();
@@ -29,26 +34,27 @@ export default function PotentialWinnings() {
       });
       
       const data = await response.json();
+      const vaultAddr = balVaultAddr.toLowerCase();  // Store lowercase once
 
       // Get total prize pool (DEGEN token balance)
       const degenTokenIndex = data.poolBalance.tokens.findIndex(
-        (token: string) => token.toLowerCase() === DEGEN_ADDR.toLowerCase()
+        (token: string) => token.toLowerCase() === (degenAddr as string).toLowerCase()
       );
       const totalDegenInPool = Number(data.poolBalance.balances[degenTokenIndex]);
-      const LP_DEGEN_AMOUNT = 50; //TODO: get this from the pool
+      const LP_DEGEN_AMOUNT = 50;
       const totalPrizePool = totalDegenInPool - LP_DEGEN_AMOUNT;
 
-      // Calculate sum of tokens excluding BAL_VAULT_ADDR
+      // Calculate sums using stored vaultAddr
       const playerASum = data.address.playerA
-        .filter((holder: any) => holder.address.toLowerCase() !== BAL_VAULT_ADDR.toLowerCase())
+        .filter((holder: any) => holder.address.toLowerCase() !== vaultAddr)
         .reduce((sum: number, holder: any) => sum + Number(holder.balance), 0);
 
       const playerBSum = data.address.playerB
-        .filter((holder: any) => holder.address.toLowerCase() !== BAL_VAULT_ADDR.toLowerCase())
+        .filter((holder: any) => holder.address.toLowerCase() !== vaultAddr)
         .reduce((sum: number, holder: any) => sum + Number(holder.balance), 0);
 
       const drawSum = data.address.draw
-        .filter((holder: any) => holder.address.toLowerCase() !== BAL_VAULT_ADDR.toLowerCase())
+        .filter((holder: any) => holder.address.toLowerCase() !== vaultAddr)
         .reduce((sum: number, holder: any) => sum + Number(holder.balance), 0);
 
       setWinningsData({
