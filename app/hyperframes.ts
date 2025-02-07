@@ -85,7 +85,7 @@ addHyperFrame('start', {
   frame: async () => {
     // Fetch pool balance
     const poolData = await getPoolBalance();
-    const degenBalance = parseFloat(poolData.balances[1]) - 50; // Subtract initial 1000 DEGEN LP
+    const degenBalance = parseFloat(poolData.balances[1]) - 50; // TODO Subtract initial 50 DEGEN LP
     console.log('DEGEN Balance 🧢🧢🧢 : degenBalance 🧢🧢🧢', degenBalance);
 
     // Construct the text with all parameters included
@@ -160,41 +160,11 @@ addHyperFrame('approve', {
       const amount = state?.amount;
       const outcome = state?.outcome;
       
-      // If this is after the approve transaction, skip the calculation
-      if (state?.isPostApproval) {
-        const params = new URLSearchParams({
-          text: `Ready to swap ${amount} DEGEN for ${outcome} tokens`,
-          type: 'approve'
-        });
-
-        return getFrameHtmlResponse({
-          buttons: [
-            {
-              action: 'tx',
-              label: 'Proceed with Swap',
-              target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=${amount}`,
-            },
-            {
-              label: 'Cancel',
-            },
-          ],
-          image: {
-            src: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
-            aspectRatio: '1:1',
-          },
-          state: { 
-            frame: 'approve', 
-            amount, 
-            outcome,
-            isPostApproval: true 
-          },
-          postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-        });
-      }
-
-      // For initial approve screen, show simple confirmation
+      // Calculate expected tokens even after approval
+      const { absValue } = await calculateTokenAmount(amount, outcome);
+      
       const params = new URLSearchParams({
-        text: `Approve ${amount} DEGEN tokens for ${outcome}`,
+        text: `Swap ${amount} DEGEN for ${absValue} ${outcome} tokens?`,
         type: 'approve'
       });
 
@@ -202,8 +172,8 @@ addHyperFrame('approve', {
         buttons: [
           {
             action: 'tx',
-            label: 'Approve',
-            target: `${NEXT_PUBLIC_URL}/api/approveTx?amount=${amount}`,
+            label: 'Confirm Swap',
+            target: `${NEXT_PUBLIC_URL}/api/swapTx?amount=${amount}`,
           },
           {
             label: 'Cancel',
@@ -217,10 +187,10 @@ addHyperFrame('approve', {
           frame: 'approve', 
           amount, 
           outcome,
+          expectedTokens: absValue
         },
         postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
       });
-
     } catch (error) {
       console.error('Error in approve frame:', error);
       return getFrameHtmlResponse({

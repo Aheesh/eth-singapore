@@ -2,7 +2,10 @@ import { BalancerSDK, Network, SwapType } from '@balancer-labs/sdk';
 import { parseUnits, formatEther } from 'ethers';
 import { POOL_ID, DEGEN_ADDR, PLAYER_A_ADDR, PLAYER_B_ADDR, DRAW_ADDR } from '../config';
 
-export async function calculateTokenAmount(amount: string, outcome: string, providerApiKey: string) {
+export async function calculateTokenAmount(amount: string, outcome: string) {
+  const providerApiKey = process.env.BASE_PROVIDER_API_KEY;
+  if (!providerApiKey) throw new Error('BASE_PROVIDER_API_KEY not set');
+
   const value = parseUnits(amount, 18);
 
   const tokenIn = DEGEN_ADDR;
