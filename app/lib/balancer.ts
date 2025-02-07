@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import controllerABI from '../_contracts/Controller.json';
 
-const CONTROLLER_ADDRESS = "0x5510E5aAC4dD789FF020C54ee32b4FA431C339e7";
+const controllerAddress = process.env.CONTROLLER_ADDRESS;
 
 export async function getPoolBalance() {
     const providerApiKey = process.env.BASE_PROVIDER_API_KEY;
@@ -13,8 +13,12 @@ export async function getPoolBalance() {
         `https://base-mainnet.g.alchemy.com/v2/${providerApiKey}`
     );
     
+    if (!controllerAddress) {
+        throw new Error("CONTROLLER_ADDRESS environment variable is not set");
+    }
+
     const controllerContract = new ethers.Contract(
-        CONTROLLER_ADDRESS, 
+        controllerAddress, 
         controllerABI.abi, 
         provider
     );

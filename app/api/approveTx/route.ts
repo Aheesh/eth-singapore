@@ -71,7 +71,6 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
       frame: 'approve',
       amount: amount.toString(),
       isPostApproval: true,
-      skipCalculation: true,
     };
 
     console.log('api/approveTx/route.ts : updated state =>', state);

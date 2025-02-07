@@ -49,7 +49,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   if (!providerApiKey) {
     return new NextResponse('Provider API key is required', { status: 400 });
   }
-  const { absValue, tokenOut } = await calculateTokenAmount(amount, outcome, providerApiKey);
+  const { absValue, tokenOut } = await calculateTokenAmount(amount, outcome);
 
   console.log(`queryInfo - Swap : You will receive ${absValue} ${tokenOut}`);
 

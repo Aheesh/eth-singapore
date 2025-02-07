@@ -8,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
   let degenBalance = 0;
   try {
     const poolData = await getPoolBalance();
-    degenBalance = parseFloat(poolData.balances[1]) - 50;
+    degenBalance = parseFloat(poolData.balances[1]) - 50; //TODO the intial LP DEGEN amount should be dynamic
     console.log('page.tsx DEGEN Balance 🧢💸🧢💸🧢💸 : degenBalance 💸🧢💸🧢💸', degenBalance);
   } catch (error) {
     console.error('Failed to fetch pool balance:', error);
