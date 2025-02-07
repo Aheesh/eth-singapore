@@ -19,13 +19,13 @@ interface WinningsData {
 const REFRESH_INTERVAL = 1000; // Refresh every 10 seconds
 
 export default function PotentialWinnings() {
-  if (!publicBalVaultAddr) throw new Error('balVaultAddr not set');
-  if (!publicDegenAddr) throw new Error('degenAddr not set');
+  if (!publicBalVaultAddr) throw new Error(' PotentialWinnings publicBalVaultAddr not set');
+  if (!publicDegenAddr) throw new Error('PotentialWinnings publicDegenAddr not set');
   const [winningsData, setWinningsData] = useState<WinningsData | null>(null);
 
   const calculateWinnings = async () => {
-    if (!publicBalVaultAddr) throw new Error('balVaultAddr not set');
-    if (!publicDegenAddr) throw new Error('degenAddr not set');
+    if (!publicBalVaultAddr) throw new Error('calculateWinnings publicBalVaultAddr not set');
+    if (!publicDegenAddr) throw new Error('calculateWinnings publicDegenAddr not set');
     
     try {
       // Add timestamp to URL to prevent caching
