@@ -3,7 +3,7 @@ dotenv.config();
 import { NextRequest, NextResponse } from 'next/server';
 import { FrameRequest, getFrameMessage } from '@coinbase/onchainkit/frame';
 import { BalancerSDK, Network, SwapType, Swaps } from '@balancer-labs/sdk';
-import { BAL_VAULT_ADDR, DEGEN_ADDR, POOL_ID } from '../../config';
+import { balVaultAddr, degenAddr, poolId } from '../../config';
 import { formatEther, parseUnits } from 'ethers';
 import { calculateTokenAmount } from '../../lib/swapUtils';
 
@@ -55,8 +55,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   const value = parseUnits(amount, 18);
 
-  console.log('tokenIn', DEGEN_ADDR);
+  console.log('tokenIn', degenAddr);
   console.log('tokenOut', tokenOut);
+
+  if (!poolId) throw new Error('poolId not set');
+  if (!degenAddr) throw new Error('degenAddr not set');
+  if (!tokenOut) throw new Error('tokenOut not set');
 
   // QueryBatchSwap to get the expected amount of tokens Out for confirmation
   const sdk = new BalancerSDK({
@@ -73,14 +77,14 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     kind: SwapType.SwapExactIn,
     swaps: [
       {
-        poolId: POOL_ID,
+        poolId: poolId,
         assetInIndex: 0,
         assetOutIndex: 1,
         amount: value.toString(),
         userData: '0x',
       },
     ],
-    assets: [DEGEN_ADDR, tokenOut],
+    assets: [degenAddr, tokenOut],
 
     funds: {
       fromInternalBalance: false,
@@ -111,7 +115,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     chainId: `eip155:${Network.BASE}`,
     method: 'eth_sendTransaction',
     params: {
-      to: BAL_VAULT_ADDR,
+      to: balVaultAddr,
       data: `0x${hexSwapData}`,
       value: '0',
       gasLimit: gasLimit.toString(),
