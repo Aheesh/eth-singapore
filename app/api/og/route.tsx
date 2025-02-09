@@ -51,41 +51,37 @@ export async function GET(request: NextRequest) {
           display: 'flex',
           gap: '40px',
           marginBottom: '40px',
+          fontSize: 36,
+          color: 'white',
         }}>
           {outcomes.includes('Player-A') && (
             <div style={{ 
-              fontSize: 36,
               textAlign: 'center',
-              padding: '20px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '12px',
               display: 'flex',
+              flexDirection: 'column',
             }}>
-              Player A<br/>0.28
+              Player A
+              <span style={{ color: '#FF6B6B' }}>0.28</span>
             </div>
           )}
           {outcomes.includes('Player-B') && (
             <div style={{ 
-              fontSize: 36,
               textAlign: 'center',
-              padding: '20px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '12px',
               display: 'flex',
+              flexDirection: 'column',
             }}>
-              Player B<br/>0.36
+              Player B
+              <span style={{ color: '#FF6B6B' }}>0.36</span>
             </div>
           )}
           {outcomes.includes('Draw') && (
             <div style={{ 
-              fontSize: 36,
               textAlign: 'center',
-              padding: '20px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '12px',
               display: 'flex',
+              flexDirection: 'column',
             }}>
-              Draw<br/>0.36
+              Draw
+              <span style={{ color: '#FF6B6B' }}>0.36</span>
             </div>
           )}
         </div>
