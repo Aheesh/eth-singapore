@@ -59,9 +59,22 @@ export async function GET(request: NextRequest) {
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
+              alignItems: 'center',
             }}>
-              Player A
-              <span style={{ color: '#FF6B6B' }}>0.28</span>
+              <div style={{
+                background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}>
+                Player A
+              </div>
+              <div style={{
+                background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}>
+                0.28
+              </div>
             </div>
           )}
           {outcomes.includes('Player-B') && (
@@ -69,9 +82,22 @@ export async function GET(request: NextRequest) {
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
+              alignItems: 'center',
             }}>
-              Player B
-              <span style={{ color: '#FF6B6B' }}>0.36</span>
+              <div style={{
+                background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}>
+                Player B
+              </div>
+              <div style={{
+                background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}>
+                0.36
+              </div>
             </div>
           )}
           {outcomes.includes('Draw') && (
@@ -79,9 +105,22 @@ export async function GET(request: NextRequest) {
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
+              alignItems: 'center',
             }}>
-              Draw
-              <span style={{ color: '#FF6B6B' }}>0.36</span>
+              <div style={{
+                background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}>
+                Draw
+              </div>
+              <div style={{
+                background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}>
+                0.36
+              </div>
             </div>
           )}
         </div>
