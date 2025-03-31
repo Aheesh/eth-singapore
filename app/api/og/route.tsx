@@ -156,10 +156,10 @@ export async function GET(request: NextRequest) {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '40px',
-          color: 'white',
         }}
       >
         <div style={{ 
+          display: 'flex',
           fontSize: 48, 
           fontWeight: 'bold',
           marginBottom: '40px',
@@ -180,6 +180,7 @@ export async function GET(request: NextRequest) {
           padding: '0 20px',
         }}>
           <div style={{
+            display: 'flex',
             fontSize: '36px',
             textAlign: 'center',
             color: '#4ECDC4',
@@ -187,6 +188,7 @@ export async function GET(request: NextRequest) {
             Approve DEGEN to place your bet
           </div>
           <div style={{
+            display: 'flex',
             fontSize: '24px',
             color: '#808080',
             textAlign: 'center',
