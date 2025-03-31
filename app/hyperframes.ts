@@ -137,7 +137,7 @@ addHyperFrame('selectAmount', {
       },
     ],
     image: {
-      src: `${NEXT_PUBLIC_URL}/select-amount.webp`,
+      src: `${NEXT_PUBLIC_URL}/api/og/approve`,
       aspectRatio: '1:1',
     },
     state: { 
