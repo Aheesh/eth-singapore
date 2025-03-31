@@ -42,15 +42,18 @@ export async function GET(request: NextRequest) {
           color: '#4ECDC4',
           marginBottom: '20px',
         }}>
-          Odds
+          Odds<span style={{ 
+            fontSize: '16px',
+            verticalAlign: 'super',
+          }}>*</span>
         </div>
         
         <div style={{
-          fontSize: 16,
+          fontSize: 20,
           color: '#808080',
           marginBottom: '20px',
         }}>
-          Odds are based on FIDE Elo ratings, showing each player's win probability.
+          *Odds are based on FIDE Elo ratings, showing each player's win probability.
         </div>
 
         <div style={{ 
