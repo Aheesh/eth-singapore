@@ -38,15 +38,21 @@ export async function GET(request: NextRequest) {
         </div>
         
         <div style={{ 
-          fontSize: 48, 
-          fontWeight: 'bold',
-          marginBottom: '20px',
+          fontSize: 24,
           color: '#4ECDC4',
-          display: 'flex',
+          marginBottom: '20px',
         }}>
           Odds
         </div>
         
+        <div style={{
+          fontSize: 16,
+          color: '#808080',
+          marginBottom: '20px',
+        }}>
+          Odds are based on FIDE Elo ratings, showing each player's win probability.
+        </div>
+
         <div style={{ 
           display: 'flex',
           gap: '40px',
