@@ -243,7 +243,7 @@ export async function GET(request: NextRequest) {
           backgroundClip: 'text',
           color: 'transparent',
         }}>
-          One-time DEGEN Approval
+          Confirm Swap
         </div>
 
         <div style={{
@@ -262,7 +262,7 @@ export async function GET(request: NextRequest) {
             textAlign: 'center',
             color: '#4ECDC4',
           }}>
-            Approve DEGEN to place your bet
+            {text}
           </div>
           <div style={{
             display: 'flex',
@@ -272,7 +272,7 @@ export async function GET(request: NextRequest) {
             textAlign: 'center',
             maxWidth: '800px',
           }}>
-            This is a one-time approval that allows the smart contract to use your DEGEN tokens for betting. You'll only need to do this once.
+            Please confirm the transaction to proceed with the swap
           </div>
         </div>
       </div>
