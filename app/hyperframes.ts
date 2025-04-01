@@ -164,7 +164,7 @@ addHyperFrame('approve', {
       const { absValue } = await calculateTokenAmount(amount, outcome);
       
       const params = new URLSearchParams({
-        text: `Swap ${amount} DEGEN for ${absValue} ${outcome} tokens?`,
+        text: `${amount} DEGEN will be swapped for ${absValue} ${outcome} tokens. Confirm swap?`,
         type: 'approve'
       });
 
