@@ -159,6 +159,66 @@ export async function GET(request: NextRequest) {
         </div>
       </div>
     );
+  } else if (type === 'selectAmount') {
+    content = (
+      <div
+        style={{
+          background: 'linear-gradient(to bottom, #1a1a1a, #2d2d2d)',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '40px',
+          color: 'white',
+        }}
+      >
+        <div style={{ 
+          display: 'flex',
+          justifyContent: 'center',
+          fontSize: 48, 
+          fontWeight: 'bold',
+          marginBottom: '40px',
+          background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
+          backgroundClip: 'text',
+          color: 'transparent',
+        }}>
+          Select Betting Amount
+        </div>
+
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '24px',
+          marginTop: '20px',
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            fontSize: '32px',
+            textAlign: 'center',
+            color: '#4ECDC4',
+            maxWidth: '800px',
+          }}>
+            Select the amount of DEGEN to place your bet
+          </div>
+          
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            fontSize: '24px',
+            color: '#808080',
+            textAlign: 'center',
+            maxWidth: '800px',
+            marginTop: '20px',
+          }}>
+            This will require a one-time permission to deduct DEGEN from your wallet
+          </div>
+        </div>
+      </div>
+    );
   } else if (type === 'approve') {
     content = (
       <div
