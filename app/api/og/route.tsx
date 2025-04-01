@@ -26,29 +26,39 @@ export async function GET(request: NextRequest) {
         }}
       >
         <div style={{ 
+          display: 'flex',
+          justifyContent: 'center',
           fontSize: 72, 
           fontWeight: 'bold',
           marginBottom: '40px',
           background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
           backgroundClip: 'text',
           color: 'transparent',
-          display: 'flex',
         }}>
           Player A vs Player B
         </div>
         
         <div style={{ 
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
           fontSize: 24,
           color: '#4ECDC4',
           marginBottom: '20px',
         }}>
-          Odds<span style={{ 
-            fontSize: '16px',
-            verticalAlign: 'super',
-          }}>*</span>
+          <span style={{ display: 'flex' }}>
+            Odds
+            <span style={{ 
+              display: 'flex',
+              fontSize: '16px',
+              verticalAlign: 'super',
+            }}>*</span>
+          </span>
         </div>
         
         <div style={{
+          display: 'flex',
+          justifyContent: 'center',
           fontSize: 20,
           color: '#808080',
           marginBottom: '20px',
@@ -58,6 +68,7 @@ export async function GET(request: NextRequest) {
 
         <div style={{ 
           display: 'flex',
+          justifyContent: 'center',
           gap: '40px',
           marginBottom: '40px',
           fontSize: 36,
@@ -65,12 +76,12 @@ export async function GET(request: NextRequest) {
         }}>
           {outcomes.includes('Player-A') && (
             <div style={{ 
-              textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}>
               <div style={{
+                display: 'flex',
                 background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
                 backgroundClip: 'text',
                 color: 'transparent',
@@ -78,6 +89,7 @@ export async function GET(request: NextRequest) {
                 Player A
               </div>
               <div style={{
+                display: 'flex',
                 background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
                 backgroundClip: 'text',
                 color: 'transparent',
@@ -88,12 +100,12 @@ export async function GET(request: NextRequest) {
           )}
           {outcomes.includes('Player-B') && (
             <div style={{ 
-              textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}>
               <div style={{
+                display: 'flex',
                 background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
                 backgroundClip: 'text',
                 color: 'transparent',
@@ -101,6 +113,7 @@ export async function GET(request: NextRequest) {
                 Player B
               </div>
               <div style={{
+                display: 'flex',
                 background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
                 backgroundClip: 'text',
                 color: 'transparent',
@@ -111,12 +124,12 @@ export async function GET(request: NextRequest) {
           )}
           {outcomes.includes('Draw') && (
             <div style={{ 
-              textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}>
               <div style={{
+                display: 'flex',
                 background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
                 backgroundClip: 'text',
                 color: 'transparent',
@@ -124,6 +137,7 @@ export async function GET(request: NextRequest) {
                 Draw
               </div>
               <div style={{
+                display: 'flex',
                 background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
                 backgroundClip: 'text',
                 color: 'transparent',
@@ -135,10 +149,11 @@ export async function GET(request: NextRequest) {
         </div>
         
         <div style={{ 
+          display: 'flex',
+          justifyContent: 'center',
           fontSize: 42,
           color: '#FF6B6B',
           fontWeight: 'bold',
-          display: 'flex',
         }}>
           DEGEN Prize Pool: {degenBalance} DEGEN
         </div>
@@ -160,6 +175,7 @@ export async function GET(request: NextRequest) {
       >
         <div style={{ 
           display: 'flex',
+          justifyContent: 'center',
           fontSize: 48, 
           fontWeight: 'bold',
           marginBottom: '40px',
@@ -181,6 +197,7 @@ export async function GET(request: NextRequest) {
         }}>
           <div style={{
             display: 'flex',
+            justifyContent: 'center',
             fontSize: '36px',
             textAlign: 'center',
             color: '#4ECDC4',
@@ -189,6 +206,7 @@ export async function GET(request: NextRequest) {
           </div>
           <div style={{
             display: 'flex',
+            justifyContent: 'center',
             fontSize: '24px',
             color: '#808080',
             textAlign: 'center',
@@ -212,7 +230,12 @@ export async function GET(request: NextRequest) {
           color: 'white',
         }}
       >
-        Invalid type
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}>
+          Invalid type
+        </div>
       </div>
     );
   }
