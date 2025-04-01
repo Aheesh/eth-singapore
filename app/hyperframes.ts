@@ -137,7 +137,7 @@ addHyperFrame('selectAmount', {
       },
     ],
     image: {
-      src: `${NEXT_PUBLIC_URL}/api/og/approve`,
+      src: `${NEXT_PUBLIC_URL}/api/og?type=selectAmount`,
       aspectRatio: '1:1',
     },
     state: { 
