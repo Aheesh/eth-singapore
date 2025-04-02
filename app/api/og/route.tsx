@@ -325,7 +325,7 @@ export async function GET(request: NextRequest) {
             marginBottom: '10px',
             color: '#FF6B6B',
           }}>
-            Summary
+            Summary!
           </div>
           <div style={{ display: 'flex' }}>
             Bet on: {outcome}
