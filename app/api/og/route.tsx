@@ -318,6 +318,15 @@ export async function GET(request: NextRequest) {
           fontSize: '24px',
           color: '#4ECDC4',
         }}>
+          <div style={{ 
+            display: 'flex',
+            fontSize: '32px',
+            fontWeight: 'bold',
+            marginBottom: '10px',
+            color: '#FF6B6B',
+          }}>
+            Summary
+          </div>
           <div style={{ display: 'flex' }}>
             Bet on: {outcome}
           </div>
