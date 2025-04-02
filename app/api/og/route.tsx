@@ -277,6 +277,75 @@ export async function GET(request: NextRequest) {
         </div>
       </div>
     );
+  } else if (type === 'txSuccess') {
+    const txHash = searchParams.get('txHash') || '';
+    const amount = searchParams.get('amount') || '';
+    const outcome = searchParams.get('outcome') || '';
+    const tokensReceived = searchParams.get('tokensReceived') || '';
+    
+    content = (
+      <div
+        style={{
+          background: 'linear-gradient(to bottom, #1a1a1a, #2d2d2d)',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '40px',
+          color: 'white',
+        }}
+      >
+        <div style={{ 
+          display: 'flex',
+          justifyContent: 'center',
+          fontSize: 48, 
+          fontWeight: 'bold',
+          marginBottom: '40px',
+          background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
+          backgroundClip: 'text',
+          color: 'transparent',
+        }}>
+          Bet Placed! Good luck ♟️
+        </div>
+
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '20px',
+          fontSize: '24px',
+          color: '#4ECDC4',
+        }}>
+          <div style={{ display: 'flex' }}>
+            Bet on: {outcome}
+          </div>
+          <div style={{ display: 'flex' }}>
+            DEGEN spent: {amount}
+          </div>
+          <div style={{ display: 'flex' }}>
+            Estimated {outcome} tokens received: {tokensReceived}
+          </div>
+          <div style={{ 
+            display: 'flex',
+            fontSize: '20px',
+            color: '#808080',
+          }}>
+            <a 
+              href={`https://basescan.org/tx/${txHash}`}
+              target="_blank"
+              style={{
+                color: '#4ECDC4',
+                textDecoration: 'underline',
+              }}
+            >
+              View on Basescan
+            </a>
+          </div>
+        </div>
+      </div>
+    );
   } else {
     content = (
       <div

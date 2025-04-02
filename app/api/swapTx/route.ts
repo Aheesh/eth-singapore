@@ -19,7 +19,7 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   console.log('Raw state:', message?.state?.serialized);
 
-  let state: { frame?: string; amount?: string; outcome?: string } = {
+  let state: { frame?: string; amount?: string; outcome?: string; txHash?: string } = {
     frame: 'start'
   };
   if (message?.state?.serialized) {
@@ -126,7 +126,11 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('txData', txData);
 
   // At the end of the function, update the state and return the response
-  state.frame = 'txSuccess';
+  state = {
+    ...state,
+    frame: 'txSuccess',
+    txHash: message.transaction?.hash || '',
+  };
   const updatedSerializedState = encodeURIComponent(JSON.stringify(state));
 
   return NextResponse.json({

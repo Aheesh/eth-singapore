@@ -209,16 +209,28 @@ addHyperFrame('approve', {
 });
 
 addHyperFrame('txSuccess', {
-  frame: getFrameHtmlResponse({
-    buttons: [
-      { label: 'Start Again' }
-    ],
-    image: {
-      src: `${NEXT_PUBLIC_URL}/tx-success.webp`,
-      aspectRatio: '1:1',
-    },
-    state: { frame: 'txSuccess' },
-    postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
-  }),
-  1: 'start'
+  frame: (text, state?: any) => {
+    const params = new URLSearchParams({
+      type: 'txSuccess',
+      amount: state?.amount || '',
+      outcome: state?.outcome || '',
+      tokensReceived: state?.expectedTokens || '',
+      txHash: state?.txHash || '',
+    });
+
+    return getFrameHtmlResponse({
+      buttons: [
+        { label: 'Bet Again' },
+        { label: 'View Pool' }
+      ],
+      image: {
+        src: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
+        aspectRatio: '1:1',
+      },
+      state: { frame: 'txSuccess' },
+      postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+    });
+  },
+  1: 'start',
+  2: 'dashboard',
 });
