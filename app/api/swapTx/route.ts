@@ -135,12 +135,18 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   
   console.log('Formatted tokens:', formattedTokens);
   
+  // Get the transaction hash from the message
+  const txHash = message.transaction?.hash || '';
+  console.log('Transaction hash:', txHash);
+  
   // Update state with transaction hash and formatted tokens
   const updatedState = {
     ...state,
     frame: 'txSuccess',
-    txHash: message.transaction?.hash,
+    txHash: txHash,
     tokensReceived: formattedTokens,
+    amount: state.amount,
+    outcome: state.outcome
   };
   
   console.log('Updated state:', updatedState);
