@@ -67,10 +67,13 @@ export async function POST(req: NextRequest): Promise<Response> {
       
       // Get real pool stats
       const poolData = await getPoolBalance();
-      const totalPool = parseFloat(poolData.balances[1]) - 50; // Subtract initial 50 DEGEN LP
-      const playerABets = parseFloat(poolData.balances[2]) || 400;
-      const playerBBets = parseFloat(poolData.balances[3]) || 350;
-      const drawBets = parseFloat(poolData.balances[4]) || 250;
+      console.log('Raw pool data:', poolData);
+      
+      // Calculate total pool without subtracting LP contribution
+      const totalPool = parseFloat(poolData.balances[1]);
+      const playerABets = parseFloat(poolData.balances[2]) || 0;
+      const playerBBets = parseFloat(poolData.balances[3]) || 0;
+      const drawBets = parseFloat(poolData.balances[4]) || 0;
       
       // Handle "View Pool" button click
       const poolStatsState = {
@@ -120,10 +123,13 @@ export async function POST(req: NextRequest): Promise<Response> {
         // Handle "Refresh Stats" button click
         // Get real pool stats
         const poolData = await getPoolBalance();
-        const totalPool = parseFloat(poolData.balances[1]) - 50; // Subtract initial 50 DEGEN LP
-        const playerABets = parseFloat(poolData.balances[2]) || 400;
-        const playerBBets = parseFloat(poolData.balances[3]) || 350;
-        const drawBets = parseFloat(poolData.balances[4]) || 250;
+        console.log('Raw pool data:', poolData);
+        
+        // Calculate total pool without subtracting LP contribution
+        const totalPool = parseFloat(poolData.balances[1]);
+        const playerABets = parseFloat(poolData.balances[2]) || 0;
+        const playerBBets = parseFloat(poolData.balances[3]) || 0;
+        const drawBets = parseFloat(poolData.balances[4]) || 0;
         
         const refreshedState = {
           frame: 'poolStats',

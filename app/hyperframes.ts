@@ -242,8 +242,11 @@ addHyperFrame('txSuccess', {
     
     console.log('Formatted tokens in txSuccess:', formattedTokens);
     
+    // Get amount from either text split or state
+    const spentAmount = amount || state?.amount || '0';
+    
     // Construct text with formatted tokens
-    const formattedText = `${outcome},${amount},${formattedTokens}`;
+    const formattedText = `${outcome || state?.outcome || ''},${spentAmount},${formattedTokens}`;
     params.append('text', formattedText);
     
     return getFrameHtmlResponse({
@@ -254,8 +257,8 @@ addHyperFrame('txSuccess', {
       ],
       state: { 
         frame: 'txSuccess',
-        amount,
-        outcome,
+        amount: spentAmount,
+        outcome: outcome || state?.outcome,
         tokensReceived: formattedTokens,
         txHash: state?.txHash,
         expectedTokens: state?.expectedTokens
