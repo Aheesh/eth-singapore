@@ -141,12 +141,12 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   
   // Update state with transaction hash and formatted tokens
   const updatedState = {
-    ...state,
     frame: 'txSuccess',
     txHash: txHash,
     tokensReceived: formattedTokens,
-    amount: state.amount,
-    outcome: state.outcome
+    amount: amount,
+    outcome: outcome,
+    text: `${outcome},${amount},${formattedTokens}`
   };
   
   // Serialize the updated state

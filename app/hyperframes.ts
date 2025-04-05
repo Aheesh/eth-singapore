@@ -229,17 +229,11 @@ addHyperFrame('txSuccess', {
     
     const params = new URLSearchParams();
     params.append('type', 'txSuccess');
-    params.append('amount', state?.amount || '0');
-    params.append('outcome', state?.outcome || '');
     
-    // Format tokens received with more decimal places
-    const tokensReceived = state?.tokensReceived || '0';
-    const formattedTokens = parseFloat(tokensReceived).toFixed(10);
-    console.log('Formatted tokens in txSuccess:', formattedTokens);
-    params.append('tokensReceived', formattedTokens);
+    // Use text parameter which contains outcome,amount,tokensReceived
+    const [outcome, amount, tokensReceived] = text.split(',');
+    params.append('text', text);
     
-    params.append('txHash', state?.txHash || '');
-
     return getFrameHtmlResponse({
       image: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
       buttons: [
@@ -248,9 +242,9 @@ addHyperFrame('txSuccess', {
       ],
       state: { 
         frame: 'txSuccess',
-        amount: state?.amount,
-        outcome: state?.outcome,
-        tokensReceived: formattedTokens,
+        amount,
+        outcome,
+        tokensReceived,
         txHash: state?.txHash
       },
       postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
@@ -259,7 +253,8 @@ addHyperFrame('txSuccess', {
   1: 'start',
   2: (text, state) => ({ 
     frame: 'poolStats',
-    totalPool: '1000', // Example value, replace with actual data
+    text: '1000,400,350,250', // Format: totalPool,playerABets,playerBBets,drawBets
+    totalPool: '1000',
     playerABets: '400',
     playerBBets: '350',
     drawBets: '250',
@@ -276,14 +271,8 @@ addHyperFrame('poolStats', {
     
     const params = new URLSearchParams();
     params.append('type', 'poolStats');
-    params.append('totalPool', state?.totalPool || '0');
-    params.append('playerABets', state?.playerABets || '0');
-    params.append('playerBBets', state?.playerBBets || '0');
-    params.append('drawBets', state?.drawBets || '0');
-    params.append('playerAOdds', state?.playerAOdds || '0.28');
-    params.append('playerBOdds', state?.playerBOdds || '0.36');
-    params.append('drawOdds', state?.drawOdds || '0.36');
-
+    params.append('text', text);
+    
     return getFrameHtmlResponse({
       image: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
       buttons: [
@@ -292,6 +281,7 @@ addHyperFrame('poolStats', {
       ],
       state: {
         frame: 'poolStats',
+        text,
         totalPool: state?.totalPool,
         playerABets: state?.playerABets,
         playerBBets: state?.playerBBets,
@@ -306,6 +296,7 @@ addHyperFrame('poolStats', {
   1: 'start',
   2: (text, state) => ({ 
     frame: 'poolStats',
+    text: state?.text,
     totalPool: state?.totalPool,
     playerABets: state?.playerABets,
     playerBBets: state?.playerBBets,

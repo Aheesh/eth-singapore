@@ -64,16 +64,15 @@ export async function POST(req: NextRequest): Promise<Response> {
       console.log('Handling View Pool button click');
       // Handle "View Pool" button click
       const poolStatsState = {
-        ...state,
         frame: 'poolStats',
-        // Fetch pool stats from your backend or blockchain
-        totalPool: '1000', // Example value, replace with actual data
+        text: '1000,400,350,250', // Format: totalPool,playerABets,playerBBets,drawBets
+        totalPool: '1000',
         playerABets: '400',
         playerBBets: '350',
         drawBets: '250',
         playerAOdds: '0.28',
         playerBOdds: '0.36',
-        drawOdds: '0.36',
+        drawOdds: '0.36'
       };
       
       console.log('Pool stats state:', poolStatsState);
@@ -81,7 +80,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       // Generate the frame HTML for poolStats
       const poolStatsHtml = await getHyperFrame(
         'poolStats',
-        message.input || '',
+        poolStatsState.text,
         undefined,
         poolStatsState
       );
@@ -93,8 +92,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       if (buttonNumber === 1) {
         // Handle "Place Bet" button click
         const startState = {
-          ...state,
-          frame: 'start',
+          frame: 'start'
         };
         
         console.log('Start state:', startState);
@@ -102,7 +100,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         // Generate the frame HTML for start
         const startHtml = await getHyperFrame(
           'start',
-          message.input || '',
+          '',
           undefined,
           startState
         );
@@ -111,15 +109,15 @@ export async function POST(req: NextRequest): Promise<Response> {
       } else if (buttonNumber === 2) {
         // Handle "Refresh Stats" button click
         const refreshedState = {
-          ...state,
-          // Fetch updated pool stats from your backend or blockchain
-          totalPool: '1200', // Example value, replace with actual data
+          frame: 'poolStats',
+          text: '1200,500,400,300', // Format: totalPool,playerABets,playerBBets,drawBets
+          totalPool: '1200',
           playerABets: '500',
           playerBBets: '400',
           drawBets: '300',
           playerAOdds: '0.28',
           playerBOdds: '0.36',
-          drawOdds: '0.36',
+          drawOdds: '0.36'
         };
         
         console.log('Refreshed state:', refreshedState);
@@ -127,7 +125,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         // Generate the frame HTML for poolStats
         const refreshedHtml = await getHyperFrame(
           'poolStats',
-          message.input || '',
+          refreshedState.text,
           undefined,
           refreshedState
         );
