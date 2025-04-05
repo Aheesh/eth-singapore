@@ -48,6 +48,17 @@ export async function getHyperFrame(
   console.log('hyperframes.ts : baseFrame =>', baseFrame);
   console.log('hyperframes.ts : frames =>', frames);
   
+  // If this is a direct frame call (no button number), use the frame directly
+  if (!buttonNumber) {
+    const nextFrame = currentFrame.frame;
+    if (typeof nextFrame === 'function') {
+      console.log('Calling nextFrame function with text and state:', { text, existingState });
+      return await nextFrame(text, existingState);
+    } else {
+      return nextFrame;
+    }
+  }
+  
   const nextFrameIdOrFunction = currentFrame[buttonNumber as keyof HyperFrame];
 
   let nextFrameId: string;
@@ -68,7 +79,6 @@ export async function getHyperFrame(
     throw new Error('Invalid nextFrameIdOrFunction type');
   }
 
-
   if (!frames[nextFrameId]) {
     throw new Error(`Frame not found: ${nextFrameId}`);
   }
@@ -83,7 +93,6 @@ export async function getHyperFrame(
   } else {
     return nextFrame;
   }
-
 }
 
 // Define frames
@@ -216,6 +225,8 @@ addHyperFrame('approve', {
 
 addHyperFrame('txSuccess', {
   frame: (text, state?: any) => {
+    console.log('txSuccess frame state:', state);
+    
     const params = new URLSearchParams();
     params.append('type', 'txSuccess');
     params.append('amount', state?.amount || '0');
@@ -224,6 +235,7 @@ addHyperFrame('txSuccess', {
     // Format tokens received with more decimal places
     const tokensReceived = state?.tokensReceived || '0';
     const formattedTokens = parseFloat(tokensReceived).toFixed(10);
+    console.log('Formatted tokens in txSuccess:', formattedTokens);
     params.append('tokensReceived', formattedTokens);
     
     params.append('txHash', state?.txHash || '');
@@ -245,12 +257,23 @@ addHyperFrame('txSuccess', {
     });
   },
   1: 'start',
-  2: (text, state) => ({ frame: 'poolStats' }),
+  2: (text, state) => ({ 
+    frame: 'poolStats',
+    totalPool: '1000', // Example value, replace with actual data
+    playerABets: '400',
+    playerBBets: '350',
+    drawBets: '250',
+    playerAOdds: '0.28',
+    playerBOdds: '0.36',
+    drawOdds: '0.36'
+  }),
 });
 
 // Add the poolStats frame
 addHyperFrame('poolStats', {
   frame: (text, state?: any) => {
+    console.log('poolStats frame state:', state);
+    
     const params = new URLSearchParams();
     params.append('type', 'poolStats');
     params.append('totalPool', state?.totalPool || '0');
