@@ -126,9 +126,14 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   console.log('txData', txData);
 
   // Calculate the expected tokens
+  console.log('Expected tokens (absValue):', absValue);
+  
+  // Format the token amount with high precision
   const formattedTokens = typeof absValue === 'string' 
     ? parseFloat(absValue).toFixed(10) 
     : absValue.toFixed(10);
+  
+  console.log('Formatted tokens:', formattedTokens);
   
   // Update state with transaction hash and formatted tokens
   const updatedState = {
@@ -138,9 +143,13 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     tokensReceived: formattedTokens,
   };
   
+  console.log('Updated state:', updatedState);
+  
   // Serialize the updated state
   const serializedState = JSON.stringify(updatedState);
   const encodedState = encodeURIComponent(serializedState);
+  
+  console.log('Encoded state:', encodedState);
   
   return NextResponse.json({
     ...txData,

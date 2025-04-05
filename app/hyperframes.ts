@@ -234,7 +234,14 @@ addHyperFrame('txSuccess', {
         { label: 'Bet Again' },
         { label: 'View Pool' }
       ],
-      post_url: `${NEXT_PUBLIC_URL}/api/frame`,
+      state: { 
+        frame: 'txSuccess',
+        amount: state?.amount,
+        outcome: state?.outcome,
+        tokensReceived: formattedTokens,
+        txHash: state?.txHash
+      },
+      postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
     });
   },
   1: 'start',
@@ -260,9 +267,28 @@ addHyperFrame('poolStats', {
         { label: 'Place Bet' },
         { label: 'Refresh Stats' }
       ],
-      post_url: `${NEXT_PUBLIC_URL}/api/frame`,
+      state: {
+        frame: 'poolStats',
+        totalPool: state?.totalPool,
+        playerABets: state?.playerABets,
+        playerBBets: state?.playerBBets,
+        drawBets: state?.drawBets,
+        playerAOdds: state?.playerAOdds,
+        playerBOdds: state?.playerBOdds,
+        drawOdds: state?.drawOdds
+      },
+      postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
     });
   },
   1: 'start',
-  2: (text, state) => ({ frame: 'poolStats' }),
+  2: (text, state) => ({ 
+    frame: 'poolStats',
+    totalPool: state?.totalPool,
+    playerABets: state?.playerABets,
+    playerBBets: state?.playerBBets,
+    drawBets: state?.drawBets,
+    playerAOdds: state?.playerAOdds,
+    playerBOdds: state?.playerBOdds,
+    drawOdds: state?.drawOdds
+  }),
 });
