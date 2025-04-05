@@ -62,7 +62,8 @@ export async function POST(req: NextRequest): Promise<Response> {
       state
     );
 
-    if (buttonNumber === 1 && state.frame === 'txSuccess') {
+    // Handle special cases for button clicks
+    if (buttonNumber === 2 && state.frame === 'txSuccess') {
       // Handle "View Pool" button click
       return NextResponse.json({
         frame: 'poolStats',
@@ -82,7 +83,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     }
 
     if (state.frame === 'poolStats') {
-      if (buttonNumber === 0) {
+      if (buttonNumber === 1) {
         // Handle "Place Bet" button click
         return NextResponse.json({
           frame: 'start',
@@ -91,7 +92,7 @@ export async function POST(req: NextRequest): Promise<Response> {
             frame: 'start',
           },
         });
-      } else if (buttonNumber === 1) {
+      } else if (buttonNumber === 2) {
         // Handle "Refresh Stats" button click
         return NextResponse.json({
           frame: 'poolStats',
