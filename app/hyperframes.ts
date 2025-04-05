@@ -5,6 +5,11 @@ import { getPoolBalance } from './lib/balancer';
 
 // Add this type definition
 type FrameResult = string | { frame: string; [key: string]: any };
+type FrameResponse = {
+  image: string;
+  buttons: { label: string }[];
+  postUrl: string;
+};
 
 // Update the HyperFrame type definition
 export type HyperFrame = {
@@ -13,6 +18,7 @@ export type HyperFrame = {
   2?: string | ((text: string, state?: any) => FrameResult) | (() => string);
   3?: string | ((text: string, state?: any) => FrameResult) | (() => string);
   4?: string | ((text: string, state?: any) => FrameResult) | (() => string);
+  poolStats?: (state: any) => FrameResponse;
 };
 
 const frames: Record<string, HyperFrame> = {};
@@ -210,27 +216,42 @@ addHyperFrame('approve', {
 
 addHyperFrame('txSuccess', {
   frame: (text, state?: any) => {
-    const params = new URLSearchParams({
-      type: 'txSuccess',
-      amount: state?.amount || '',
-      outcome: state?.outcome || '',
-      tokensReceived: state?.expectedTokens || '',
-      txHash: state?.txHash || '',
-    });
+    const params = new URLSearchParams();
+    params.append('type', 'txSuccess');
+    params.append('amount', state?.amount || '0');
+    params.append('outcome', state?.outcome || '');
+    params.append('tokensReceived', state?.tokensReceived || '0');
+    params.append('txHash', state?.txHash || '');
 
     return getFrameHtmlResponse({
+      image: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
       buttons: [
         { label: 'Bet Again' },
         { label: 'View Pool' }
       ],
-      image: {
-        src: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
-        aspectRatio: '1:1',
-      },
-      state: { frame: 'txSuccess' },
-      postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+      post_url: `${NEXT_PUBLIC_URL}/api/frame`,
     });
   },
   1: 'start',
-  2: 'dashboard',
+  2: 'poolStats',
+  poolStats: (state: any) => {
+    const params = new URLSearchParams();
+    params.append('type', 'poolStats');
+    params.append('totalPool', state.totalPool || '0');
+    params.append('playerABets', state.playerABets || '0');
+    params.append('playerBBets', state.playerBBets || '0');
+    params.append('drawBets', state.drawBets || '0');
+    params.append('playerAOdds', state.playerAOdds || '0.28');
+    params.append('playerBOdds', state.playerBOdds || '0.36');
+    params.append('drawOdds', state.drawOdds || '0.36');
+
+    return {
+      image: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
+      buttons: [
+        { label: 'Place Bet' },
+        { label: 'Refresh Stats' }
+      ],
+      postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
+    };
+  },
 });
