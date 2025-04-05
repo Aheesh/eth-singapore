@@ -125,20 +125,26 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   };
   console.log('txData', txData);
 
-  // At the end of the function, update the state and return the response
-  state = {
+  // Calculate the expected tokens
+  const formattedTokens = typeof absValue === 'string' 
+    ? parseFloat(absValue).toFixed(10) 
+    : absValue.toFixed(10);
+  
+  // Update state with transaction hash and formatted tokens
+  const updatedState = {
     ...state,
     frame: 'txSuccess',
-    txHash: message.transaction?.hash || '',
+    txHash: message.transaction?.hash,
+    tokensReceived: formattedTokens,
   };
-  const updatedSerializedState = encodeURIComponent(JSON.stringify(state));
-
+  
+  // Serialize the updated state
+  const serializedState = JSON.stringify(updatedState);
+  
   return NextResponse.json({
-    ...txData,
-    state: {
-      serialized: updatedSerializedState,
-    },
-    postUrl: `${process.env.NEXT_PUBLIC_URL}/api/frame`,
+    frame: 'txSuccess',
+    state: serializedState,
+    post_url: `${process.env.NEXT_PUBLIC_URL}/api/frame`,
   });
 }
 

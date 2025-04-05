@@ -281,7 +281,7 @@ export async function GET(request: NextRequest) {
     const txHash = searchParams.get('txHash') || '';
     const amount = searchParams.get('amount') || '';
     const outcome = searchParams.get('outcome') || '';
-    const tokensReceived = searchParams.get('tokensReceived') || '';
+    const tokensReceived = searchParams.get('tokensReceived') || '0';
     
     content = (
       <div
