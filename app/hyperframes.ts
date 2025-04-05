@@ -232,7 +232,19 @@ addHyperFrame('txSuccess', {
     
     // Use text parameter which contains outcome,amount,tokensReceived
     const [outcome, amount, tokensReceived] = text.split(',');
-    params.append('text', text);
+    
+    // Format tokens received with high precision
+    const formattedTokens = tokensReceived 
+      ? parseFloat(tokensReceived).toFixed(10)
+      : state?.expectedTokens 
+        ? parseFloat(state.expectedTokens).toFixed(10)
+        : '0.0000000000';
+    
+    console.log('Formatted tokens in txSuccess:', formattedTokens);
+    
+    // Construct text with formatted tokens
+    const formattedText = `${outcome},${amount},${formattedTokens}`;
+    params.append('text', formattedText);
     
     return getFrameHtmlResponse({
       image: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
@@ -244,8 +256,9 @@ addHyperFrame('txSuccess', {
         frame: 'txSuccess',
         amount,
         outcome,
-        tokensReceived,
-        txHash: state?.txHash
+        tokensReceived: formattedTokens,
+        txHash: state?.txHash,
+        expectedTokens: state?.expectedTokens
       },
       postUrl: `${NEXT_PUBLIC_URL}/api/frame`,
     });
@@ -253,14 +266,14 @@ addHyperFrame('txSuccess', {
   1: 'start',
   2: (text, state) => ({ 
     frame: 'poolStats',
-    text: '1000,400,350,250', // Format: totalPool,playerABets,playerBBets,drawBets
-    totalPool: '1000',
-    playerABets: '400',
-    playerBBets: '350',
-    drawBets: '250',
-    playerAOdds: '0.28',
-    playerBOdds: '0.36',
-    drawOdds: '0.36'
+    text: state?.text || '1000,400,350,250',
+    totalPool: state?.totalPool || '1000',
+    playerABets: state?.playerABets || '400',
+    playerBBets: state?.playerBBets || '350',
+    drawBets: state?.drawBets || '250',
+    playerAOdds: state?.playerAOdds || '0.28',
+    playerBOdds: state?.playerBOdds || '0.36',
+    drawOdds: state?.drawOdds || '0.36'
   }),
 });
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFrameMessage, FrameRequest } from '@coinbase/onchainkit/frame';
 import { getHyperFrame } from '../../hyperframes';
+import { getPoolBalance } from '../../lib/balancer';
 
 interface FrameState {
   frame?: string;
@@ -14,6 +15,7 @@ interface FrameState {
   playerAOdds?: string;
   playerBOdds?: string;
   drawOdds?: string;
+  expectedTokens?: number | string;
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
@@ -62,14 +64,22 @@ export async function POST(req: NextRequest): Promise<Response> {
     // Handle special cases for button clicks
     if (buttonNumber === 2 && currentFrame === 'txSuccess') {
       console.log('Handling View Pool button click');
+      
+      // Get real pool stats
+      const poolData = await getPoolBalance();
+      const totalPool = parseFloat(poolData.balances[1]) - 50; // Subtract initial 50 DEGEN LP
+      const playerABets = parseFloat(poolData.balances[2]) || 400;
+      const playerBBets = parseFloat(poolData.balances[3]) || 350;
+      const drawBets = parseFloat(poolData.balances[4]) || 250;
+      
       // Handle "View Pool" button click
       const poolStatsState = {
         frame: 'poolStats',
-        text: '1000,400,350,250', // Format: totalPool,playerABets,playerBBets,drawBets
-        totalPool: '1000',
-        playerABets: '400',
-        playerBBets: '350',
-        drawBets: '250',
+        text: `${totalPool},${playerABets},${playerBBets},${drawBets}`,
+        totalPool: totalPool.toString(),
+        playerABets: playerABets.toString(),
+        playerBBets: playerBBets.toString(),
+        drawBets: drawBets.toString(),
         playerAOdds: '0.28',
         playerBOdds: '0.36',
         drawOdds: '0.36'
@@ -108,13 +118,20 @@ export async function POST(req: NextRequest): Promise<Response> {
         return new NextResponse(startHtml);
       } else if (buttonNumber === 2) {
         // Handle "Refresh Stats" button click
+        // Get real pool stats
+        const poolData = await getPoolBalance();
+        const totalPool = parseFloat(poolData.balances[1]) - 50; // Subtract initial 50 DEGEN LP
+        const playerABets = parseFloat(poolData.balances[2]) || 400;
+        const playerBBets = parseFloat(poolData.balances[3]) || 350;
+        const drawBets = parseFloat(poolData.balances[4]) || 250;
+        
         const refreshedState = {
           frame: 'poolStats',
-          text: '1200,500,400,300', // Format: totalPool,playerABets,playerBBets,drawBets
-          totalPool: '1200',
-          playerABets: '500',
-          playerBBets: '400',
-          drawBets: '300',
+          text: `${totalPool},${playerABets},${playerBBets},${drawBets}`,
+          totalPool: totalPool.toString(),
+          playerABets: playerABets.toString(),
+          playerBBets: playerBBets.toString(),
+          drawBets: drawBets.toString(),
           playerAOdds: '0.28',
           playerBOdds: '0.36',
           drawOdds: '0.36'
