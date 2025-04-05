@@ -19,7 +19,13 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
 
   console.log('Raw state:', message?.state?.serialized);
 
-  let state: { frame?: string; amount?: string; outcome?: string; txHash?: string } = {
+  let state: { 
+    frame?: string; 
+    amount?: string; 
+    outcome?: string; 
+    txHash?: string;
+    expectedTokens?: number | string;
+  } = {
     frame: 'start'
   };
   if (message?.state?.serialized) {
@@ -146,7 +152,8 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     tokensReceived: formattedTokens,
     amount: amount,
     outcome: outcome,
-    text: `${outcome},${amount},${formattedTokens}`
+    expectedTokens: state.expectedTokens, // Preserve the expected tokens from approve state
+    text: `${outcome},${amount},${state.expectedTokens || formattedTokens}`
   };
   
   // Serialize the updated state
