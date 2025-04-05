@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
   let content;
 
   if (type === 'start') {
-    const outcomes = text.split(',');
     content = (
       <div
         style={{
@@ -22,140 +21,135 @@ export async function GET(request: NextRequest) {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '40px',
-          color: 'white',
         }}
       >
         <div style={{ 
           display: 'flex',
           justifyContent: 'center',
-          fontSize: 72, 
+          fontSize: 48, 
           fontWeight: 'bold',
           marginBottom: '40px',
           background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
           backgroundClip: 'text',
           color: 'transparent',
         }}>
-          Player A vs Player B
+          Place Your Bet
         </div>
-        
-        <div style={{ 
+
+        <div style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          fontSize: 24,
-          color: '#4ECDC4',
-          marginBottom: '20px',
+          gap: '24px',
+          marginTop: '20px',
+          width: '100%',
+          padding: '0 20px',
         }}>
-          <span style={{ display: 'flex' }}>
-            Odds
-            <span style={{ 
-              display: 'flex',
-              fontSize: '16px',
-              verticalAlign: 'super',
-            }}>*</span>
-          </span>
-        </div>
-        
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          fontSize: 20,
-          color: '#808080',
-          marginBottom: '20px',
-        }}>
-          *Odds are based on FIDE Elo ratings, showing each player's win probability.
-        </div>
-
-        <div style={{ 
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '40px',
-          marginBottom: '40px',
-          fontSize: 36,
-          color: 'white',
-        }}>
-          {outcomes.includes('Player-A') && (
-            <div style={{ 
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%',
+            maxWidth: '800px',
+            gap: '20px',
+          }}>
+            <div style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              flex: 1,
+              background: 'rgba(255, 107, 107, 0.1)',
+              padding: '20px',
+              borderRadius: '12px',
+              border: '2px solid #FF6B6B',
             }}>
               <div style={{
                 display: 'flex',
-                background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
-                backgroundClip: 'text',
-                color: 'transparent',
+                justifyContent: 'center',
+                fontSize: '32px',
+                fontWeight: 'bold',
+                color: '#FF6B6B',
+                marginBottom: '8px',
               }}>
                 Player A
               </div>
               <div style={{
                 display: 'flex',
-                background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
-                backgroundClip: 'text',
-                color: 'transparent',
+                justifyContent: 'center',
+                fontSize: '24px',
+                color: '#808080',
               }}>
-                0.28
+                Odds: 2.5x
               </div>
             </div>
-          )}
-          {outcomes.includes('Player-B') && (
-            <div style={{ 
+
+            <div style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              flex: 1,
+              background: 'rgba(78, 205, 196, 0.1)',
+              padding: '20px',
+              borderRadius: '12px',
+              border: '2px solid #4ECDC4',
             }}>
               <div style={{
                 display: 'flex',
-                background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
-                backgroundClip: 'text',
-                color: 'transparent',
+                justifyContent: 'center',
+                fontSize: '32px',
+                fontWeight: 'bold',
+                color: '#4ECDC4',
+                marginBottom: '8px',
               }}>
                 Player B
               </div>
               <div style={{
                 display: 'flex',
-                background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
-                backgroundClip: 'text',
-                color: 'transparent',
+                justifyContent: 'center',
+                fontSize: '24px',
+                color: '#808080',
               }}>
-                0.36
+                Odds: 1.8x
               </div>
             </div>
-          )}
-          {outcomes.includes('Draw') && (
-            <div style={{ 
+          </div>
+
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+            maxWidth: '800px',
+            marginTop: '20px',
+          }}>
+            <div style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              flex: 1,
+              background: 'rgba(255, 255, 255, 0.1)',
+              padding: '20px',
+              borderRadius: '12px',
+              border: '2px solid #808080',
             }}>
               <div style={{
                 display: 'flex',
-                background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
-                backgroundClip: 'text',
-                color: 'transparent',
+                justifyContent: 'center',
+                fontSize: '32px',
+                fontWeight: 'bold',
+                color: '#808080',
+                marginBottom: '8px',
               }}>
                 Draw
               </div>
               <div style={{
                 display: 'flex',
-                background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
-                backgroundClip: 'text',
-                color: 'transparent',
+                justifyContent: 'center',
+                fontSize: '24px',
+                color: '#808080',
               }}>
-                0.36
+                Odds: 3.2x
               </div>
             </div>
-          )}
-        </div>
-        
-        <div style={{ 
-          display: 'flex',
-          justifyContent: 'center',
-          fontSize: 42,
-          color: '#FF6B6B',
-          fontWeight: 'bold',
-        }}>
-          DEGEN Prize Pool: {degenBalance} DEGEN
+          </div>
         </div>
       </div>
     );
@@ -278,11 +272,7 @@ export async function GET(request: NextRequest) {
       </div>
     );
   } else if (type === 'txSuccess') {
-    const txHash = searchParams.get('txHash') || '';
-    const amount = searchParams.get('amount') || '';
-    const outcome = searchParams.get('outcome') || '';
-    const tokensReceived = searchParams.get('tokensReceived') || '0';
-    
+    const [outcome, amount, tokensReceived] = text.split(',');
     content = (
       <div
         style={{
@@ -294,7 +284,6 @@ export async function GET(request: NextRequest) {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '40px',
-          color: 'white',
         }}
       >
         <div style={{ 
@@ -307,160 +296,141 @@ export async function GET(request: NextRequest) {
           backgroundClip: 'text',
           color: 'transparent',
         }}>
-          Bet Placed! Good luck ♟️
+          Bet Placed Successfully!
         </div>
 
         <div style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '20px',
-          fontSize: '24px',
-          color: '#4ECDC4',
-        }}>
-          <div style={{ 
-            display: 'flex',
-            fontSize: '32px',
-            fontWeight: 'bold',
-            marginBottom: '10px',
-            color: '#FF6B6B',
-          }}>
-            Summary!
-          </div>
-          <div style={{ display: 'flex' }}>
-            Bet on: {outcome}
-          </div>
-          <div style={{ display: 'flex' }}>
-            DEGEN spent: {amount}
-          </div>
-          <div style={{ display: 'flex' }}>
-            Estimated {outcome} tokens received: {tokensReceived}
-          </div>
-          <div style={{ 
-            display: 'flex',
-            fontSize: '20px',
-            color: '#808080',
-          }}>
-            <a 
-              href={`https://basescan.org/tx/${txHash}`}
-              target="_blank"
-              style={{
-                color: '#4ECDC4',
-                textDecoration: 'underline',
-              }}
-            >
-              View on Basescan
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  } else if (type === 'poolStats') {
-    const totalPool = searchParams.get('totalPool') || '0';
-    const playerABets = searchParams.get('playerABets') || '0';
-    const playerBBets = searchParams.get('playerBBets') || '0';
-    const drawBets = searchParams.get('drawBets') || '0';
-    const playerAOdds = searchParams.get('playerAOdds') || '0.28';
-    const playerBOdds = searchParams.get('playerBOdds') || '0.36';
-    const drawOdds = searchParams.get('drawOdds') || '0.36';
-    
-    content = (
-      <div
-        style={{
-          background: 'linear-gradient(to bottom, #1a1a1a, #2d2d2d)',
+          gap: '24px',
+          marginTop: '20px',
           width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '40px',
-          color: 'white',
-        }}
-      >
-        <div style={{ 
-          display: 'flex',
-          justifyContent: 'center',
-          fontSize: 48, 
-          fontWeight: 'bold',
-          marginBottom: '40px',
-          background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
-          backgroundClip: 'text',
-          color: 'transparent',
+          padding: '0 20px',
         }}>
-          Pool Statistics 🏊‍♂️
-        </div>
-
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '20px',
-          fontSize: '24px',
-          color: '#4ECDC4',
-        }}>
-          <div style={{ 
+          <div style={{
             display: 'flex',
-            fontSize: '32px',
-            fontWeight: 'bold',
-            marginBottom: '10px',
-            color: '#FF6B6B',
+            justifyContent: 'center',
+            fontSize: '36px',
+            color: '#4ECDC4',
           }}>
-            Total Pool: {totalPool} DEGEN
+            {outcome}
           </div>
-          
           <div style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '15px',
+            alignItems: 'center',
+            gap: '16px',
             width: '100%',
             maxWidth: '800px',
           }}>
             <div style={{
               display: 'flex',
               justifyContent: 'space-between',
-              padding: '10px',
-              background: 'rgba(255, 107, 107, 0.1)',
-              borderRadius: '8px',
+              width: '100%',
+              fontSize: '24px',
+              color: '#808080',
             }}>
-              <div>Player A</div>
-              <div>{playerABets} DEGEN</div>
-              <div>Odds: {playerAOdds}</div>
+              <span>Amount Spent:</span>
+              <span>{amount} DEGEN</span>
             </div>
-            
             <div style={{
               display: 'flex',
               justifyContent: 'space-between',
-              padding: '10px',
-              background: 'rgba(78, 205, 196, 0.1)',
-              borderRadius: '8px',
+              width: '100%',
+              fontSize: '24px',
+              color: '#808080',
             }}>
-              <div>Player B</div>
-              <div>{playerBBets} DEGEN</div>
-              <div>Odds: {playerBOdds}</div>
-            </div>
-            
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              padding: '10px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '8px',
-            }}>
-              <div>Draw</div>
-              <div>{drawBets} DEGEN</div>
-              <div>Odds: {drawOdds}</div>
+              <span>Estimated Tokens:</span>
+              <span>{tokensReceived || '0.0000000000'}</span>
             </div>
           </div>
-          
-          <div style={{ 
+        </div>
+      </div>
+    );
+  } else if (type === 'poolStats') {
+    const [totalPool, playerABets, playerBBets, drawBets] = text.split(',');
+    content = (
+      <div
+        style={{
+          background: 'linear-gradient(to bottom, #1a1a1a, #2d2d2d)',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '40px',
+        }}
+      >
+        <div style={{ 
+          display: 'flex',
+          justifyContent: 'center',
+          fontSize: 48, 
+          fontWeight: 'bold',
+          marginBottom: '40px',
+          background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
+          backgroundClip: 'text',
+          color: 'transparent',
+        }}>
+          Pool Statistics
+        </div>
+
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '24px',
+          marginTop: '20px',
+          width: '100%',
+          padding: '0 20px',
+        }}>
+          <div style={{
             display: 'flex',
-            fontSize: '20px',
-            color: '#808080',
-            marginTop: '20px',
-            textAlign: 'center',
+            justifyContent: 'center',
+            fontSize: '36px',
+            color: '#4ECDC4',
           }}>
-            Potential winnings are calculated based on the total pool and your bet amount
+            Total Pool: {totalPool} DEGEN
+          </div>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '16px',
+            width: '100%',
+            maxWidth: '800px',
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+              fontSize: '24px',
+              color: '#808080',
+            }}>
+              <span>Player A Bets:</span>
+              <span>{playerABets} DEGEN</span>
+            </div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+              fontSize: '24px',
+              color: '#808080',
+            }}>
+              <span>Player B Bets:</span>
+              <span>{playerBBets} DEGEN</span>
+            </div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+              fontSize: '24px',
+              color: '#808080',
+            }}>
+              <span>Draw Bets:</span>
+              <span>{drawBets} DEGEN</span>
+            </div>
           </div>
         </div>
       </div>
