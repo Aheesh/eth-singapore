@@ -140,11 +140,14 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
   
   // Serialize the updated state
   const serializedState = JSON.stringify(updatedState);
+  const encodedState = encodeURIComponent(serializedState);
   
   return NextResponse.json({
-    frame: 'txSuccess',
-    state: serializedState,
-    post_url: `${process.env.NEXT_PUBLIC_URL}/api/frame`,
+    ...txData,
+    state: {
+      serialized: encodedState,
+    },
+    postUrl: `${process.env.NEXT_PUBLIC_URL}/api/frame`,
   });
 }
 

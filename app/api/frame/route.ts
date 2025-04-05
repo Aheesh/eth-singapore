@@ -54,6 +54,10 @@ export async function POST(req: NextRequest): Promise<Response> {
     const currentFrame = (state as any)?.frame || 'start';
     const buttonNumber = message.button || undefined;
     
+    console.log('Current frame:', currentFrame);
+    console.log('Button number:', buttonNumber);
+    console.log('State:', state);
+    
     // Generate the frame HTML
     const frameHtml = await getHyperFrame(
       currentFrame,
@@ -63,7 +67,8 @@ export async function POST(req: NextRequest): Promise<Response> {
     );
 
     // Handle special cases for button clicks
-    if (buttonNumber === 2 && state.frame === 'txSuccess') {
+    if (buttonNumber === 2 && currentFrame === 'txSuccess') {
+      console.log('Handling View Pool button click');
       // Handle "View Pool" button click
       return NextResponse.json({
         frame: 'poolStats',
@@ -82,7 +87,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       });
     }
 
-    if (state.frame === 'poolStats') {
+    if (currentFrame === 'poolStats') {
       if (buttonNumber === 1) {
         // Handle "Place Bet" button click
         return NextResponse.json({
