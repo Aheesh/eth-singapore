@@ -220,7 +220,12 @@ addHyperFrame('txSuccess', {
     params.append('type', 'txSuccess');
     params.append('amount', state?.amount || '0');
     params.append('outcome', state?.outcome || '');
-    params.append('tokensReceived', state?.tokensReceived || '0');
+    
+    // Format tokens received with more decimal places
+    const tokensReceived = state?.tokensReceived || '0';
+    const formattedTokens = parseFloat(tokensReceived).toFixed(10);
+    params.append('tokensReceived', formattedTokens);
+    
     params.append('txHash', state?.txHash || '');
 
     return getFrameHtmlResponse({
