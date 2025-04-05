@@ -149,18 +149,15 @@ async function getResponse(req: NextRequest): Promise<NextResponse> {
     outcome: state.outcome
   };
   
-  console.log('Updated state:', updatedState);
-  
   // Serialize the updated state
-  const serializedState = JSON.stringify(updatedState);
-  const encodedState = encodeURIComponent(serializedState);
+  const serializedState = encodeURIComponent(JSON.stringify(updatedState));
+  console.log('Serialized state:', serializedState);
   
-  console.log('Encoded state:', encodedState);
-  
+  // Return the response with the transaction data and updated state
   return NextResponse.json({
     ...txData,
     state: {
-      serialized: encodedState,
+      serialized: serializedState,
     },
     postUrl: `${process.env.NEXT_PUBLIC_URL}/api/frame`,
   });

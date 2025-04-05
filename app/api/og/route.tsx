@@ -331,8 +331,8 @@ export async function GET(request: NextRequest) {
               fontSize: '24px',
               color: '#808080',
             }}>
-              <span>Amount Spent:</span>
-              <span>{amount} DEGEN</span>
+              <span style={{ display: 'flex' }}>Amount Spent:</span>
+              <span style={{ display: 'flex' }}>{amount} DEGEN</span>
             </div>
             <div style={{
               display: 'flex',
@@ -341,8 +341,8 @@ export async function GET(request: NextRequest) {
               fontSize: '24px',
               color: '#808080',
             }}>
-              <span>Estimated Tokens:</span>
-              <span>{tokensReceived || '0.0000000000'}</span>
+              <span style={{ display: 'flex' }}>Estimated Tokens:</span>
+              <span style={{ display: 'flex' }}>{tokensReceived || '0.0000000000'}</span>
             </div>
           </div>
         </div>
@@ -408,8 +408,8 @@ export async function GET(request: NextRequest) {
               fontSize: '24px',
               color: '#808080',
             }}>
-              <span>Player A Bets:</span>
-              <span>{playerABets} DEGEN</span>
+              <span style={{ display: 'flex' }}>Player A Bets:</span>
+              <span style={{ display: 'flex' }}>{playerABets} DEGEN</span>
             </div>
             <div style={{
               display: 'flex',
@@ -418,8 +418,8 @@ export async function GET(request: NextRequest) {
               fontSize: '24px',
               color: '#808080',
             }}>
-              <span>Player B Bets:</span>
-              <span>{playerBBets} DEGEN</span>
+              <span style={{ display: 'flex' }}>Player B Bets:</span>
+              <span style={{ display: 'flex' }}>{playerBBets} DEGEN</span>
             </div>
             <div style={{
               display: 'flex',
@@ -428,8 +428,8 @@ export async function GET(request: NextRequest) {
               fontSize: '24px',
               color: '#808080',
             }}>
-              <span>Draw Bets:</span>
-              <span>{drawBets} DEGEN</span>
+              <span style={{ display: 'flex' }}>Draw Bets:</span>
+              <span style={{ display: 'flex' }}>{drawBets} DEGEN</span>
             </div>
           </div>
         </div>
