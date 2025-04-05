@@ -2,6 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getFrameMessage, FrameRequest } from '@coinbase/onchainkit/frame';
 import { getHyperFrame } from '../../hyperframes';
 
+interface FrameState {
+  frame?: string;
+  amount?: string;
+  outcome?: string;
+  txHash?: string;
+  totalPool?: string;
+  playerABets?: string;
+  playerBBets?: string;
+  drawBets?: string;
+  playerAOdds?: string;
+  playerBOdds?: string;
+  drawOdds?: string;
+}
+
 export async function POST(req: NextRequest): Promise<Response> {
   try {
     // Safely parse the request body
@@ -22,7 +36,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     }
 
     // Safely parse the state
-    let state = {};
+    let state: FrameState = {};
     if (message.state?.serialized) {
       try {
         state = JSON.parse(decodeURIComponent(message.state.serialized));
@@ -47,6 +61,54 @@ export async function POST(req: NextRequest): Promise<Response> {
       buttonNumber,
       state
     );
+
+    if (buttonNumber === 1 && state.frame === 'txSuccess') {
+      // Handle "View Pool" button click
+      return NextResponse.json({
+        frame: 'poolStats',
+        state: {
+          ...state,
+          frame: 'poolStats',
+          // Fetch pool stats from your backend or blockchain
+          totalPool: '1000', // Example value, replace with actual data
+          playerABets: '400',
+          playerBBets: '350',
+          drawBets: '250',
+          playerAOdds: '0.28',
+          playerBOdds: '0.36',
+          drawOdds: '0.36',
+        },
+      });
+    }
+
+    if (state.frame === 'poolStats') {
+      if (buttonNumber === 0) {
+        // Handle "Place Bet" button click
+        return NextResponse.json({
+          frame: 'start',
+          state: {
+            ...state,
+            frame: 'start',
+          },
+        });
+      } else if (buttonNumber === 1) {
+        // Handle "Refresh Stats" button click
+        return NextResponse.json({
+          frame: 'poolStats',
+          state: {
+            ...state,
+            // Fetch updated pool stats from your backend or blockchain
+            totalPool: '1200', // Example value, replace with actual data
+            playerABets: '500',
+            playerBBets: '400',
+            drawBets: '300',
+            playerAOdds: '0.28',
+            playerBOdds: '0.36',
+            drawOdds: '0.36',
+          },
+        });
+      }
+    }
 
     return new NextResponse(frameHtml);
 

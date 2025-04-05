@@ -318,6 +318,15 @@ export async function GET(request: NextRequest) {
           fontSize: '24px',
           color: '#4ECDC4',
         }}>
+          <div style={{ 
+            display: 'flex',
+            fontSize: '32px',
+            fontWeight: 'bold',
+            marginBottom: '10px',
+            color: '#FF6B6B',
+          }}>
+            Summary!
+          </div>
           <div style={{ display: 'flex' }}>
             Bet on: {outcome}
           </div>
@@ -342,6 +351,116 @@ export async function GET(request: NextRequest) {
             >
               View on Basescan
             </a>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (type === 'poolStats') {
+    const totalPool = searchParams.get('totalPool') || '0';
+    const playerABets = searchParams.get('playerABets') || '0';
+    const playerBBets = searchParams.get('playerBBets') || '0';
+    const drawBets = searchParams.get('drawBets') || '0';
+    const playerAOdds = searchParams.get('playerAOdds') || '0.28';
+    const playerBOdds = searchParams.get('playerBOdds') || '0.36';
+    const drawOdds = searchParams.get('drawOdds') || '0.36';
+    
+    content = (
+      <div
+        style={{
+          background: 'linear-gradient(to bottom, #1a1a1a, #2d2d2d)',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '40px',
+          color: 'white',
+        }}
+      >
+        <div style={{ 
+          display: 'flex',
+          justifyContent: 'center',
+          fontSize: 48, 
+          fontWeight: 'bold',
+          marginBottom: '40px',
+          background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
+          backgroundClip: 'text',
+          color: 'transparent',
+        }}>
+          Pool Statistics 🏊‍♂️
+        </div>
+
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '20px',
+          fontSize: '24px',
+          color: '#4ECDC4',
+        }}>
+          <div style={{ 
+            display: 'flex',
+            fontSize: '32px',
+            fontWeight: 'bold',
+            marginBottom: '10px',
+            color: '#FF6B6B',
+          }}>
+            Total Pool: {totalPool} DEGEN
+          </div>
+          
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '15px',
+            width: '100%',
+            maxWidth: '800px',
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              padding: '10px',
+              background: 'rgba(255, 107, 107, 0.1)',
+              borderRadius: '8px',
+            }}>
+              <div>Player A</div>
+              <div>{playerABets} DEGEN</div>
+              <div>Odds: {playerAOdds}</div>
+            </div>
+            
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              padding: '10px',
+              background: 'rgba(78, 205, 196, 0.1)',
+              borderRadius: '8px',
+            }}>
+              <div>Player B</div>
+              <div>{playerBBets} DEGEN</div>
+              <div>Odds: {playerBOdds}</div>
+            </div>
+            
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              padding: '10px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '8px',
+            }}>
+              <div>Draw</div>
+              <div>{drawBets} DEGEN</div>
+              <div>Odds: {drawOdds}</div>
+            </div>
+          </div>
+          
+          <div style={{ 
+            display: 'flex',
+            fontSize: '20px',
+            color: '#808080',
+            marginTop: '20px',
+            textAlign: 'center',
+          }}>
+            Potential winnings are calculated based on the total pool and your bet amount
           </div>
         </div>
       </div>
