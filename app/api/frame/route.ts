@@ -40,6 +40,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     if (message.state?.serialized) {
       try {
         state = JSON.parse(decodeURIComponent(message.state.serialized));
+        console.log('Parsed state from message:', state);
       } catch (e) {
         console.error('Error parsing state:', e);
         // Instead of failing, continue with empty state
@@ -51,12 +52,89 @@ export async function POST(req: NextRequest): Promise<Response> {
     console.log('frame/route.ts: Message =>', message);
 
     // Get the current frame from state or default to 'start'
-    const currentFrame = (state as any)?.frame || 'start';
+    const currentFrame = state.frame || 'start';
     const buttonNumber = message.button || undefined;
     
     console.log('Current frame:', currentFrame);
     console.log('Button number:', buttonNumber);
     console.log('State:', state);
+    
+    // Handle special cases for button clicks
+    if (buttonNumber === 2 && currentFrame === 'txSuccess') {
+      console.log('Handling View Pool button click');
+      // Handle "View Pool" button click
+      const poolStatsState = {
+        ...state,
+        frame: 'poolStats',
+        // Fetch pool stats from your backend or blockchain
+        totalPool: '1000', // Example value, replace with actual data
+        playerABets: '400',
+        playerBBets: '350',
+        drawBets: '250',
+        playerAOdds: '0.28',
+        playerBOdds: '0.36',
+        drawOdds: '0.36',
+      };
+      
+      console.log('Pool stats state:', poolStatsState);
+      
+      // Generate the frame HTML for poolStats
+      const poolStatsHtml = await getHyperFrame(
+        'poolStats',
+        message.input || '',
+        undefined,
+        poolStatsState
+      );
+      
+      return new NextResponse(poolStatsHtml);
+    }
+
+    if (currentFrame === 'poolStats') {
+      if (buttonNumber === 1) {
+        // Handle "Place Bet" button click
+        const startState = {
+          ...state,
+          frame: 'start',
+        };
+        
+        console.log('Start state:', startState);
+        
+        // Generate the frame HTML for start
+        const startHtml = await getHyperFrame(
+          'start',
+          message.input || '',
+          undefined,
+          startState
+        );
+        
+        return new NextResponse(startHtml);
+      } else if (buttonNumber === 2) {
+        // Handle "Refresh Stats" button click
+        const refreshedState = {
+          ...state,
+          // Fetch updated pool stats from your backend or blockchain
+          totalPool: '1200', // Example value, replace with actual data
+          playerABets: '500',
+          playerBBets: '400',
+          drawBets: '300',
+          playerAOdds: '0.28',
+          playerBOdds: '0.36',
+          drawOdds: '0.36',
+        };
+        
+        console.log('Refreshed state:', refreshedState);
+        
+        // Generate the frame HTML for poolStats
+        const refreshedHtml = await getHyperFrame(
+          'poolStats',
+          message.input || '',
+          undefined,
+          refreshedState
+        );
+        
+        return new NextResponse(refreshedHtml);
+      }
+    }
     
     // Generate the frame HTML
     const frameHtml = await getHyperFrame(
@@ -65,56 +143,6 @@ export async function POST(req: NextRequest): Promise<Response> {
       buttonNumber,
       state
     );
-
-    // Handle special cases for button clicks
-    if (buttonNumber === 2 && currentFrame === 'txSuccess') {
-      console.log('Handling View Pool button click');
-      // Handle "View Pool" button click
-      return NextResponse.json({
-        frame: 'poolStats',
-        state: {
-          ...state,
-          frame: 'poolStats',
-          // Fetch pool stats from your backend or blockchain
-          totalPool: '1000', // Example value, replace with actual data
-          playerABets: '400',
-          playerBBets: '350',
-          drawBets: '250',
-          playerAOdds: '0.28',
-          playerBOdds: '0.36',
-          drawOdds: '0.36',
-        },
-      });
-    }
-
-    if (currentFrame === 'poolStats') {
-      if (buttonNumber === 1) {
-        // Handle "Place Bet" button click
-        return NextResponse.json({
-          frame: 'start',
-          state: {
-            ...state,
-            frame: 'start',
-          },
-        });
-      } else if (buttonNumber === 2) {
-        // Handle "Refresh Stats" button click
-        return NextResponse.json({
-          frame: 'poolStats',
-          state: {
-            ...state,
-            // Fetch updated pool stats from your backend or blockchain
-            totalPool: '1200', // Example value, replace with actual data
-            playerABets: '500',
-            playerBBets: '400',
-            drawBets: '300',
-            playerAOdds: '0.28',
-            playerBOdds: '0.36',
-            drawOdds: '0.36',
-          },
-        });
-      }
-    }
 
     return new NextResponse(frameHtml);
 
