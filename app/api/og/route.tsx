@@ -80,14 +80,15 @@ export async function GET(request: NextRequest) {
             gap: '16px',
           }}>
             <div style={{
-              width: '100px',
               display: 'flex',
+              width: '100px',
               fontSize: '20px',
               color: '#FF6B6B',
             }}>
               Player A
             </div>
             <div style={{
+              display: 'flex',
               flex: 1,
               height: '24px',
               background: 'rgba(255, 107, 107, 0.1)',
@@ -95,14 +96,15 @@ export async function GET(request: NextRequest) {
               overflow: 'hidden',
             }}>
               <div style={{
+                display: 'flex',
                 width: `${playerAProb}%`,
                 height: '100%',
                 background: 'rgba(255, 107, 107, 0.3)',
               }} />
             </div>
             <div style={{
-              width: '60px',
               display: 'flex',
+              width: '60px',
               fontSize: '18px',
               color: '#666666',
               justifyContent: 'flex-end',
@@ -119,14 +121,15 @@ export async function GET(request: NextRequest) {
             gap: '16px',
           }}>
             <div style={{
-              width: '100px',
               display: 'flex',
+              width: '100px',
               fontSize: '20px',
               color: '#4ECDC4',
             }}>
               Player B
             </div>
             <div style={{
+              display: 'flex',
               flex: 1,
               height: '24px',
               background: 'rgba(78, 205, 196, 0.1)',
@@ -134,14 +137,15 @@ export async function GET(request: NextRequest) {
               overflow: 'hidden',
             }}>
               <div style={{
+                display: 'flex',
                 width: `${playerBProb}%`,
                 height: '100%',
                 background: 'rgba(78, 205, 196, 0.3)',
               }} />
             </div>
             <div style={{
-              width: '60px',
               display: 'flex',
+              width: '60px',
               fontSize: '18px',
               color: '#666666',
               justifyContent: 'flex-end',
@@ -158,14 +162,15 @@ export async function GET(request: NextRequest) {
             gap: '16px',
           }}>
             <div style={{
-              width: '100px',
               display: 'flex',
+              width: '100px',
               fontSize: '20px',
               color: '#808080',
             }}>
               Draw
             </div>
             <div style={{
+              display: 'flex',
               flex: 1,
               height: '24px',
               background: 'rgba(128, 128, 128, 0.1)',
@@ -173,14 +178,15 @@ export async function GET(request: NextRequest) {
               overflow: 'hidden',
             }}>
               <div style={{
+                display: 'flex',
                 width: `${drawProb}%`,
                 height: '100%',
                 background: 'rgba(128, 128, 128, 0.3)',
               }} />
             </div>
             <div style={{
-              width: '60px',
               display: 'flex',
+              width: '60px',
               fontSize: '18px',
               color: '#666666',
               justifyContent: 'flex-end',
