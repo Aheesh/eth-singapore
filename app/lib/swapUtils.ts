@@ -1,6 +1,7 @@
 import { BalancerSDK, Network, SwapType } from '@balancer-labs/sdk';
 import { parseUnits, formatEther } from 'ethers';
 import { poolId, degenAddr, PLAYER_A_ADDR, PLAYER_B_ADDR, DRAW_ADDR } from '../config';
+import { getPoolBalance } from './balancer';
 
 export async function calculateTokenAmount(amount: string, outcome: string) {
   const providerApiKey = process.env.BASE_PROVIDER_API_KEY;
@@ -22,16 +23,30 @@ export async function calculateTokenAmount(amount: string, outcome: string) {
 
   if (!poolId) throw new Error('poolId not set');
 
+  // Get pool tokens to determine correct indices
+  const poolData = await getPoolBalance();
+  console.log('Pool tokens:', poolData.tokens);
+  
+  // Find indices of input and output tokens
+  const tokenInIndex = poolData.tokens.findIndex((t: string) => t.toLowerCase() === tokenIn.toLowerCase());
+  const tokenOutIndex = poolData.tokens.findIndex((t: string) => t.toLowerCase() === tokenOut.toLowerCase());
+  
+  if (tokenInIndex === -1 || tokenOutIndex === -1) {
+    throw new Error('Token not found in pool');
+  }
+
+  console.log('Swap indices:', { tokenInIndex, tokenOutIndex });
+
   const swaps = [
     {
       poolId: poolId,
-      assetInIndex: 0,
-      assetOutIndex: 1,
+      assetInIndex: tokenInIndex,
+      assetOutIndex: tokenOutIndex,
       amount: value.toString(),
       userData: '0x',
     },
   ];
-  const assets = [tokenIn, tokenOut];
+  const assets = poolData.tokens;
 
   const queryInfo = await sdk.swaps.queryBatchSwap({
     kind: SwapType.SwapExactIn,
@@ -39,6 +54,6 @@ export async function calculateTokenAmount(amount: string, outcome: string) {
     assets,
   });
 
-  const absValue = Math.abs(Number(formatEther(queryInfo[1])));
+  const absValue = Math.abs(Number(formatEther(queryInfo[tokenOutIndex])));
   return { absValue, tokenOut };
 }
