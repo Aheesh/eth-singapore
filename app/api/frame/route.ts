@@ -69,11 +69,12 @@ export async function POST(req: NextRequest): Promise<Response> {
       const poolData = await getPoolBalance();
       console.log('Raw pool data:', poolData);
       
-      // Calculate total pool without subtracting LP contribution
-      const totalPool = parseFloat(poolData.balances[1]);
-      const playerABets = parseFloat(poolData.balances[2]) || 0;
-      const playerBBets = parseFloat(poolData.balances[3]) || 0;
-      const drawBets = parseFloat(poolData.balances[4]) || 0;
+      // Calculate total pool using correct token indices
+      // 2 - DEGEN Token, 3 - PlayerA token, 4 - PlayerB token, 1 - Draw token
+      const totalPool = parseFloat(poolData.balances[2]);
+      const playerABets = parseFloat(poolData.balances[3]) || 0;
+      const playerBBets = parseFloat(poolData.balances[4]) || 0;
+      const drawBets = parseFloat(poolData.balances[1]) || 0;
       
       // Handle "View Pool" button click
       const poolStatsState = {
@@ -125,11 +126,12 @@ export async function POST(req: NextRequest): Promise<Response> {
         const poolData = await getPoolBalance();
         console.log('Raw pool data:', poolData);
         
-        // Calculate total pool without subtracting LP contribution
-        const totalPool = parseFloat(poolData.balances[1]);
-        const playerABets = parseFloat(poolData.balances[2]) || 0;
-        const playerBBets = parseFloat(poolData.balances[3]) || 0;
-        const drawBets = parseFloat(poolData.balances[4]) || 0;
+        // Calculate total pool using correct token indices
+        // 2 - DEGEN Token, 3 - PlayerA token, 4 - PlayerB token, 1 - Draw token
+        const totalPool = parseFloat(poolData.balances[2]);
+        const playerABets = parseFloat(poolData.balances[3]) || 0;
+        const playerBBets = parseFloat(poolData.balances[4]) || 0;
+        const drawBets = parseFloat(poolData.balances[1]) || 0;
         
         const refreshedState = {
           frame: 'poolStats',
