@@ -10,6 +10,10 @@ export async function GET(request: NextRequest) {
   let content;
 
   if (type === 'start') {
+    const playerAProb = searchParams.get('playerAProb') || '28';
+    const playerBProb = searchParams.get('playerBProb') || '36';
+    const drawProb = searchParams.get('drawProb') || '36';
+
     content = (
       <div
         style={{
@@ -25,15 +29,38 @@ export async function GET(request: NextRequest) {
       >
         <div style={{ 
           display: 'flex',
-          justifyContent: 'center',
-          fontSize: 48, 
-          fontWeight: 'bold',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '16px',
           marginBottom: '40px',
-          background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
-          backgroundClip: 'text',
-          color: 'transparent',
         }}>
-          Place Your Bet
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            fontSize: 48, 
+            fontWeight: 'bold',
+            background: 'linear-gradient(90deg, #FF6B6B, #4ECDC4)',
+            backgroundClip: 'text',
+            color: 'transparent',
+          }}>
+            Player A vs Player B
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            fontSize: 24,
+            color: '#808080',
+          }}>
+            Win Probability: {playerAProb}% vs {playerBProb}% (Draw: {drawProb}%)
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            fontSize: 24,
+            color: '#4ECDC4',
+          }}>
+            Total Pool: {parseFloat(degenBalance).toFixed(2)} DEGEN
+          </div>
         </div>
 
         <div style={{
@@ -78,7 +105,7 @@ export async function GET(request: NextRequest) {
                 fontSize: '24px',
                 color: '#808080',
               }}>
-                Odds: 2.5x
+                Win: {playerAProb}%
               </div>
             </div>
 
@@ -108,7 +135,7 @@ export async function GET(request: NextRequest) {
                 fontSize: '24px',
                 color: '#808080',
               }}>
-                Odds: 1.8x
+                Win: {playerBProb}%
               </div>
             </div>
           </div>
@@ -146,7 +173,7 @@ export async function GET(request: NextRequest) {
                 fontSize: '24px',
                 color: '#808080',
               }}>
-                Odds: 3.2x
+                Probability: {drawProb}%
               </div>
             </div>
           </div>
