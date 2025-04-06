@@ -66,109 +66,126 @@ export async function GET(request: NextRequest) {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
           gap: '24px',
           marginTop: '20px',
           width: '100%',
+          maxWidth: '700px',
           padding: '0 20px',
         }}>
+          {/* Player A Bar */}
           <div style={{
             display: 'flex',
-            justifyContent: 'space-between',
+            alignItems: 'center',
             width: '100%',
-            maxWidth: '800px',
-            gap: '20px',
+            gap: '16px',
           }}>
             <div style={{
+              width: '100px',
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              flex: 1,
-              background: 'rgba(255, 107, 107, 0.05)',
-              padding: '16px',
-              borderRadius: '8px',
+              fontSize: '20px',
+              color: '#FF6B6B',
             }}>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                fontSize: '28px',
-                color: '#FF6B6B',
-                marginBottom: '4px',
-              }}>
-                Player A
-              </div>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                fontSize: '20px',
-                color: '#666666',
-              }}>
-                Win: {playerAProb}%
-              </div>
+              Player A
             </div>
-
             <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
               flex: 1,
-              background: 'rgba(78, 205, 196, 0.05)',
-              padding: '16px',
-              borderRadius: '8px',
+              height: '24px',
+              background: 'rgba(255, 107, 107, 0.1)',
+              borderRadius: '12px',
+              overflow: 'hidden',
             }}>
               <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                fontSize: '28px',
-                color: '#4ECDC4',
-                marginBottom: '4px',
-              }}>
-                Player B
-              </div>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                fontSize: '20px',
-                color: '#666666',
-              }}>
-                Win: {playerBProb}%
-              </div>
+                width: `${playerAProb}%`,
+                height: '100%',
+                background: 'rgba(255, 107, 107, 0.3)',
+              }} />
+            </div>
+            <div style={{
+              width: '60px',
+              display: 'flex',
+              fontSize: '18px',
+              color: '#666666',
+              justifyContent: 'flex-end',
+            }}>
+              {playerAProb}%
             </div>
           </div>
 
+          {/* Player B Bar */}
           <div style={{
             display: 'flex',
-            justifyContent: 'center',
+            alignItems: 'center',
             width: '100%',
-            maxWidth: '800px',
-            marginTop: '16px',
+            gap: '16px',
           }}>
             <div style={{
+              width: '100px',
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              fontSize: '20px',
+              color: '#4ECDC4',
+            }}>
+              Player B
+            </div>
+            <div style={{
               flex: 1,
-              background: 'rgba(255, 255, 255, 0.05)',
-              padding: '16px',
-              borderRadius: '8px',
+              height: '24px',
+              background: 'rgba(78, 205, 196, 0.1)',
+              borderRadius: '12px',
+              overflow: 'hidden',
             }}>
               <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                fontSize: '28px',
-                color: '#808080',
-                marginBottom: '4px',
-              }}>
-                Draw
-              </div>
+                width: `${playerBProb}%`,
+                height: '100%',
+                background: 'rgba(78, 205, 196, 0.3)',
+              }} />
+            </div>
+            <div style={{
+              width: '60px',
+              display: 'flex',
+              fontSize: '18px',
+              color: '#666666',
+              justifyContent: 'flex-end',
+            }}>
+              {playerBProb}%
+            </div>
+          </div>
+
+          {/* Draw Bar */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+            gap: '16px',
+          }}>
+            <div style={{
+              width: '100px',
+              display: 'flex',
+              fontSize: '20px',
+              color: '#808080',
+            }}>
+              Draw
+            </div>
+            <div style={{
+              flex: 1,
+              height: '24px',
+              background: 'rgba(128, 128, 128, 0.1)',
+              borderRadius: '12px',
+              overflow: 'hidden',
+            }}>
               <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                fontSize: '20px',
-                color: '#666666',
-              }}>
-                Probability: {drawProb}%
-              </div>
+                width: `${drawProb}%`,
+                height: '100%',
+                background: 'rgba(128, 128, 128, 0.3)',
+              }} />
+            </div>
+            <div style={{
+              width: '60px',
+              display: 'flex',
+              fontSize: '18px',
+              color: '#666666',
+              justifyContent: 'flex-end',
+            }}>
+              {drawProb}%
             </div>
           </div>
         </div>
