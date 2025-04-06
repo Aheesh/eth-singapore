@@ -100,21 +100,29 @@ addHyperFrame('start', {
   frame: async () => {
     // Fetch pool balance
     const poolData = await getPoolBalance();
-    const degenBalance = parseFloat(poolData.balances[1]) - 50; // TODO Subtract initial 50 DEGEN LP
-    console.log('DEGEN Balance 🧢🧢🧢 : degenBalance 🧢🧢🧢', degenBalance);
+    const degenBalance = parseFloat(poolData.balances[2]); // DEGEN token is at index 2
+    console.log('DEGEN Balance:', degenBalance);
+
+    // Calculate probabilities in percentage
+    const playerAProb = 28;  // 0.28 * 100
+    const playerBProb = 36;  // 0.36 * 100
+    const drawProb = 36;     // 0.36 * 100
 
     // Construct the text with all parameters included
     const params = new URLSearchParams({
       text: 'Player-A,Player-B,Draw', // Include all outcomes to show all cards
-      degenBalance: degenBalance.toFixed(2),
+      degenBalance: degenBalance.toString(),
+      playerAProb: playerAProb.toString(),
+      playerBProb: playerBProb.toString(),
+      drawProb: drawProb.toString(),
       type: 'start'
     });
 
     return getFrameHtmlResponse({
       buttons: [
-        { label: 'Player-A (0.28)' },
-        { label: 'Player-B (0.36)' },
-        { label: 'Draw (0.36)' },
+        { label: `Player-A (${playerAProb}%)` },
+        { label: `Player-B (${playerBProb}%)` },
+        { label: `Draw (${drawProb}%)` },
       ],
       image: {
         src: `${NEXT_PUBLIC_URL}/api/og?${params.toString()}`,
