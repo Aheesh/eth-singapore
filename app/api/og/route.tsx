@@ -84,26 +84,24 @@ export async function GET(request: NextRequest) {
               flexDirection: 'column',
               alignItems: 'center',
               flex: 1,
-              background: 'rgba(255, 107, 107, 0.1)',
-              padding: '20px',
-              borderRadius: '12px',
-              border: '2px solid #FF6B6B',
+              background: 'rgba(255, 107, 107, 0.05)',
+              padding: '16px',
+              borderRadius: '8px',
             }}>
               <div style={{
                 display: 'flex',
                 justifyContent: 'center',
-                fontSize: '32px',
-                fontWeight: 'bold',
+                fontSize: '28px',
                 color: '#FF6B6B',
-                marginBottom: '8px',
+                marginBottom: '4px',
               }}>
                 Player A
               </div>
               <div style={{
                 display: 'flex',
                 justifyContent: 'center',
-                fontSize: '24px',
-                color: '#808080',
+                fontSize: '20px',
+                color: '#666666',
               }}>
                 Win: {playerAProb}%
               </div>
@@ -114,26 +112,24 @@ export async function GET(request: NextRequest) {
               flexDirection: 'column',
               alignItems: 'center',
               flex: 1,
-              background: 'rgba(78, 205, 196, 0.1)',
-              padding: '20px',
-              borderRadius: '12px',
-              border: '2px solid #4ECDC4',
+              background: 'rgba(78, 205, 196, 0.05)',
+              padding: '16px',
+              borderRadius: '8px',
             }}>
               <div style={{
                 display: 'flex',
                 justifyContent: 'center',
-                fontSize: '32px',
-                fontWeight: 'bold',
+                fontSize: '28px',
                 color: '#4ECDC4',
-                marginBottom: '8px',
+                marginBottom: '4px',
               }}>
                 Player B
               </div>
               <div style={{
                 display: 'flex',
                 justifyContent: 'center',
-                fontSize: '24px',
-                color: '#808080',
+                fontSize: '20px',
+                color: '#666666',
               }}>
                 Win: {playerBProb}%
               </div>
@@ -145,33 +141,31 @@ export async function GET(request: NextRequest) {
             justifyContent: 'center',
             width: '100%',
             maxWidth: '800px',
-            marginTop: '20px',
+            marginTop: '16px',
           }}>
             <div style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               flex: 1,
-              background: 'rgba(255, 255, 255, 0.1)',
-              padding: '20px',
-              borderRadius: '12px',
-              border: '2px solid #808080',
+              background: 'rgba(255, 255, 255, 0.05)',
+              padding: '16px',
+              borderRadius: '8px',
             }}>
               <div style={{
                 display: 'flex',
                 justifyContent: 'center',
-                fontSize: '32px',
-                fontWeight: 'bold',
+                fontSize: '28px',
                 color: '#808080',
-                marginBottom: '8px',
+                marginBottom: '4px',
               }}>
                 Draw
               </div>
               <div style={{
                 display: 'flex',
                 justifyContent: 'center',
-                fontSize: '24px',
-                color: '#808080',
+                fontSize: '20px',
+                color: '#666666',
               }}>
                 Probability: {drawProb}%
               </div>
